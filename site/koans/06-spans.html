@@ -17,17 +17,17 @@
       border: 1px solid var(--border-subtle);
       border-radius: 1em;
       overflow: hidden;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
       backdrop-filter: blur(var(--blur));
       -webkit-backdrop-filter: blur(var(--blur));
       box-shadow: var(--shadow-inset);
     }
 
     .wf-scene-header {
-      padding: 0.6rem 1rem;
+      padding: 0.5rem 1rem;
       border-bottom: 1px solid var(--border-subtle);
       font-family: var(--font-mono);
-      font-size: 0.65rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.1em;
@@ -36,7 +36,7 @@
     }
 
     .wf-scene-body {
-      padding: 2rem;
+      padding: 1.25rem 1.5rem;
     }
 
     /* Waterfall grid */
@@ -46,16 +46,16 @@
 
     .waterfall-header {
       display: grid;
-      grid-template-columns: 120px 1fr 60px;
+      grid-template-columns: 130px 1fr 60px;
       gap: 1rem;
-      padding: 0.4rem 0;
+      padding: 0.35rem 0;
       border-bottom: 1px solid var(--border-subtle);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.4rem;
     }
 
     .waterfall-header span {
       font-family: var(--font-mono);
-      font-size: 0.6rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.1em;
@@ -67,10 +67,10 @@
 
     .waterfall-row {
       display: grid;
-      grid-template-columns: 120px 1fr 60px;
+      grid-template-columns: 130px 1fr 60px;
       gap: 1rem;
       align-items: center;
-      padding: 0.4rem 0;
+      padding: 0.35rem 0;
       opacity: 0;
       transition: opacity 0.5s var(--ease-smooth);
     }
@@ -81,7 +81,7 @@
 
     .waterfall-svc {
       font-family: var(--font-mono);
-      font-size: 0.75rem;
+      font-size: 0.85rem;
       color: var(--text-primary);
       display: flex;
       align-items: center;
@@ -95,14 +95,14 @@
     .waterfall-row.depth-3 .waterfall-svc { padding-left: 42px; }
 
     .waterfall-svc-dot {
-      width: 6px;
-      height: 6px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       flex-shrink: 0;
     }
 
     .waterfall-bar-track {
-      height: 22px;
+      height: 24px;
       position: relative;
       background: var(--bg-glass);
       border-radius: 0.5em;
@@ -120,7 +120,7 @@
       top: 50%;
       transform: translateY(-50%);
       font-family: var(--font-mono);
-      font-size: 0.6rem;
+      font-size: 0.7rem;
       color: var(--text-primary);
       padding: 0 6px;
       white-space: nowrap;
@@ -128,7 +128,7 @@
 
     .waterfall-dur {
       font-family: var(--font-mono);
-      font-size: 0.65rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
       text-align: right;
     }
@@ -147,11 +147,11 @@
     /* Time axis */
     .waterfall-axis {
       display: grid;
-      grid-template-columns: 120px 1fr 60px;
+      grid-template-columns: 130px 1fr 60px;
       gap: 1rem;
-      padding-top: 0.5rem;
+      padding-top: 0.4rem;
       border-top: 1px solid var(--border-subtle);
-      margin-top: 0.5rem;
+      margin-top: 0.4rem;
     }
 
     .waterfall-axis-labels {
@@ -161,7 +161,7 @@
 
     .waterfall-axis-labels span {
       font-family: var(--font-mono);
-      font-size: 0.6rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
     }
 
@@ -178,14 +178,14 @@
     /* Controls */
     .wf-controls {
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
     }
 
     .wf-status {
       font-family: var(--font-mono);
-      font-size: 0.75rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
-      margin-top: 0.75rem;
+      margin-top: 0.5rem;
       min-height: 1.5em;
     }
 
@@ -194,9 +194,9 @@
       background: var(--bg-glass);
       border: 1px solid var(--border-subtle);
       border-radius: 1em;
-      padding: 1.5rem;
+      padding: 1.25rem;
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
       opacity: 0;
       transition: opacity 0.6s;
       backdrop-filter: blur(var(--blur));
@@ -208,9 +208,9 @@
 
     .wf-question p {
       font-family: var(--font-sans);
-      font-size: 0.95rem;
+      font-size: 1rem;
       color: var(--text-primary);
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
     }
 
     .wf-opts {
@@ -222,8 +222,8 @@
 
     .wf-opt {
       font-family: var(--font-mono);
-      font-size: 0.8rem;
-      padding: 0.5rem 1.25rem;
+      font-size: 0.9rem;
+      padding: 0.6rem 1.4rem;
       border: 1px solid var(--border-subtle);
       border-radius: 0.5em;
       background: var(--bg-glass);
@@ -255,9 +255,9 @@
 
     .wf-fb {
       font-family: var(--font-mono);
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       min-height: 1.5em;
-      margin-top: 0.75rem;
+      margin-top: 0.5rem;
     }
 
     .wf-fb--correct { color: var(--accent-green); }
@@ -266,11 +266,11 @@
     /* Mid-flow insight text (appears between questions) */
     .wf-mid-insight {
       font-family: var(--font-sans);
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       font-style: italic;
       color: var(--text-secondary);
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
       opacity: 0;
       transition: opacity 0.6s;
     }
@@ -280,7 +280,7 @@
     /* Final insight */
     .wf-insight {
       text-align: center;
-      padding: 1.5rem;
+      padding: 1.25rem;
       background: var(--bg-glass);
       border: 1px solid var(--border-subtle);
       border-radius: 1em;
@@ -295,14 +295,14 @@
 
     .wf-insight p {
       font-family: var(--font-sans);
-      font-size: 0.95rem;
+      font-size: 1rem;
       color: var(--text-secondary);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.35rem;
     }
 
     .wf-insight a {
       font-family: var(--font-mono);
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: var(--accent-blue);
       text-decoration: none;
     }
@@ -324,10 +324,10 @@
     /* Total line at bottom of waterfall */
     .wf-total {
       font-family: var(--font-mono);
-      font-size: 0.65rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
       text-align: right;
-      margin-top: 0.75rem;
+      margin-top: 0.5rem;
       opacity: 0;
       transition: opacity 0.5s;
     }

@@ -18,7 +18,7 @@
       border: 1px solid var(--border-subtle);
       border-radius: 1em;
       overflow: hidden;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
       box-shadow: var(--shadow-inset);
     }
 
@@ -26,7 +26,7 @@
       padding: 0.6rem 1rem;
       border-bottom: 1px solid var(--border-subtle);
       font-family: var(--font-mono);
-      font-size: 0.65rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.1em;
@@ -37,7 +37,7 @@
 
     .connection-counter {
       font-family: var(--font-mono);
-      font-size: 0.75rem;
+      font-size: 0.85rem;
       color: var(--accent-orange);
       transition: color 0.4s var(--ease-smooth);
     }
@@ -47,7 +47,7 @@
     }
 
     .collector-scene-body {
-      padding: 2.5rem 2rem;
+      padding: 1.75rem 2rem;
     }
 
     .diagram-wrapper {
@@ -57,28 +57,28 @@
     /* Three-column grid: services | (gap for SVG lines) | backends */
     .arch-diagram {
       display: grid;
-      grid-template-columns: 140px 1fr 140px;
+      grid-template-columns: 160px 1fr 160px;
       gap: 0;
       align-items: start;
-      min-height: 280px;
+      min-height: 260px;
       position: relative;
     }
 
     .arch-column {
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 0.6rem;
       z-index: 2;
     }
 
     .arch-column-label {
       font-family: var(--font-mono);
-      font-size: 0.6rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.1em;
       text-align: center;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.3rem;
     }
 
     /* Service boxes */
@@ -88,7 +88,7 @@
       border-radius: 0.5em;
       padding: 0.55rem 0.75rem;
       font-family: var(--font-mono);
-      font-size: 0.72rem;
+      font-size: 0.82rem;
       color: var(--text-primary);
       text-align: center;
       position: relative;
@@ -124,7 +124,7 @@
       border-radius: 0.5em;
       padding: 0.55rem 0.75rem;
       font-family: var(--font-mono);
-      font-size: 0.72rem;
+      font-size: 0.82rem;
       color: var(--text-primary);
       text-align: center;
     }
@@ -146,7 +146,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 280px;
+      min-height: 260px;
       z-index: 2;
     }
 
@@ -156,7 +156,7 @@
       border-radius: 1em;
       padding: 1.2rem 1rem;
       text-align: center;
-      width: 130px;
+      width: 140px;
       min-height: 80px;
       display: flex;
       align-items: center;
@@ -200,11 +200,11 @@
 
     .collector-title {
       font-family: var(--font-mono);
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       font-weight: 600;
       color: var(--accent-blue);
       text-align: center;
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.5rem;
       letter-spacing: 0.05em;
       text-shadow: 0 0 10px rgba(88, 166, 255, 0.3);
     }
@@ -215,7 +215,7 @@
       padding: 0.35rem 0.4rem;
       text-align: center;
       font-family: var(--font-mono);
-      font-size: 0.62rem;
+      font-size: 0.7rem;
       color: var(--text-secondary);
       background: var(--bg-glass);
       position: relative;
@@ -286,7 +286,7 @@
       border-radius: 1em;
       padding: 0;
       text-align: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
       box-shadow: var(--shadow-inset);
       opacity: 0;
       max-height: 0;
@@ -297,21 +297,21 @@
     .cq.visible {
       opacity: 1;
       max-height: 28rem;
-      padding: 1.5rem;
+      padding: 1.25rem;
     }
 
     .cq p {
       font-family: var(--font-sans);
       font-size: 0.95rem;
       color: var(--text-primary);
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
       line-height: 1.6;
     }
 
     .cq p.cq-context {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: var(--text-secondary);
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.5rem;
     }
 
     .cq-opts {
@@ -323,8 +323,8 @@
 
     .cq-opt {
       font-family: var(--font-mono);
-      font-size: 0.8rem;
-      padding: 0.5rem 1.25rem;
+      font-size: 0.9rem;
+      padding: 0.6rem 1.35rem;
       border: 1px solid var(--border);
       border-radius: 0.5em;
       background: var(--bg-glass);
@@ -361,9 +361,9 @@
 
     .cq-fb {
       font-family: var(--font-mono);
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       min-height: 1.5em;
-      margin-top: 0.75rem;
+      margin-top: 0.5rem;
     }
 
     .cq-fb--correct { color: var(--accent-green); }
@@ -373,13 +373,13 @@
     .math-callout {
       display: inline-block;
       font-family: var(--font-mono);
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: var(--accent-orange);
       background: rgba(210, 153, 34, 0.06);
       border: 1px solid rgba(210, 153, 34, 0.15);
       border-radius: 0.5em;
-      padding: 0.5rem 1rem;
-      margin: 0.5rem 0;
+      padding: 0.4rem 1rem;
+      margin: 0.35rem 0;
       backdrop-filter: blur(var(--blur));
       -webkit-backdrop-filter: blur(var(--blur));
     }
@@ -399,7 +399,7 @@
       border-radius: 1em;
       padding: 0;
       text-align: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
       box-shadow: var(--shadow-inset);
       opacity: 0;
       max-height: 0;
@@ -410,20 +410,20 @@
     .narrative.visible {
       opacity: 1;
       max-height: 20rem;
-      padding: 1.25rem 1.5rem;
+      padding: 1rem 1.25rem;
     }
 
     .narrative p {
       font-family: var(--font-sans);
-      font-size: 0.92rem;
+      font-size: 0.95rem;
       color: var(--text-secondary);
       line-height: 1.6;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.35rem;
     }
 
     .narrative p:last-child { margin-bottom: 0; }
 
-    .narrative .math-callout { margin-top: 0.75rem; }
+    .narrative .math-callout { margin-top: 0.5rem; }
 
     /* Insight */
     .collector-insight {
@@ -444,19 +444,19 @@
     .collector-insight.visible {
       opacity: 1;
       max-height: 18rem;
-      padding: 1.5rem;
+      padding: 1.25rem;
     }
 
     .collector-insight p {
       font-family: var(--font-sans);
       font-size: 0.95rem;
       color: var(--text-secondary);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.35rem;
     }
 
     .collector-insight a {
       font-family: var(--font-mono);
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: var(--accent-blue);
       text-decoration: none;
       transition: all 0.3s var(--ease-spring);
@@ -471,22 +471,22 @@
     .match-exercise {
       display: flex;
       flex-direction: column;
-      gap: 0.6rem;
-      max-width: 480px;
+      gap: 0.5rem;
+      max-width: 520px;
       margin: 0 auto;
     }
 
     .match-row {
       display: grid;
-      grid-template-columns: 100px 1fr;
+      grid-template-columns: 110px 1fr;
       gap: 0.75rem;
       align-items: center;
     }
 
     .match-stage {
       font-family: var(--font-mono);
-      font-size: 0.78rem;
-      padding: 0.4rem 0.6rem;
+      font-size: 0.85rem;
+      padding: 0.45rem 0.7rem;
       border-radius: 0.5em;
       text-align: center;
       color: var(--text-primary);
@@ -505,8 +505,8 @@
 
     .match-opt {
       font-family: var(--font-mono);
-      font-size: 0.7rem;
-      padding: 0.35rem 0.6rem;
+      font-size: 0.8rem;
+      padding: 0.4rem 0.7rem;
       border: 1px solid var(--border);
       border-radius: 0.5em;
       background: var(--bg-glass);

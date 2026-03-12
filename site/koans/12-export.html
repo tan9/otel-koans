@@ -17,7 +17,7 @@
       border: 1px solid var(--border-subtle);
       border-radius: 1em;
       overflow: hidden;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
       box-shadow: var(--shadow-inset);
     }
 
@@ -25,20 +25,20 @@
       padding: 0.6rem 1rem;
       border-bottom: 1px solid var(--border-subtle);
       font-family: var(--font-mono);
-      font-size: 0.65rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.1em;
     }
 
     .export-scene-body {
-      padding: 2rem;
+      padding: 1.25rem;
     }
 
     .export-flow {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 2rem;
+      gap: 1.25rem;
       align-items: start;
     }
 
@@ -47,25 +47,25 @@
       background: var(--bg-glass);
       border: 1px solid var(--border-subtle);
       border-radius: 0.5em;
-      padding: 1.25rem;
+      padding: 1rem;
       box-shadow: var(--shadow-inset);
       transition: all 0.3s var(--ease-smooth);
     }
 
     .export-panel-title {
       font-family: var(--font-mono);
-      font-size: 0.6rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.5rem;
     }
 
     .export-panel-title--green { color: var(--accent-green); }
 
     .export-code {
       font-family: var(--font-mono);
-      font-size: 0.65rem;
+      font-size: 0.85rem;
       line-height: 1.7;
       color: var(--text-secondary);
     }
@@ -80,15 +80,15 @@
       background: var(--bg-glass);
       border: 1px solid var(--border-subtle);
       border-radius: 0.5em;
-      padding: 1.25rem;
+      padding: 1rem;
       box-shadow: var(--shadow-inset);
       transition: all 0.3s var(--ease-smooth);
     }
 
     .export-json {
       font-family: var(--font-mono);
-      font-size: 0.65rem;
-      line-height: 2.2;
+      font-size: 0.85rem;
+      line-height: 2.0;
       color: var(--text-secondary);
     }
 
@@ -100,12 +100,12 @@
     /* Dropdown blanks */
     .blank-select {
       font-family: var(--font-mono);
-      font-size: 0.65rem;
+      font-size: 0.8rem;
       background: var(--bg-glass);
       color: var(--accent-orange);
       border: 1px solid var(--border-subtle);
       border-radius: 0.5em;
-      padding: 0.15rem 0.4rem;
+      padding: 0.2rem 0.5rem;
       cursor: pointer;
       appearance: none;
       -webkit-appearance: none;
@@ -148,7 +148,7 @@
 
     .blank-label {
       font-family: var(--font-mono);
-      font-size: 0.55rem;
+      font-size: 0.65rem;
       color: var(--text-muted);
       margin-left: 0.5rem;
     }
@@ -156,14 +156,14 @@
     /* Check button */
     .export-controls {
       text-align: center;
-      margin-top: 1.5rem;
+      margin-top: 1rem;
     }
 
     .export-status {
       font-family: var(--font-mono);
-      font-size: 0.75rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
-      margin-top: 0.75rem;
+      margin-top: 0.5rem;
       min-height: 1.5em;
     }
 
@@ -172,8 +172,8 @@
 
     /* OTLP callout */
     .export-callout {
-      margin-top: 1.5rem;
-      padding: 1rem 1.25rem;
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
       background: var(--bg-glass);
       backdrop-filter: blur(var(--blur));
       -webkit-backdrop-filter: blur(var(--blur));
@@ -182,7 +182,7 @@
       border-left: 3px solid var(--accent-blue);
       box-shadow: 0 0 16px rgba(88, 166, 255, 0.06);
       font-family: var(--font-mono);
-      font-size: 0.7rem;
+      font-size: 0.85rem;
       color: var(--text-secondary);
       line-height: 1.6;
       opacity: 0;
@@ -205,9 +205,9 @@
       -webkit-backdrop-filter: blur(var(--blur));
       border: 1px solid var(--border-subtle);
       border-radius: 1em;
-      padding: 1.5rem;
+      padding: 1.25rem;
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
       box-shadow: var(--shadow-inset);
       opacity: 0;
       max-height: 0;
@@ -218,14 +218,14 @@
     .export-question.visible {
       opacity: 1;
       max-height: 20rem;
-      padding: 1.5rem;
+      padding: 1.25rem;
     }
 
     .export-question p {
       font-family: var(--font-sans);
       font-size: 0.95rem;
       color: var(--text-primary);
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
     }
 
     .export-opts {
@@ -237,8 +237,8 @@
 
     .export-opt {
       font-family: var(--font-mono);
-      font-size: 0.8rem;
-      padding: 0.5rem 1.25rem;
+      font-size: 0.9rem;
+      padding: 0.6rem 1.35rem;
       border: 1px solid var(--border-subtle);
       border-radius: 0.5em;
       background: var(--bg-glass);
@@ -271,9 +271,9 @@
 
     .export-fb {
       font-family: var(--font-mono);
-      font-size: 0.8rem;
+      font-size: 0.9rem;
       min-height: 1.5em;
-      margin-top: 0.75rem;
+      margin-top: 0.5rem;
     }
 
     .export-fb--correct { color: var(--accent-green); }
@@ -282,7 +282,7 @@
     /* Insight */
     .export-insight {
       text-align: center;
-      padding: 1.5rem;
+      padding: 1.25rem;
       background: var(--bg-glass);
       backdrop-filter: blur(var(--blur));
       -webkit-backdrop-filter: blur(var(--blur));
@@ -298,7 +298,7 @@
     .export-insight.visible {
       opacity: 1;
       max-height: 15rem;
-      padding: 1.5rem;
+      padding: 1.25rem;
     }
 
     .export-insight p {
@@ -310,7 +310,7 @@
 
     .export-insight a {
       font-family: var(--font-mono);
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: var(--accent-blue);
       text-decoration: none;
       transition: all 0.3s var(--ease-spring);
@@ -324,18 +324,18 @@
       align-items: center;
       justify-content: center;
       gap: 0.5rem;
-      margin-top: 1rem;
+      margin-top: 0.75rem;
       font-family: var(--font-mono);
-      font-size: 0.7rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
     }
 
     /* Progressive hint text below the check button */
     .export-blank-hint {
       font-family: var(--font-mono);
-      font-size: 0.72rem;
+      font-size: 0.82rem;
       color: var(--accent-orange);
-      margin-top: 0.5rem;
+      margin-top: 0.4rem;
       min-height: 0;
       opacity: 0;
       transition: opacity 0.3s var(--ease-smooth);

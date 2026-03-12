@@ -36,7 +36,7 @@
       padding: 0.6rem 1rem;
       border-bottom: 1px solid var(--border-subtle);
       font-family: var(--font-mono);
-      font-size: 0.65rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.1em;
@@ -46,13 +46,13 @@
     }
 
     .corr-panel-body {
-      padding: 1.5rem 2rem;
+      padding: 1.25rem 1.75rem;
     }
 
     /* Signal type badges */
     .signal-badge {
       font-family: var(--font-mono);
-      font-size: 0.6rem;
+      font-size: 0.7rem;
       padding: 0.15rem 0.5rem;
       border-radius: 0.5em;
       text-transform: uppercase;
@@ -91,9 +91,9 @@
 
     .metric-name {
       font-family: var(--font-mono);
-      font-size: 0.7rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.3rem;
     }
 
     .metric-value {
@@ -106,14 +106,14 @@
 
     .metric-unit {
       font-family: var(--font-mono);
-      font-size: 0.7rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
-      margin-top: 0.3rem;
+      margin-top: 0.25rem;
     }
 
     .metric-context {
       font-family: var(--font-mono);
-      font-size: 0.7rem;
+      font-size: 0.8rem;
       color: var(--text-secondary);
       line-height: 1.8;
     }
@@ -127,13 +127,13 @@
       align-items: center;
       gap: 0.4rem;
       font-family: var(--font-mono);
-      font-size: 0.7rem;
+      font-size: 0.8rem;
       color: var(--accent-red);
       background: rgba(248, 81, 73, 0.08);
       border: 1px solid rgba(248, 81, 73, 0.2);
       border-radius: 0.5em;
       padding: 0.25rem 0.6rem;
-      margin-top: 0.5rem;
+      margin-top: 0.4rem;
       box-shadow: 0 0 10px rgba(248, 81, 73, 0.08);
     }
 
@@ -154,7 +154,7 @@
     .trace-waterfall {
       display: flex;
       flex-direction: column;
-      gap: 0.4rem;
+      gap: 0.35rem;
     }
 
     .trace-span-row {
@@ -165,7 +165,7 @@
 
     .trace-span-svc {
       font-family: var(--font-mono);
-      font-size: 0.75rem;
+      font-size: 0.85rem;
       color: var(--text-primary);
       width: 80px;
       text-align: right;
@@ -195,7 +195,7 @@
 
     .trace-span-time {
       font-family: var(--font-mono);
-      font-size: 0.65rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
       width: 60px;
     }
@@ -206,9 +206,9 @@
 
     .trace-id-line {
       font-family: var(--font-mono);
-      font-size: 0.65rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
-      margin-top: 0.75rem;
+      margin-top: 0.5rem;
       text-align: center;
     }
 
@@ -219,7 +219,7 @@
     /* ── Log record ── */
     .log-record {
       font-family: var(--font-mono);
-      font-size: 0.7rem;
+      font-size: 0.8rem;
       line-height: 2;
     }
 
@@ -238,9 +238,9 @@
 
     .log-id-line {
       font-family: var(--font-mono);
-      font-size: 0.65rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
-      margin-top: 0.75rem;
+      margin-top: 0.5rem;
       text-align: center;
     }
 
@@ -253,7 +253,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 0.5rem 0;
+      padding: 0.35rem 0;
       opacity: 0;
       transition: opacity 0.6s var(--ease-smooth);
     }
@@ -264,7 +264,7 @@
 
     .corr-connector-line {
       width: 2px;
-      height: 16px;
+      height: 12px;
       background: var(--border);
     }
 
@@ -277,9 +277,9 @@
 
     .corr-connector-label {
       font-family: var(--font-mono);
-      font-size: 0.6rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
-      margin-top: 0.15rem;
+      margin-top: 0.1rem;
     }
 
     /* ── Narrative text ── */
@@ -288,7 +288,7 @@
       font-size: 0.95rem;
       color: var(--text-secondary);
       text-align: center;
-      margin: 1.5rem 0;
+      margin: 0.75rem 0;
       line-height: 1.7;
       opacity: 0;
       transition: opacity 0.6s var(--ease-smooth);
@@ -309,9 +309,9 @@
       -webkit-backdrop-filter: blur(var(--blur));
       border: 1px solid var(--border);
       border-radius: 1em;
-      padding: 1.5rem;
+      padding: 1.25rem;
       text-align: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 0.75rem;
       opacity: 0;
       max-height: 0;
       overflow: hidden;
@@ -322,14 +322,14 @@
     .corr-question.visible {
       opacity: 1;
       max-height: 20rem;
-      padding: 1.5rem;
+      padding: 1.25rem;
     }
 
     .corr-question p {
       font-family: var(--font-sans);
       font-size: 0.95rem;
       color: var(--text-primary);
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
     }
 
     .corr-opts {
@@ -341,8 +341,8 @@
 
     .corr-opt {
       font-family: var(--font-mono);
-      font-size: 0.8rem;
-      padding: 0.5rem 1.25rem;
+      font-size: 0.9rem;
+      padding: 0.6rem 1.35rem;
       border: 1px solid var(--border);
       border-radius: 0.5em;
       background: var(--bg-glass);
@@ -373,9 +373,9 @@
 
     .corr-fb {
       font-family: var(--font-mono);
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       min-height: 1.5em;
-      margin-top: 0.75rem;
+      margin-top: 0.5rem;
     }
 
     .corr-fb--correct { color: var(--accent-green); }
@@ -387,7 +387,7 @@
       max-height: 0;
       overflow: hidden;
       transition: opacity 0.8s var(--ease-smooth), max-height 0.8s ease;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
     }
 
     .corr-summary.visible {
@@ -400,16 +400,16 @@
       align-items: stretch;
       gap: 0;
       justify-content: center;
-      margin: 1.5rem 0;
+      margin: 0.75rem 0;
     }
 
     .corr-chain-node {
       flex: 1;
-      max-width: 240px;
+      max-width: 260px;
       background: var(--bg-glass);
       border: 1px solid var(--border);
       border-radius: 1em;
-      padding: 1rem;
+      padding: 0.75rem;
       text-align: center;
       position: relative;
       box-shadow: var(--shadow-inset);
@@ -430,10 +430,10 @@
 
     .corr-chain-signal {
       font-family: var(--font-mono);
-      font-size: 0.7rem;
+      font-size: 0.8rem;
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.3rem;
     }
 
     .corr-chain-signal--metric { color: var(--accent-orange); }
@@ -442,14 +442,14 @@
 
     .corr-chain-role {
       font-family: var(--font-sans);
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: var(--text-primary);
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.2rem;
     }
 
     .corr-chain-detail {
       font-family: var(--font-mono);
-      font-size: 0.6rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
     }
 
@@ -470,7 +470,7 @@
 
     .corr-chain-arrow-head {
       font-family: var(--font-mono);
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
       line-height: 1;
       margin-top: -2px;
@@ -478,9 +478,9 @@
 
     .corr-chain-arrow-label {
       font-family: var(--font-mono);
-      font-size: 0.55rem;
+      font-size: 0.65rem;
       color: var(--text-muted);
-      margin-top: 0.25rem;
+      margin-top: 0.2rem;
       white-space: nowrap;
     }
 
@@ -491,14 +491,14 @@
       border-radius: 0.5em;
       padding: 0.1rem 0.35rem;
       font-family: var(--font-mono);
-      font-size: 0.65rem;
+      font-size: 0.75rem;
       color: var(--accent-blue);
     }
 
     /* ── Insight ── */
     .corr-insight {
       text-align: center;
-      padding: 1.5rem;
+      padding: 1.25rem;
       background: var(--bg-glass);
       backdrop-filter: blur(var(--blur));
       -webkit-backdrop-filter: blur(var(--blur));
@@ -514,19 +514,19 @@
     .corr-insight.visible {
       opacity: 1;
       max-height: 15rem;
-      padding: 1.5rem;
+      padding: 1.25rem;
     }
 
     .corr-insight p {
       font-family: var(--font-sans);
       font-size: 0.95rem;
       color: var(--text-secondary);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.35rem;
     }
 
     .corr-insight a {
       font-family: var(--font-mono);
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: var(--accent-blue);
       text-decoration: none;
       transition: all 0.3s var(--ease-spring);
@@ -537,7 +537,7 @@
     /* ── Start area ── */
     .corr-start {
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
     }
   </style>
 </head>

@@ -15,9 +15,9 @@
     /* Layout: two-column workspace */
     .workspace {
       display: grid;
-      grid-template-columns: 1fr 1.4fr;
-      gap: 1.5rem;
-      margin-bottom: 2rem;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
     }
 
     /* Traces panel (left) */
@@ -33,27 +33,27 @@
       padding: 0.6rem 1rem;
       border-bottom: 1px solid var(--border-subtle);
       font-family: var(--font-mono);
-      font-size: 0.65rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.1em;
     }
 
     .panel-body {
-      padding: 1rem;
+      padding: 0.75rem;
     }
 
     .trace-list {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.4rem;
     }
 
     .trace-row {
       display: flex;
       align-items: center;
       gap: 0.6rem;
-      padding: 0.5rem 0.75rem;
+      padding: 0.55rem 0.85rem;
       background: var(--bg-glass);
       border-radius: 0.5em;
       border: 1px solid transparent;
@@ -89,7 +89,7 @@
 
     .trace-label {
       font-family: var(--font-mono);
-      font-size: 0.65rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
       min-width: 4.5em;
       flex-shrink: 0;
@@ -100,11 +100,11 @@
       align-items: center;
       gap: 0.35rem;
       font-family: var(--font-mono);
-      font-size: 0.75rem;
+      font-size: 0.85rem;
     }
 
     .trace-svc {
-      padding: 0.15rem 0.5rem;
+      padding: 0.2rem 0.55rem;
       border-radius: 0.5em;
       color: var(--text-primary);
       background: var(--bg-glass);
@@ -118,7 +118,7 @@
 
     .trace-arrow {
       color: var(--text-muted);
-      font-size: 0.7rem;
+      font-size: 0.8rem;
     }
 
     .trace-row.active .trace-arrow {
@@ -127,11 +127,11 @@
 
     .trace-hint {
       font-family: var(--font-mono);
-      font-size: 0.7rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
       text-align: center;
-      padding: 0.75rem 0.5rem 0.25rem;
-      min-height: 2em;
+      padding: 0.5rem 0.5rem 0.15rem;
+      min-height: 1.8em;
     }
 
     /* SVG map panel (right) — soft node strokes, transparent fills */
@@ -144,15 +144,15 @@
     }
 
     .map-canvas-body {
-      padding: 1.5rem;
+      padding: 1rem;
       display: flex;
       justify-content: center;
     }
 
     .map-svg {
       width: 100%;
-      max-width: 520px;
-      height: 380px;
+      max-width: 580px;
+      height: 360px;
     }
 
     .map-node-circle {
@@ -170,7 +170,7 @@
 
     .map-node-label {
       font-family: 'JetBrains Mono', 'Fira Code', monospace;
-      font-size: 11px;
+      font-size: 12px;
       fill: var(--text-muted);
       text-anchor: middle;
       dominant-baseline: central;
@@ -206,7 +206,7 @@
 
     .map-edge-count {
       font-family: 'JetBrains Mono', 'Fira Code', monospace;
-      font-size: 9px;
+      font-size: 10px;
       fill: var(--text-muted);
       text-anchor: middle;
       dominant-baseline: central;
@@ -223,9 +223,9 @@
       display: flex;
       justify-content: center;
       gap: 1.5rem;
-      padding: 0.5rem 1rem 0.75rem;
+      padding: 0.4rem 1rem 0.6rem;
       font-family: var(--font-mono);
-      font-size: 0.6rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
       opacity: 0;
       transition: opacity 0.6s var(--ease-smooth);
@@ -261,7 +261,7 @@
       border: 1px solid var(--border);
       border-radius: 1em;
       padding: 0;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
       text-align: center;
       opacity: 0;
       max-height: 0;
@@ -273,20 +273,20 @@
     .prediction-box.visible {
       opacity: 1;
       max-height: 20rem;
-      padding: 1.25rem 1.5rem;
+      padding: 1rem 1.25rem;
     }
 
     .prediction-box p {
       font-family: var(--font-sans);
       font-size: 0.95rem;
       color: var(--text-primary);
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
       line-height: 1.5;
     }
 
     .prediction-box p .mono {
       font-family: var(--font-mono);
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: var(--accent-blue);
     }
 
@@ -299,8 +299,8 @@
 
     .pred-opt {
       font-family: var(--font-mono);
-      font-size: 0.78rem;
-      padding: 0.45rem 1rem;
+      font-size: 0.88rem;
+      padding: 0.55rem 1.15rem;
       border: 1px solid var(--border);
       border-radius: 0.5em;
       background: var(--bg-glass);
@@ -332,9 +332,9 @@
 
     .pred-fb {
       font-family: var(--font-mono);
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       min-height: 1.5em;
-      margin-top: 0.75rem;
+      margin-top: 0.5rem;
     }
 
     .pred-fb--correct { color: var(--accent-green); }
@@ -349,7 +349,7 @@
       border-radius: 1em;
       padding: 0;
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
       opacity: 0;
       max-height: 0;
       overflow: hidden;
@@ -360,14 +360,14 @@
     .map-question.visible {
       opacity: 1;
       max-height: 20rem;
-      padding: 1.5rem;
+      padding: 1.25rem;
     }
 
     .map-question p {
       font-family: var(--font-sans);
       font-size: 0.95rem;
       color: var(--text-primary);
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
     }
 
     .map-opts {
@@ -379,8 +379,8 @@
 
     .map-opt {
       font-family: var(--font-mono);
-      font-size: 0.8rem;
-      padding: 0.5rem 1.25rem;
+      font-size: 0.9rem;
+      padding: 0.6rem 1.35rem;
       border: 1px solid var(--border);
       border-radius: 0.5em;
       background: var(--bg-glass);
@@ -411,9 +411,9 @@
 
     .map-fb {
       font-family: var(--font-mono);
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       min-height: 1.5em;
-      margin-top: 0.75rem;
+      margin-top: 0.5rem;
     }
 
     .map-fb--correct { color: var(--accent-green); }
@@ -438,19 +438,19 @@
     .map-insight.visible {
       opacity: 1;
       max-height: 15rem;
-      padding: 1.5rem;
+      padding: 1.25rem;
     }
 
     .map-insight p {
       font-family: var(--font-sans);
       font-size: 0.95rem;
       color: var(--text-secondary);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.35rem;
     }
 
     .map-insight a {
       font-family: var(--font-mono);
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: var(--accent-blue);
       text-decoration: none;
       transition: all 0.3s var(--ease-spring);

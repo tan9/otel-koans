@@ -33,7 +33,7 @@
 }
 
 html {
-  font-size: 16px;
+  font-size: 17px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -42,15 +42,15 @@ body {
   background: var(--bg-primary);
   color: var(--text-primary);
   font-family: var(--font-sans);
-  line-height: 1.7;
+  line-height: 1.65;
   min-height: 100vh;
 }
 
 /* Page layout */
 .koan-page {
-  max-width: 880px;
+  max-width: 1060px;
   margin: 0 auto;
-  padding: 4rem 2.5rem 50vh;
+  padding: 2.5rem 3rem 20vh;
 }
 
 /* Koan number and navigation */
@@ -58,14 +58,14 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 3rem;
-  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
   border-bottom: 1px solid var(--border-subtle);
 }
 
 .koan-number {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: var(--text-muted);
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -78,7 +78,7 @@ body {
 
 .koan-nav a {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: var(--text-muted);
   text-decoration: none;
   padding: 0.25em 0.5em;
@@ -97,9 +97,9 @@ body {
   font-size: 1.1rem;
   font-style: italic;
   color: var(--text-secondary);
-  line-height: 1.9;
-  max-width: 600px;
-  margin: 0 auto 3rem;
+  line-height: 1.8;
+  max-width: 660px;
+  margin: 0 auto 1.5rem;
   text-align: center;
   letter-spacing: 0.01em;
 }
@@ -107,11 +107,11 @@ body {
 /* Koan title */
 .koan-title {
   font-family: var(--font-mono);
-  font-size: 1.35rem;
+  font-size: 1.4rem;
   font-weight: 300;
   color: var(--text-primary);
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   letter-spacing: -0.02em;
 }
 
@@ -122,8 +122,8 @@ body {
   -webkit-backdrop-filter: blur(var(--blur));
   border: 1px solid var(--border);
   border-radius: 1em;
-  padding: 2rem;
-  margin: 2rem 0;
+  padding: 1.75rem;
+  margin: 1.25rem 0;
   box-shadow: var(--shadow-inset);
   transition: background 0.4s var(--ease-smooth),
               box-shadow 0.4s var(--ease-smooth);
@@ -151,7 +151,7 @@ body {
 /* Buttons */
 .koan-btn {
   font-family: var(--font-mono);
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   padding: 0.5em 1.25em;
   border: 1px solid var(--border);
   border-radius: 0.5em;
@@ -192,24 +192,24 @@ body {
 /* Hint text */
 .koan-hint {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: var(--text-muted);
   text-align: center;
-  margin-top: 1.5rem;
+  margin-top: 1rem;
   letter-spacing: 0.02em;
 }
 
 /* Completion state */
 .koan-complete {
   text-align: center;
-  padding: 2rem;
+  padding: 1.5rem;
 }
 
 .koan-complete-text {
   font-family: var(--font-sans);
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   color: var(--accent-green);
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
   opacity: 0.85;
 }
 

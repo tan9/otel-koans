@@ -15,42 +15,39 @@
   <meta name="twitter:image" content="https://otel.mreider.com/img/og-image.png">
   <link rel="stylesheet" href="css/shared.css">
   <style>
-    /* Koan 0: The Opening — page-specific styles */
-
     .opening {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      padding: 2rem;
+      padding: 2.5rem;
     }
 
     .opening-title {
       font-family: var(--font-mono);
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
-      letter-spacing: 0.2em;
+      letter-spacing: 0.25em;
       text-transform: uppercase;
       margin-bottom: 3rem;
       opacity: 0;
-      animation: fadeIn 1.5s ease 0.5s forwards;
+      animation: fadeIn 2s var(--ease-smooth) 0.5s forwards;
     }
 
     .opening-koan {
       font-family: var(--font-sans);
-      font-size: 1.25rem;
+      font-size: 1.15rem;
       font-style: italic;
       color: var(--text-secondary);
-      line-height: 2;
-      max-width: 580px;
+      line-height: 2.1;
+      max-width: 540px;
       text-align: center;
       margin-bottom: 4rem;
       opacity: 0;
-      animation: fadeIn 2s ease 1.5s forwards;
+      animation: fadeIn 2.5s var(--ease-smooth) 1.5s forwards;
     }
 
-    /* The system diagram */
     .system-container {
       position: relative;
       width: 100%;
@@ -58,141 +55,119 @@
       height: 400px;
       margin-bottom: 3rem;
       opacity: 0;
-      animation: fadeIn 1.5s ease 3s forwards;
+      animation: fadeIn 2s var(--ease-smooth) 3s forwards;
     }
 
-    .system-svg {
-      width: 100%;
-      height: 100%;
-    }
+    .system-svg { width: 100%; height: 100%; }
 
-    /* Service nodes */
-    .service {
-      cursor: default;
-    }
+    .service { cursor: default; }
 
     .service-circle {
-      fill: var(--bg-tertiary);
-      stroke: var(--border);
-      stroke-width: 1.5;
-      transition: all 0.8s ease;
+      fill: rgba(28, 33, 40, 0.3);
+      stroke: var(--border-subtle);
+      stroke-width: 1;
+      transition: all 1s var(--ease-smooth);
     }
 
     .service-label {
       font-family: var(--font-mono);
-      font-size: 10px;
+      font-size: 9px;
       fill: var(--text-muted);
       text-anchor: middle;
-      transition: fill 0.8s ease;
+      transition: fill 1s var(--ease-smooth);
     }
 
-    /* Edges between services */
     .edge {
-      stroke: var(--border);
-      stroke-width: 1;
+      stroke: var(--border-subtle);
+      stroke-width: 0.75;
       fill: none;
-      opacity: 0.3;
-      transition: all 0.8s ease;
+      opacity: 0.25;
+      transition: all 1s var(--ease-smooth);
     }
 
-    /* Illuminated state */
     .illuminated .service-circle {
-      stroke: var(--accent-blue);
-      filter: drop-shadow(0 0 6px rgba(88, 166, 255, 0.3));
+      stroke: rgba(88, 166, 255, 0.5);
+      fill: rgba(88, 166, 255, 0.04);
+      filter: drop-shadow(0 0 10px rgba(88, 166, 255, 0.15));
     }
 
-    .illuminated .service-label {
-      fill: var(--text-primary);
-    }
+    .illuminated .service-label { fill: var(--text-primary); }
 
-    .illuminated .edge {
-      stroke: var(--accent-blue);
-      opacity: 0.6;
-    }
+    .particle { fill: var(--accent-green); opacity: 0; r: 2; }
+    .illuminated .particle { opacity: 0.8; }
 
-    /* Data flow particles */
-    .particle {
-      fill: var(--accent-green);
-      opacity: 0;
-      r: 2.5;
-    }
-
-    .illuminated .particle {
-      opacity: 1;
-    }
-
-    /* Telemetry indicators */
     .telemetry-label {
       font-family: var(--font-mono);
       font-size: 8px;
-      fill: var(--text-muted);
       opacity: 0;
-      transition: opacity 0.8s ease;
+      transition: opacity 1.2s var(--ease-smooth);
     }
 
-    .illuminated .telemetry-label {
-      opacity: 1;
-    }
+    .illuminated .telemetry-label { opacity: 0.7; }
 
-    /* The prompt */
     .opening-prompt {
       opacity: 0;
-      animation: fadeIn 1.5s ease 4s forwards;
+      animation: fadeIn 1.5s var(--ease-smooth) 4s forwards;
       text-align: center;
     }
 
     .opening-prompt .koan-btn {
-      font-size: 0.9rem;
-      padding: 0.75rem 2rem;
+      font-size: 0.85rem;
+      padding: 0.75em 2em;
+      border-radius: 2em;
     }
 
-    /* After illumination */
+    .opening-prompt .koan-hint {
+      margin-top: 1rem;
+      opacity: 0.5;
+    }
+
     .opening-insight {
       font-family: var(--font-sans);
       font-size: 1rem;
       color: var(--accent-green);
       text-align: center;
-      margin-top: 2rem;
+      margin-top: 2.5rem;
       opacity: 0;
-      transition: opacity 1s ease;
+      transition: opacity 1.5s var(--ease-smooth);
     }
 
-    .opening-insight.visible {
-      opacity: 1;
-    }
+    .opening-insight.visible { opacity: 0.8; }
 
     .opening-continue {
       text-align: center;
       margin-top: 2rem;
       opacity: 0;
-      transition: opacity 1s ease 1s;
+      transition: opacity 1.5s var(--ease-smooth) 0.8s;
     }
 
-    .opening-continue.visible {
-      opacity: 1;
-    }
+    .opening-continue.visible { opacity: 1; }
 
     .opening-continue a {
       font-family: var(--font-mono);
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--accent-blue);
       text-decoration: none;
+      padding: 0.4em 1em;
+      border-radius: 2em;
+      border: 1px solid rgba(88, 166, 255, 0.2);
+      transition: all 0.3s var(--ease-spring);
     }
 
     .opening-continue a:hover {
-      text-decoration: underline;
+      background: rgba(88, 166, 255, 0.08);
+      border-color: rgba(88, 166, 255, 0.4);
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
+      from { opacity: 0; transform: translateY(12px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Particle animation along edges */
     @keyframes flowParticle {
       0% { offset-distance: 0%; opacity: 0; }
-      10% { opacity: 1; }
-      90% { opacity: 1; }
+      10% { opacity: 0.8; }
+      90% { opacity: 0.8; }
       100% { offset-distance: 100%; opacity: 0; }
     }
   </style>

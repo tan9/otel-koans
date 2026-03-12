@@ -7,16 +7,19 @@
   <link rel="stylesheet" href="../css/shared.css">
   <style>
     .export-scene {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border);
-      border-radius: 8px;
+      background: var(--bg-glass);
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+      border: 1px solid var(--border-subtle);
+      border-radius: 1em;
       overflow: hidden;
       margin-bottom: 2rem;
+      box-shadow: var(--shadow-inset);
     }
 
     .export-scene-header {
       padding: 0.6rem 1rem;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--border-subtle);
       font-family: var(--font-mono);
       font-size: 0.65rem;
       color: var(--text-muted);
@@ -37,9 +40,14 @@
 
     /* Code panel (left) */
     .export-code-panel {
-      background: var(--bg-tertiary);
-      border-radius: 6px;
+      background: var(--bg-glass);
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5em;
       padding: 1.25rem;
+      box-shadow: var(--shadow-inset);
+      transition: all 0.3s var(--ease-smooth);
     }
 
     .export-panel-title {
@@ -67,9 +75,14 @@
 
     /* Data template panel (right) */
     .export-data-panel {
-      background: var(--bg-tertiary);
-      border-radius: 6px;
+      background: var(--bg-glass);
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5em;
       padding: 1.25rem;
+      box-shadow: var(--shadow-inset);
+      transition: all 0.3s var(--ease-smooth);
     }
 
     .export-json {
@@ -88,10 +101,12 @@
     .blank-select {
       font-family: var(--font-mono);
       font-size: 0.65rem;
-      background: var(--bg-primary);
+      background: var(--bg-glass);
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
       color: var(--accent-orange);
-      border: 1px solid var(--border);
-      border-radius: 4px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5em;
       padding: 0.15rem 0.4rem;
       cursor: pointer;
       appearance: none;
@@ -99,29 +114,33 @@
       -moz-appearance: none;
       min-width: 8.5em;
       text-align: center;
-      transition: border-color 0.3s, background 0.3s, color 0.3s;
+      transition: all 0.3s var(--ease-spring);
     }
 
     .blank-select:hover {
       border-color: var(--accent-blue);
+      box-shadow: 0 0 8px rgba(88, 166, 255, 0.1);
     }
 
     .blank-select:focus {
       outline: none;
       border-color: var(--accent-blue);
+      box-shadow: 0 0 12px rgba(88, 166, 255, 0.15);
     }
 
     .blank-select.correct {
-      border-color: var(--accent-green);
-      background: rgba(63, 185, 80, 0.1);
+      border-color: transparent;
+      background: rgba(63, 185, 80, 0.08);
       color: var(--accent-green);
+      box-shadow: 0 0 12px rgba(63, 185, 80, 0.15);
       pointer-events: none;
     }
 
     .blank-select.wrong {
-      border-color: var(--accent-red);
-      background: rgba(248, 81, 73, 0.1);
+      border-color: transparent;
+      background: rgba(248, 81, 73, 0.06);
       color: var(--accent-red);
+      box-shadow: 0 0 12px rgba(248, 81, 73, 0.15);
     }
 
     .blank-select.locked {
@@ -157,9 +176,13 @@
     .export-callout {
       margin-top: 1.5rem;
       padding: 1rem 1.25rem;
-      background: var(--bg-tertiary);
-      border-radius: 6px;
+      background: var(--bg-glass);
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+      border-radius: 0.5em;
+      border: 1px solid var(--border-subtle);
       border-left: 3px solid var(--accent-blue);
+      box-shadow: 0 0 16px rgba(88, 166, 255, 0.06);
       font-family: var(--font-mono);
       font-size: 0.7rem;
       color: var(--text-secondary);
@@ -167,7 +190,7 @@
       opacity: 0;
       max-height: 0;
       overflow: hidden;
-      transition: opacity 0.6s, max-height 0.6s, margin-top 0.6s;
+      transition: opacity 0.6s var(--ease-smooth), max-height 0.6s var(--ease-smooth), margin-top 0.6s var(--ease-smooth);
     }
 
     .export-callout.visible {
@@ -179,16 +202,19 @@
 
     /* Final question */
     .export-question {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border);
-      border-radius: 8px;
+      background: var(--bg-glass);
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+      border: 1px solid var(--border-subtle);
+      border-radius: 1em;
       padding: 1.5rem;
       text-align: center;
       margin-bottom: 2rem;
+      box-shadow: var(--shadow-inset);
       opacity: 0;
       max-height: 0;
       overflow: hidden;
-      transition: opacity 0.6s, max-height 0.6s, padding 0.6s, margin-bottom 0.6s;
+      transition: opacity 0.6s var(--ease-smooth), max-height 0.6s var(--ease-smooth), padding 0.6s var(--ease-smooth), margin-bottom 0.6s var(--ease-smooth);
     }
 
     .export-question.visible {
@@ -215,17 +241,34 @@
       font-family: var(--font-mono);
       font-size: 0.8rem;
       padding: 0.5rem 1.25rem;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5em;
+      background: var(--bg-glass);
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
       color: var(--text-primary);
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.3s var(--ease-spring);
     }
 
-    .export-opt:hover { border-color: var(--accent-blue); }
-    .export-opt.correct { border-color: var(--accent-green); background: rgba(63, 185, 80, 0.1); color: var(--accent-green); }
-    .export-opt.wrong { border-color: var(--accent-red); color: var(--accent-red); }
+    .export-opt:hover {
+      border-color: var(--accent-blue);
+      background: var(--bg-glass-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .export-opt.correct {
+      border-color: transparent;
+      background: rgba(63, 185, 80, 0.08);
+      color: var(--accent-green);
+      box-shadow: 0 0 12px rgba(63, 185, 80, 0.15);
+      transform: none;
+    }
+    .export-opt.wrong {
+      border-color: transparent;
+      color: var(--accent-red);
+      box-shadow: 0 0 12px rgba(248, 81, 73, 0.15);
+    }
     .export-opt.disabled { pointer-events: none; opacity: 0.4; }
 
     .export-fb {
@@ -242,13 +285,16 @@
     .export-insight {
       text-align: center;
       padding: 1.5rem;
-      background: var(--bg-secondary);
-      border: 1px solid var(--border);
-      border-radius: 8px;
+      background: var(--bg-glass);
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+      border: 1px solid var(--border-subtle);
+      border-radius: 1em;
+      box-shadow: var(--shadow-inset);
       opacity: 0;
       max-height: 0;
       overflow: hidden;
-      transition: opacity 0.6s, max-height 0.6s, padding 0.6s;
+      transition: opacity 0.6s var(--ease-smooth), max-height 0.6s var(--ease-smooth), padding 0.6s var(--ease-smooth);
     }
 
     .export-insight.visible {
@@ -269,6 +315,7 @@
       font-size: 0.85rem;
       color: var(--accent-blue);
       text-decoration: none;
+      transition: all 0.3s var(--ease-spring);
     }
 
     .export-insight a:hover { text-decoration: underline; }
@@ -293,7 +340,7 @@
       margin-top: 0.5rem;
       min-height: 0;
       opacity: 0;
-      transition: opacity 0.3s;
+      transition: opacity 0.3s var(--ease-smooth);
     }
 
     .export-blank-hint.visible {
@@ -303,11 +350,12 @@
 
     /* Highlight a code line in the left panel */
     .export-code .code-line-highlight {
-      background: rgba(255, 166, 0, 0.15);
+      background: rgba(210, 153, 34, 0.08);
       border-left: 2px solid var(--accent-orange);
       padding-left: 0.25rem;
       margin-left: -0.3rem;
       display: inline;
+      box-shadow: 0 0 8px rgba(210, 153, 34, 0.1);
     }
   </style>
 </head>

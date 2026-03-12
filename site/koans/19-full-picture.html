@@ -8,20 +8,22 @@
   <style>
     /* Alert banner */
     .alert-banner {
-      background: rgba(248, 81, 73, 0.12);
-      border: 1px solid var(--accent-red);
-      border-radius: 8px;
+      background: rgba(248, 81, 73, 0.08);
+      border: 1px solid rgba(248, 81, 73, 0.3);
+      border-radius: 1em;
       padding: 1rem 1.5rem;
       display: flex;
       align-items: center;
       gap: 1rem;
       margin-bottom: 1.5rem;
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
       animation: alertPulse 2s ease-in-out infinite;
     }
 
     @keyframes alertPulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(248, 81, 73, 0.3); }
-      50% { box-shadow: 0 0 16px 2px rgba(248, 81, 73, 0.15); }
+      0%, 100% { box-shadow: 0 0 0 0 rgba(248, 81, 73, 0.2); }
+      50% { box-shadow: 0 0 20px 2px rgba(248, 81, 73, 0.1); }
     }
 
     .alert-icon {
@@ -65,7 +67,7 @@
       margin: 1.5rem 0;
       line-height: 1.7;
       opacity: 0;
-      transition: opacity 0.6s;
+      transition: opacity 0.6s var(--ease-smooth);
     }
 
     .fp-narrative.visible { opacity: 1; }
@@ -74,16 +76,19 @@
 
     /* ── Investigation chooser ── */
     .fp-chooser {
-      background: var(--bg-secondary);
+      background: var(--bg-glass);
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 1em;
       padding: 1.5rem;
       text-align: center;
       margin-bottom: 1.5rem;
       opacity: 0;
       max-height: 0;
       overflow: hidden;
-      transition: opacity 0.6s, max-height 0.6s ease, padding 0.6s, margin 0.6s;
+      box-shadow: var(--shadow-inset);
+      transition: opacity 0.6s var(--ease-smooth), max-height 0.6s ease, padding 0.6s, margin 0.6s;
     }
 
     .fp-chooser.visible {
@@ -114,43 +119,61 @@
       flex-wrap: wrap;
     }
 
+    /* Glass signal buttons */
     .fp-choice-btn {
       font-family: var(--font-mono);
       font-size: 0.78rem;
       padding: 0.6rem 1.25rem;
-      border-radius: 6px;
+      border-radius: 0.5em;
       cursor: pointer;
-      transition: all 0.25s;
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+      transition: all 0.3s var(--ease-spring);
       display: flex;
       align-items: center;
       gap: 0.5rem;
     }
 
     .fp-choice-btn.metric-btn {
-      background: rgba(210, 153, 34, 0.08);
-      border: 1px solid rgba(210, 153, 34, 0.35);
+      background: rgba(210, 153, 34, 0.06);
+      border: 1px solid rgba(210, 153, 34, 0.3);
       color: var(--accent-orange);
     }
-    .fp-choice-btn.metric-btn:hover { border-color: var(--accent-orange); background: rgba(210, 153, 34, 0.15); }
+    .fp-choice-btn.metric-btn:hover {
+      border-color: var(--accent-orange);
+      background: rgba(210, 153, 34, 0.1);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15), 0 0 10px rgba(210, 153, 34, 0.1);
+    }
 
     .fp-choice-btn.trace-btn {
-      background: rgba(63, 185, 80, 0.08);
-      border: 1px solid rgba(63, 185, 80, 0.35);
+      background: rgba(63, 185, 80, 0.06);
+      border: 1px solid rgba(63, 185, 80, 0.3);
       color: var(--accent-green);
     }
-    .fp-choice-btn.trace-btn:hover { border-color: var(--accent-green); background: rgba(63, 185, 80, 0.15); }
+    .fp-choice-btn.trace-btn:hover {
+      border-color: var(--accent-green);
+      background: rgba(63, 185, 80, 0.1);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15), 0 0 10px rgba(63, 185, 80, 0.1);
+    }
 
     .fp-choice-btn.log-btn {
-      background: rgba(188, 140, 255, 0.08);
-      border: 1px solid rgba(188, 140, 255, 0.35);
+      background: rgba(188, 140, 255, 0.06);
+      border: 1px solid rgba(188, 140, 255, 0.3);
       color: var(--accent-purple);
     }
-    .fp-choice-btn.log-btn:hover { border-color: var(--accent-purple); background: rgba(188, 140, 255, 0.15); }
+    .fp-choice-btn.log-btn:hover {
+      border-color: var(--accent-purple);
+      background: rgba(188, 140, 255, 0.1);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15), 0 0 10px rgba(188, 140, 255, 0.1);
+    }
 
     .fp-choice-btn.chosen {
       opacity: 1;
       pointer-events: none;
-      box-shadow: 0 0 10px rgba(88, 166, 255, 0.15);
+      box-shadow: 0 0 12px rgba(88, 166, 255, 0.12);
     }
 
     .fp-choice-btn.unchosen {
@@ -160,14 +183,17 @@
 
     /* ── Signal panels ── */
     .fp-panel {
-      background: var(--bg-secondary);
+      background: var(--bg-glass);
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 1em;
       overflow: hidden;
       margin-bottom: 1.25rem;
       opacity: 0;
       max-height: 0;
-      transition: opacity 0.6s, max-height 0.8s ease;
+      box-shadow: var(--shadow-inset);
+      transition: opacity 0.6s var(--ease-smooth), max-height 0.8s ease;
     }
 
     .fp-panel.visible {
@@ -177,7 +203,7 @@
 
     .fp-panel-header {
       padding: 0.6rem 1rem;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--border-subtle);
       font-family: var(--font-mono);
       font-size: 0.65rem;
       color: var(--text-muted);
@@ -195,34 +221,36 @@
       font-family: var(--font-mono);
       font-size: 0.6rem;
       padding: 0.15rem 0.5rem;
-      border-radius: 3px;
+      border-radius: 0.5em;
       text-transform: uppercase;
       letter-spacing: 0.08em;
     }
 
     .fp-badge--metric {
-      background: rgba(210, 153, 34, 0.15);
+      background: rgba(210, 153, 34, 0.1);
       color: var(--accent-orange);
-      border: 1px solid rgba(210, 153, 34, 0.3);
+      border: 1px solid rgba(210, 153, 34, 0.25);
     }
 
     .fp-badge--trace {
-      background: rgba(63, 185, 80, 0.15);
+      background: rgba(63, 185, 80, 0.1);
       color: var(--accent-green);
-      border: 1px solid rgba(63, 185, 80, 0.3);
+      border: 1px solid rgba(63, 185, 80, 0.25);
     }
 
     .fp-badge--log {
-      background: rgba(188, 140, 255, 0.15);
+      background: rgba(188, 140, 255, 0.1);
       color: var(--accent-purple);
-      border: 1px solid rgba(188, 140, 255, 0.3);
+      border: 1px solid rgba(188, 140, 255, 0.25);
     }
 
     /* ── Metric chart content ── */
     .fp-metric-chart {
-      background: var(--bg-tertiary);
-      border: 1px solid var(--border);
-      border-radius: 6px;
+      background: var(--bg-glass);
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+      border: 1px solid var(--border-subtle);
+      border-radius: 1em;
       padding: 1rem 1.25rem;
     }
 
@@ -252,9 +280,9 @@
     .fp-metric-finding {
       margin-top: 0.75rem;
       padding: 0.5rem 0.75rem;
-      background: var(--bg-secondary);
-      border: 1px solid rgba(210, 153, 34, 0.3);
-      border-radius: 4px;
+      background: rgba(210, 153, 34, 0.04);
+      border: 1px solid rgba(210, 153, 34, 0.2);
+      border-radius: 0.5em;
       font-family: var(--font-mono);
       font-size: 0.68rem;
       color: var(--text-secondary);
@@ -272,16 +300,18 @@
       font-style: italic;
       text-align: center;
       padding: 0.5rem;
-      border-top: 1px solid var(--border);
+      border-top: 1px solid var(--border-subtle);
     }
 
     .fp-partial-clue strong { color: var(--text-primary); font-style: normal; }
 
     /* ── Trace waterfall content ── */
     .fp-trace-waterfall {
-      background: var(--bg-tertiary);
-      border: 1px solid var(--border);
-      border-radius: 6px;
+      background: var(--bg-glass);
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+      border: 1px solid var(--border-subtle);
+      border-radius: 1em;
       padding: 1rem 1.25rem;
     }
 
@@ -314,14 +344,14 @@
       flex: 1;
       height: 20px;
       background: var(--bg-primary);
-      border-radius: 4px;
+      border-radius: 0.5em;
       position: relative;
       overflow: hidden;
     }
 
     .fp-span-bar {
       height: 100%;
-      border-radius: 4px;
+      border-radius: 0.5em;
       opacity: 0.6;
       position: absolute;
       top: 0;
@@ -352,9 +382,11 @@
 
     /* ── Log content ── */
     .fp-log-block {
-      background: var(--bg-tertiary);
-      border: 1px solid var(--border);
-      border-radius: 6px;
+      background: var(--bg-glass);
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+      border: 1px solid var(--border-subtle);
+      border-radius: 1em;
       padding: 1rem 1.25rem;
     }
 
@@ -373,7 +405,7 @@
       line-height: 2;
       color: var(--text-secondary);
       padding: 0.1rem 0.4rem;
-      border-radius: 3px;
+      border-radius: 0.5em;
     }
 
     .fp-log-line .ts { color: var(--text-muted); }
@@ -384,18 +416,21 @@
     .fp-log-line .attr-k { color: var(--accent-purple); }
     .fp-log-line .attr-v { color: var(--text-secondary); }
 
-    /* ── Service map (interactive) ── */
+    /* ── Service map (interactive) — glass service map ── */
     .fp-service-map {
-      background: var(--bg-secondary);
+      background: var(--bg-glass);
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 1em;
       padding: 1.25rem;
       margin-bottom: 1.25rem;
       text-align: center;
       opacity: 0;
       max-height: 0;
       overflow: hidden;
-      transition: opacity 0.6s, max-height 0.8s ease;
+      box-shadow: var(--shadow-inset);
+      transition: opacity 0.6s var(--ease-smooth), max-height 0.8s ease;
     }
 
     .fp-service-map.visible {
@@ -427,11 +462,12 @@
 
     .fp-smap-node {
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.3s var(--ease-spring);
     }
 
     .fp-smap-node:hover rect {
       stroke: var(--accent-blue);
+      filter: drop-shadow(0 0 6px rgba(88, 166, 255, 0.15));
     }
 
     .fp-smap-node.disabled {
@@ -440,12 +476,13 @@
     }
 
     .fp-smap-node.disabled rect {
-      stroke: var(--border);
+      stroke: var(--border-subtle);
     }
 
     .fp-smap-node.correct rect {
-      stroke: var(--accent-green);
-      fill: rgba(63, 185, 80, 0.1);
+      stroke: rgba(63, 185, 80, 0.5);
+      fill: rgba(63, 185, 80, 0.08);
+      filter: drop-shadow(0 0 8px rgba(63, 185, 80, 0.15));
     }
 
     .fp-smap-node.correct text {
@@ -453,7 +490,8 @@
     }
 
     .fp-smap-node.wrong rect {
-      stroke: var(--accent-red);
+      stroke: rgba(248, 81, 73, 0.5);
+      filter: drop-shadow(0 0 8px rgba(248, 81, 73, 0.15));
     }
 
     .fp-smap-fb {
@@ -468,16 +506,19 @@
 
     /* ── Root cause panel ── */
     .fp-root-cause {
-      background: var(--bg-secondary);
+      background: var(--bg-glass);
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 1em;
       padding: 1.5rem;
       text-align: center;
       margin-bottom: 1.5rem;
       opacity: 0;
       max-height: 0;
       overflow: hidden;
-      transition: opacity 0.6s, max-height 0.6s ease;
+      box-shadow: var(--shadow-inset);
+      transition: opacity 0.6s var(--ease-smooth), max-height 0.6s ease;
     }
 
     .fp-root-cause.visible {
@@ -508,21 +549,22 @@
     .fp-root-cause .fp-root-detail {
       margin-top: 0.75rem;
       padding: 0.6rem 1rem;
-      background: var(--bg-tertiary);
-      border-radius: 6px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5em;
       font-family: var(--font-mono);
       font-size: 0.68rem;
       color: var(--text-muted);
       display: inline-block;
     }
 
-    /* ── Journey summary ── */
+    /* ── Journey summary — glass treatment ── */
     .fp-journey {
       margin-bottom: 1.5rem;
       opacity: 0;
       max-height: 0;
       overflow: hidden;
-      transition: opacity 0.8s, max-height 1s ease;
+      transition: opacity 0.8s var(--ease-smooth), max-height 1s ease;
     }
 
     .fp-journey.visible {
@@ -551,12 +593,15 @@
     .fp-journey-step {
       text-align: center;
       padding: 0.75rem 1rem;
-      background: var(--bg-secondary);
+      background: var(--bg-glass);
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 1em;
       min-width: 130px;
       opacity: 0;
-      transition: opacity 0.5s;
+      box-shadow: var(--shadow-inset);
+      transition: opacity 0.5s var(--ease-smooth);
     }
 
     .fp-journey-step.visible { opacity: 1; }
@@ -588,7 +633,7 @@
       color: var(--text-muted);
       padding: 0 0.3rem;
       opacity: 0;
-      transition: opacity 0.5s;
+      transition: opacity 0.5s var(--ease-smooth);
     }
 
     .fp-journey-arrow.visible { opacity: 1; }
@@ -601,7 +646,7 @@
       opacity: 0;
       max-height: 0;
       overflow: hidden;
-      transition: opacity 1s, max-height 1.2s ease;
+      transition: opacity 1s var(--ease-smooth), max-height 1.2s ease;
     }
 
     .fp-system-callback.visible {
@@ -625,10 +670,10 @@
     }
 
     .fp-callback-svg .svc-circle {
-      fill: var(--bg-tertiary);
-      stroke: var(--border);
+      fill: rgba(28, 33, 40, 0.3);
+      stroke: var(--border-subtle);
       stroke-width: 1.5;
-      transition: all 0.8s ease;
+      transition: all 0.8s var(--ease-smooth);
     }
 
     .fp-callback-svg .svc-label {
@@ -636,35 +681,38 @@
       font-size: 10px;
       fill: var(--text-muted);
       text-anchor: middle;
-      transition: fill 0.8s ease;
+      transition: fill 0.8s var(--ease-smooth);
     }
 
     .fp-callback-svg .svc-edge {
-      stroke: var(--border);
+      stroke: var(--border-subtle);
       stroke-width: 1;
       fill: none;
       opacity: 0.3;
-      transition: all 0.8s ease;
+      transition: all 0.8s var(--ease-smooth);
     }
 
     .fp-callback-svg .tel-label {
       font-family: var(--font-mono);
       font-size: 8px;
       opacity: 0;
-      transition: opacity 0.8s ease;
+      transition: opacity 0.8s var(--ease-smooth);
     }
 
     /* Completion section */
     .fp-completion {
       text-align: center;
-      background: var(--bg-secondary);
+      background: var(--bg-glass);
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 1em;
       padding: 2.5rem 2rem;
       opacity: 0;
       max-height: 0;
       overflow: hidden;
-      transition: opacity 1s ease, max-height 1s ease;
+      box-shadow: var(--shadow-inset);
+      transition: opacity 1s var(--ease-smooth), max-height 1s ease;
     }
 
     .fp-completion.visible {
@@ -688,7 +736,7 @@
     .fp-completion-divider {
       width: 40px;
       height: 1px;
-      background: var(--border);
+      background: var(--border-subtle);
       margin: 1.5rem auto;
     }
 
@@ -699,7 +747,7 @@
       font-size: 0.85rem;
       color: var(--accent-blue);
       text-decoration: none;
-      transition: color 0.2s;
+      transition: all 0.3s var(--ease-spring);
     }
 
     .fp-completion-link:hover { text-decoration: underline; }

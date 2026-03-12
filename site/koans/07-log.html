@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Koan 7: The Missing Detail &mdash; OpenTelemetry Koans</title>
+  <link rel="stylesheet" href="../css/shared.css">
+  <style>
+    /* Failed span display */
+    .failed-span {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .failed-span-header {
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .failed-span-body {
+      padding: 2rem;
+    }
+
+    .span-row {
+      display: grid;
+      grid-template-columns: 120px 1fr 70px 60px;
+      gap: 1rem;
+      align-items: center;
+      padding: 0.5rem 0;
+    }
+
+    .span-svc {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .span-svc-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .span-svc-dot--ok { background: var(--accent-green); }
+    .span-svc-dot--err { background: var(--accent-red); }
+
+    .span-bar-track {
+      height: 22px;
+      position: relative;
+    }
+
+    .span-bar {
+      position: absolute;
+      height: 100%;
+      border-radius: 3px;
+      opacity: 0.6;
+    }
+
+    .span-bar--ok { background: var(--accent-green); }
+    .span-bar--err { background: var(--accent-red); }
+
+    .span-bar-label {
+      position: absolute;
+      top: 50%;
+      left: 6px;
+      transform: translateY(-50%);
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--text-primary);
+      white-space: nowrap;
+    }
+
+    .span-dur {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    .span-status {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      text-align: right;
+    }
+
+    .span-status--ok { color: var(--accent-green); }
+    .span-status--err { color: var(--accent-red); }
+
+    /* Narrator prompt */
+    .narrator {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      text-align: center;
+      margin-bottom: 2rem;
+      line-height: 1.7;
+      opacity: 0;
+      transition: opacity 0.6s;
+    }
+
+    .narrator.visible { opacity: 1; }
+
+    .narrator strong {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    /* Evidence panel */
+    .evidence {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+      opacity: 0;
+      transition: opacity 0.6s;
+    }
+
+    .evidence.visible { opacity: 1; }
+
+    .evidence-header {
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .evidence-body {
+      padding: 1.5rem 2rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      line-height: 2.2;
+    }
+
+    .evidence-part {
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.5s, transform 0.5s;
+      display: flex;
+      gap: 1rem;
+      align-items: baseline;
+    }
+
+    .evidence-part.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .ev-timestamp { color: var(--text-muted); }
+    .ev-severity { color: var(--accent-red); font-weight: 600; }
+    .ev-message { color: var(--text-primary); }
+    .ev-context { color: var(--text-muted); font-size: 0.7rem; }
+
+    /* Controls */
+    .k7-controls {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .k7-status {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.75rem;
+      min-height: 1.5em;
+    }
+
+    /* Question */
+    .k7-question {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      opacity: 0;
+      transition: opacity 0.6s;
+    }
+
+    .k7-question.visible { opacity: 1; }
+
+    .k7-question p {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+
+    .k7-opts {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .k7-opt {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.2s;
+      max-width: 400px;
+      text-align: left;
+      line-height: 1.5;
+    }
+
+    .k7-opt:hover { border-color: var(--accent-blue); }
+    .k7-opt.correct { border-color: var(--accent-green); background: rgba(63, 185, 80, 0.1); color: var(--accent-green); }
+    .k7-opt.wrong { border-color: var(--accent-red); color: var(--accent-red); }
+    .k7-opt.disabled { pointer-events: none; opacity: 0.4; }
+
+    .k7-fb {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      min-height: 1.5em;
+      margin-top: 0.75rem;
+      line-height: 1.5;
+    }
+
+    .k7-fb--correct { color: var(--accent-green); }
+    .k7-fb--wrong { color: var(--accent-red); }
+
+    /* Insight */
+    .k7-insight {
+      text-align: center;
+      padding: 1.5rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      opacity: 0;
+      transition: opacity 0.6s;
+    }
+
+    .k7-insight.visible { opacity: 1; }
+
+    .k7-insight p {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+      line-height: 1.6;
+    }
+
+    .k7-insight a {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--accent-blue);
+      text-decoration: none;
+    }
+
+    .k7-insight a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="mobile-gate">
+    <div class="mobile-gate-icon">&#9776;</div>
+    <div class="mobile-gate-title">Desktop Only</div>
+    <div class="mobile-gate-text">These koans require a larger screen. Please visit on a desktop browser.</div>
+  </div>
+
+  <div class="koan-page">
+    <div class="koan-header">
+      <div class="koan-number">Koan 7 of 19</div>
+      <div class="koan-nav">
+        <a href="06-spans.html">&larr; Spans</a>
+        <a href="08-attributes.html">Attributes &rarr;</a>
+      </div>
+    </div>
+
+    <h1 class="koan-title">The Missing Detail</h1>
+
+    <div class="koan-text">
+      The trace showed where. But what happened in that moment?<br>
+      Something must have captured the details.
+    </div>
+
+    <!-- Failed span from a trace -->
+    <div class="failed-span">
+      <div class="failed-span-header">
+        <span>trace: order #8842</span>
+        <span>trace_id: a1b2c3d4e5f6</span>
+      </div>
+      <div class="failed-span-body">
+        <div class="span-row">
+          <div class="span-svc">
+            <div class="span-svc-dot span-svc-dot--ok"></div>
+            gateway
+          </div>
+          <div class="span-bar-track">
+            <div class="span-bar span-bar--ok" style="left: 0%; width: 100%;">
+              <span class="span-bar-label">GET /checkout</span>
+            </div>
+          </div>
+          <div class="span-dur">210ms</div>
+          <div class="span-status span-status--ok">OK</div>
+        </div>
+        <div class="span-row">
+          <div class="span-svc">
+            <div class="span-svc-dot span-svc-dot--ok"></div>
+            api
+          </div>
+          <div class="span-bar-track">
+            <div class="span-bar span-bar--ok" style="left: 6%; width: 87%;">
+              <span class="span-bar-label">process order</span>
+            </div>
+          </div>
+          <div class="span-dur">183ms</div>
+          <div class="span-status span-status--ok">OK</div>
+        </div>
+        <div class="span-row">
+          <div class="span-svc">
+            <div class="span-svc-dot span-svc-dot--err"></div>
+            database
+          </div>
+          <div class="span-bar-track">
+            <div class="span-bar span-bar--err" style="left: 13%; width: 85%;">
+              <span class="span-bar-label">INSERT orders</span>
+            </div>
+          </div>
+          <div class="span-dur">180ms</div>
+          <div class="span-status span-status--err">ERROR</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Narrator: pose the problem -->
+    <div class="narrator visible" id="narrator1">
+      The trace shows an error in the <strong>database</strong> span at <strong>10:42:17</strong>. It took 180ms and failed.<br>
+      But what actually went wrong? What error message? What data was involved?
+    </div>
+
+    <!-- Q1: Feel the gap -->
+    <div class="k7-question visible" id="q1">
+      <p>Can the trace alone tell you the specific error message?</p>
+      <div class="k7-opts">
+        <button class="k7-opt" data-answer="wrong">Yes</button>
+        <button class="k7-opt" data-answer="correct">No &mdash; traces show the path and timing, not the full detail of what happened</button>
+      </div>
+      <div class="k7-fb" id="fb1"></div>
+    </div>
+
+    <!-- Narrator: something captured it -->
+    <div class="narrator" id="narrator2">
+      Something <strong>did</strong> capture the exact moment of failure. Look at what appeared.
+    </div>
+
+    <!-- Evidence: log record revealed piece by piece -->
+    <div class="evidence" id="evidence">
+      <div class="evidence-header">captured at the moment of failure</div>
+      <div class="evidence-body">
+        <div class="evidence-part" id="ev-ts">
+          <span class="ev-timestamp">10:42:17.384</span>
+        </div>
+        <div class="evidence-part" id="ev-sev">
+          <span class="ev-timestamp">10:42:17.384</span>
+          <span class="ev-severity">ERROR</span>
+        </div>
+        <div class="evidence-part" id="ev-msg">
+          <span class="ev-timestamp">10:42:17.384</span>
+          <span class="ev-severity">ERROR</span>
+          <span class="ev-message">connection refused: orders-db:5432</span>
+        </div>
+        <div class="evidence-part" id="ev-ctx">
+          <span class="ev-timestamp">10:42:17.384</span>
+          <span class="ev-severity">ERROR</span>
+          <span class="ev-message">connection refused: orders-db:5432</span>
+          <span class="ev-context">order.id=8842 retry=3 pool=exhausted</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q2: What did it capture? -->
+    <div class="k7-question" id="q2">
+      <p>Look at what just appeared. What did it capture?</p>
+      <div class="k7-opts">
+        <button class="k7-opt" data-answer="wrong">A summary number over time</button>
+        <button class="k7-opt" data-answer="wrong">The path of a request through services</button>
+        <button class="k7-opt" data-answer="correct">A single event &mdash; what happened at one specific moment</button>
+      </div>
+      <div class="k7-fb" id="fb2"></div>
+    </div>
+
+    <!-- Q3: Name it -->
+    <div class="k7-question" id="q3">
+      <p>This kind of record &mdash; capturing a discrete event with severity and context &mdash; is called a...</p>
+      <div class="k7-opts">
+        <button class="k7-opt" data-answer="wrong">A metric</button>
+        <button class="k7-opt" data-answer="wrong">A span</button>
+        <button class="k7-opt" data-answer="correct">A log record</button>
+      </div>
+      <div class="k7-fb" id="fb3"></div>
+    </div>
+
+    <!-- Insight -->
+    <div class="k7-insight" id="insight">
+      <p>Metrics measure trends. Traces follow paths. Log records capture the moments that matter.</p>
+      <p>Each signal answers a different question. Together, they tell the full story.</p>
+      <a href="08-attributes.html">Continue &rarr;</a>
+    </div>
+  </div>
+
+  <div class="koan-progress">
+    <div class="koan-progress-fill" style="width: 36%"></div>
+  </div>
+
+  <script>
+    (function () {
+      // --- Evidence reveal sequence ---
+      // Parts build on each other: first just timestamp, then timestamp+severity, etc.
+      // Only the latest composite line is shown; previous ones hide.
+      var evParts = ['ev-ts', 'ev-sev', 'ev-msg', 'ev-ctx'];
+      var evDelays = [0, 900, 1800, 2700];
+
+      function revealEvidence() {
+        var evidenceEl = document.getElementById('evidence');
+        evidenceEl.classList.add('visible');
+
+        evParts.forEach(function (id, i) {
+          setTimeout(function () {
+            // Hide previous part
+            if (i > 0) {
+              document.getElementById(evParts[i - 1]).style.display = 'none';
+            }
+            document.getElementById(id).classList.add('visible');
+          }, evDelays[i]);
+        });
+      }
+
+      // --- Quiz logic ---
+      function setupQuiz(qId, fbId, correctMsg, wrongMsg, onCorrect) {
+        var q = document.getElementById(qId);
+        var fb = document.getElementById(fbId);
+        var opts = q.querySelectorAll('.k7-opt');
+
+        opts.forEach(function (opt) {
+          opt.addEventListener('click', function () {
+            if (this.dataset.answer === 'correct') {
+              this.classList.add('correct');
+              opts.forEach(function (o) { o.classList.add('disabled'); });
+              fb.textContent = correctMsg;
+              fb.className = 'k7-fb k7-fb--correct';
+              if (onCorrect) {
+                setTimeout(onCorrect, 800);
+              }
+            } else {
+              this.classList.add('wrong');
+              fb.textContent = wrongMsg;
+              fb.className = 'k7-fb k7-fb--wrong';
+              var self = this;
+              setTimeout(function () { self.classList.remove('wrong'); }, 500);
+            }
+          });
+        });
+      }
+
+      // Q1: Feel the gap
+      setupQuiz(
+        'q1', 'fb1',
+        'The trace shows WHERE and WHEN, but not the specific error details. Something else must capture that.',
+        'A trace records path and timing. Look at the span: it says ERROR, but does it say which error?',
+        function () {
+          // Show narrator2, then evidence, then Q2
+          var n2 = document.getElementById('narrator2');
+          n2.classList.add('visible');
+
+          setTimeout(function () {
+            revealEvidence();
+          }, 1000);
+
+          // After evidence fully revealed, show Q2
+          var totalRevealTime = 1000 + evDelays[evDelays.length - 1] + 800;
+          setTimeout(function () {
+            document.getElementById('q2').classList.add('visible');
+          }, totalRevealTime);
+        }
+      );
+
+      // Q2: What did it capture?
+      setupQuiz(
+        'q2', 'fb2',
+        'Not a trend over time (that would be a metric). Not a path through services (that would be a trace). A single captured event.',
+        'Think about what you see: a timestamp, a severity, a message, context. Is that a trend? A path? Or a moment?',
+        function () {
+          document.getElementById('q3').classList.add('visible');
+        }
+      );
+
+      // Q3: Name it
+      setupQuiz(
+        'q3', 'fb3',
+        'A log record: a discrete event, captured with timestamp, severity, message, and context.',
+        'A metric summarizes numbers. A span tracks one step in a path. This is something else entirely.',
+        function () {
+          document.getElementById('insight').classList.add('visible');
+        }
+      );
+    })();
+  </script>
+</body>
+</html>

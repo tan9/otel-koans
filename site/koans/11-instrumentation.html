@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Koan 11: Making Code Speak — OpenTelemetry Koans</title>
+  <link rel="stylesheet" href="../css/shared.css">
+  <style>
+    /* Code panel */
+    .inst-code-panel {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .inst-panel-header {
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .inst-panel-body {
+      padding: 1.25rem;
+    }
+
+    .inst-code {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      line-height: 1.9;
+      background: var(--bg-tertiary);
+      border-radius: 4px;
+      padding: 1rem 1.25rem;
+      overflow-x: auto;
+    }
+
+    .inst-code .kw { color: var(--accent-purple); }
+    .inst-code .fn { color: var(--accent-blue); }
+    .inst-code .str { color: var(--accent-green); }
+    .inst-code .cmt { color: var(--text-muted); font-style: italic; }
+
+    /* Insertion slots — blank lines where learner places code */
+    .inst-slot {
+      display: block;
+      min-height: 1.6em;
+      border-left: 2px dashed var(--border);
+      margin-left: -0.25rem;
+      padding-left: 0.25rem;
+      transition: all 0.3s;
+    }
+
+    .inst-slot.empty {
+      opacity: 0.5;
+    }
+
+    .inst-slot.filled {
+      border-left: 2px solid var(--accent-green);
+      background: rgba(63, 185, 80, 0.08);
+      opacity: 1;
+    }
+
+    .inst-slot.wrong-fill {
+      border-left: 2px solid var(--accent-red);
+      background: rgba(248, 81, 73, 0.08);
+    }
+
+    /* Telemetry output */
+    .inst-output {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      line-height: 1.8;
+      min-height: 80px;
+    }
+
+    .inst-output-title {
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+
+    .inst-output-none {
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .inst-output-line {
+      color: var(--text-secondary);
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .inst-output-line.visible { opacity: 1; }
+
+    /* Problem statement */
+    .inst-problem {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2rem;
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* Toolbox — the items the learner can add */
+    .inst-toolbox {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .inst-toolbox-items {
+      padding: 1rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .inst-tool {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 0.55rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .inst-tool:hover:not(.used):not(.rejected) {
+      border-color: var(--accent-blue);
+      background: rgba(88, 166, 255, 0.06);
+    }
+
+    .inst-tool .tool-icon {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      flex-shrink: 0;
+      width: 1em;
+      text-align: center;
+    }
+
+    .inst-tool.used {
+      border-color: var(--accent-green);
+      background: rgba(63, 185, 80, 0.08);
+      color: var(--accent-green);
+      cursor: default;
+      opacity: 0.6;
+    }
+
+    .inst-tool.used .tool-icon::after { content: "\2713"; }
+
+    .inst-tool.rejected {
+      border-color: var(--accent-red);
+      color: var(--accent-red);
+      cursor: default;
+    }
+
+    .inst-tool.rejected .tool-icon::after { content: "\2717"; }
+
+    /* Feedback below toolbox */
+    .inst-tool-feedback {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      min-height: 2.5em;
+      padding: 0 1.25rem 1rem;
+      line-height: 1.6;
+    }
+
+    .inst-tool-feedback.good { color: var(--accent-green); }
+    .inst-tool-feedback.bad { color: var(--accent-red); }
+
+    /* Status text */
+    .inst-status {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 2rem;
+      min-height: 1.5em;
+    }
+
+    /* Question */
+    .inst-question {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s;
+    }
+
+    .inst-question.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .inst-question p {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+
+    .inst-opts {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .inst-opt {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .inst-opt:hover { border-color: var(--accent-blue); }
+    .inst-opt.correct { border-color: var(--accent-green); background: rgba(63, 185, 80, 0.1); color: var(--accent-green); }
+    .inst-opt.wrong { border-color: var(--accent-red); color: var(--accent-red); }
+    .inst-opt.disabled { pointer-events: none; opacity: 0.4; }
+
+    .inst-fb {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      min-height: 1.5em;
+      margin-top: 0.75rem;
+    }
+
+    .inst-fb--correct { color: var(--accent-green); }
+    .inst-fb--wrong { color: var(--accent-red); }
+
+    /* Insight */
+    .inst-insight {
+      text-align: center;
+      padding: 1.5rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s;
+    }
+
+    .inst-insight.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .inst-insight p {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .inst-insight a {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--accent-blue);
+      text-decoration: none;
+    }
+
+    .inst-insight a:hover { text-decoration: underline; }
+
+    /* Two-column layout for code + toolbox */
+    .inst-workspace {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-gate">
+    <div class="mobile-gate-icon">&#9776;</div>
+    <div class="mobile-gate-title">Desktop Only</div>
+    <div class="mobile-gate-text">These koans require a larger screen. Please visit on a desktop browser.</div>
+  </div>
+
+  <div class="koan-page">
+    <div class="koan-header">
+      <div class="koan-number">Koan 11 of 19</div>
+      <div class="koan-nav">
+        <a href="09-resources.html">&larr; Resources</a>
+        <a href="12-export.html">What Gets Exported &rarr;</a>
+      </div>
+    </div>
+
+    <h1 class="koan-title">Silent Code</h1>
+
+    <div class="koan-text">
+      The code runs. It works.<br>
+      But it says nothing about how it works.<br>
+      Someone must teach it to speak.
+    </div>
+
+    <!-- Problem statement -->
+    <div class="inst-problem" id="problem">
+      This function handles checkout in production. A customer reports their checkout took 30 seconds. You look for data&mdash;timing, order details, anything&mdash;but there is none. The code works, but it tells you nothing.
+    </div>
+
+    <!-- Two-column workspace: code on left, toolbox on right -->
+    <div class="inst-workspace">
+      <!-- Left: the code and its telemetry output -->
+      <div>
+        <div class="inst-code-panel">
+          <div class="inst-panel-header">checkout.js</div>
+          <div class="inst-panel-body">
+            <div class="inst-code" id="codeBlock">
+              <span class="kw">function</span> <span class="fn">checkout</span>(order) {<br>
+              <span class="inst-slot empty" id="slot0"></span>
+              <span class="inst-slot empty" id="slot1"></span>
+              &nbsp;&nbsp;<span class="kw">let</span> total = <span class="fn">calculateTotal</span>(order)<br>
+              <span class="inst-slot empty" id="slot2"></span>
+              &nbsp;&nbsp;<span class="fn">chargePayment</span>(order.user, total)<br>
+              &nbsp;&nbsp;<span class="fn">updateInventory</span>(order.items)<br>
+              <span class="inst-slot empty" id="slot3"></span>
+              &nbsp;&nbsp;<span class="kw">return</span> { status: <span class="str">"confirmed"</span> }<br>
+              }
+            </div>
+            <div class="inst-output">
+              <div class="inst-output-title">telemetry output</div>
+              <div class="inst-output-none" id="outputNone">nothing &mdash; the code is silent</div>
+              <div class="inst-output-line" id="outSpan"><span style="color:var(--accent-green)">span:</span> checkout &mdash; started</div>
+              <div class="inst-output-line" id="outAttr"><span style="color:var(--accent-green)">span:</span> checkout (order.id=8842)</div>
+              <div class="inst-output-line" id="outMetric"><span style="color:var(--accent-orange)">metric:</span> order.total = 49.99</div>
+              <div class="inst-output-line" id="outEnd"><span style="color:var(--accent-green)">span:</span> checkout (order.id=8842) 142ms &mdash; complete</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: toolbox of lines to add -->
+      <div>
+        <div class="inst-toolbox">
+          <div class="inst-panel-header">Choose lines to add</div>
+          <div class="inst-toolbox-items" id="toolbox">
+            <button class="inst-tool" data-tool="startSpan">
+              <span class="tool-icon"></span>
+              <code><span class="kw">let</span> span = <span class="fn">tracer.startSpan</span>(<span class="str">"checkout"</span>)</code>
+            </button>
+            <button class="inst-tool" data-tool="console">
+              <span class="tool-icon"></span>
+              <code><span class="fn">console.log</span>(<span class="str">"done"</span>)</code>
+            </button>
+            <button class="inst-tool" data-tool="setAttribute">
+              <span class="tool-icon"></span>
+              <code>span.<span class="fn">setAttribute</span>(<span class="str">"order.id"</span>, order.id)</code>
+            </button>
+            <button class="inst-tool" data-tool="meterRecord">
+              <span class="tool-icon"></span>
+              <code><span class="fn">meter.record</span>(<span class="str">"order.total"</span>, total)</code>
+            </button>
+            <button class="inst-tool" data-tool="spanEnd">
+              <span class="tool-icon"></span>
+              <code>span.<span class="fn">end</span>()</code>
+            </button>
+          </div>
+          <div class="inst-tool-feedback" id="toolFeedback"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="inst-status" id="status">Click a line above to add it to the function.</div>
+
+    <!-- Question: name the act (only appears after all lines are placed) -->
+    <div class="inst-question" id="q1">
+      <p>You just made silent code emit structured telemetry. This act&mdash;adding code that makes a program produce telemetry&mdash;is called...</p>
+      <div class="inst-opts">
+        <button class="inst-opt" data-answer="wrong" data-wrong-msg="Debugging is finding and fixing errors. What you did was add new code to produce telemetry, not fix a bug.">Debugging</button>
+        <button class="inst-opt" data-answer="correct">Instrumentation</button>
+        <button class="inst-opt" data-answer="wrong" data-wrong-msg="Compiling translates source code to machine code. You added telemetry-producing code to the function.">Compiling</button>
+      </div>
+      <div class="inst-fb" id="fb1"></div>
+    </div>
+
+    <!-- Insight: appears after correct answer -->
+    <div class="inst-insight" id="insight">
+      <p>Instrumentation is the bridge between code and observability.</p>
+      <p>Without it, code runs in the dark. With it, every function can describe what it did, how long it took, and what it touched.</p>
+      <a href="12-export.html">Continue &rarr;</a>
+    </div>
+  </div>
+
+  <div class="koan-progress">
+    <div class="koan-progress-fill" style="width: 57%"></div>
+  </div>
+
+  <script>
+    (function () {
+      // The correct sequence of tools and which slot they fill
+      var tools = {
+        startSpan: {
+          slot: 'slot0',
+          html: '&nbsp;&nbsp;<span class="kw">let</span> span = <span class="fn">tracer.startSpan</span>(<span class="str">"checkout"</span>)',
+          output: 'outSpan',
+          feedback: 'A span begins. The function now has a way to record its timing.',
+          order: 0
+        },
+        setAttribute: {
+          slot: 'slot1',
+          html: '&nbsp;&nbsp;span.<span class="fn">setAttribute</span>(<span class="str">"order.id"</span>, order.id)',
+          output: 'outAttr',
+          feedback: 'The span now carries context: which order is being processed.',
+          order: 1
+        },
+        meterRecord: {
+          slot: 'slot2',
+          html: '&nbsp;&nbsp;<span class="fn">meter.record</span>(<span class="str">"order.total"</span>, total)',
+          output: 'outMetric',
+          feedback: 'A metric is recorded. You can now track order totals over time.',
+          order: 2
+        },
+        spanEnd: {
+          slot: 'slot3',
+          html: '&nbsp;&nbsp;span.<span class="fn">end</span>()',
+          output: 'outEnd',
+          feedback: 'The span is closed. Duration is captured. The function now speaks.',
+          order: 3
+        }
+      };
+
+      var correctCount = 0;
+      var totalCorrect = 4;
+      var toolFeedback = document.getElementById('toolFeedback');
+      var status = document.getElementById('status');
+      var outputNone = document.getElementById('outputNone');
+
+      // Attach click handlers to each tool button
+      var toolButtons = document.querySelectorAll('.inst-tool');
+      toolButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          if (btn.classList.contains('used') || btn.classList.contains('rejected')) return;
+
+          var toolName = btn.dataset.tool;
+
+          // Handle the distractor
+          if (toolName === 'console') {
+            btn.classList.add('rejected');
+            btn.querySelector('.tool-icon').textContent = '';
+            toolFeedback.textContent = 'console.log writes text to stdout, but it is not structured telemetry. The Collector cannot process it.';
+            toolFeedback.className = 'inst-tool-feedback bad';
+            // Clear feedback after a few seconds
+            setTimeout(function () {
+              toolFeedback.textContent = '';
+              toolFeedback.className = 'inst-tool-feedback';
+            }, 4000);
+            return;
+          }
+
+          var tool = tools[toolName];
+          if (!tool) return;
+
+          // Mark the button as used
+          btn.classList.add('used');
+          btn.querySelector('.tool-icon').textContent = '';
+
+          // Fill the slot in the code
+          var slot = document.getElementById(tool.slot);
+          slot.innerHTML = tool.html;
+          slot.classList.remove('empty');
+          slot.classList.add('filled');
+
+          // Show the corresponding telemetry output
+          // Hide the "nothing" message on first correct addition
+          if (correctCount === 0) {
+            outputNone.style.display = 'none';
+          }
+          var outEl = document.getElementById(tool.output);
+          setTimeout(function () {
+            outEl.classList.add('visible');
+          }, 200);
+
+          // Show feedback
+          toolFeedback.textContent = tool.feedback;
+          toolFeedback.className = 'inst-tool-feedback good';
+
+          correctCount++;
+
+          // Update status
+          if (correctCount < totalCorrect) {
+            status.textContent = correctCount + ' of ' + totalCorrect + ' lines added. Keep going.';
+          }
+
+          // All correct lines placed
+          if (correctCount === totalCorrect) {
+            status.textContent = 'The code is no longer silent.';
+            setTimeout(function () {
+              toolFeedback.textContent = '';
+              toolFeedback.className = 'inst-tool-feedback';
+            }, 1500);
+            setTimeout(function () {
+              document.getElementById('q1').classList.add('visible');
+            }, 1200);
+          }
+        });
+      });
+
+      // Quiz logic for Q1
+      var q1 = document.getElementById('q1');
+      var fb1 = document.getElementById('fb1');
+      var q1opts = q1.querySelectorAll('.inst-opt');
+
+      q1opts.forEach(function (opt) {
+        opt.addEventListener('click', function () {
+          if (opt.dataset.answer === 'correct') {
+            opt.classList.add('correct');
+            q1opts.forEach(function (o) { o.classList.add('disabled'); });
+            fb1.textContent = 'Instrumentation: the act of adding code that makes a program produce telemetry.';
+            fb1.className = 'inst-fb inst-fb--correct';
+            setTimeout(function () {
+              document.getElementById('insight').classList.add('visible');
+            }, 800);
+          } else {
+            opt.classList.add('wrong');
+            fb1.textContent = opt.dataset.wrongMsg || 'Not quite. Think about what you just did to the code.';
+            fb1.className = 'inst-fb inst-fb--wrong';
+            setTimeout(function () {
+              opt.classList.remove('wrong');
+            }, 600);
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

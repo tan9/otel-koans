@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Koan 8: Attributes — OpenTelemetry Koans</title>
+  <link rel="stylesheet" href="../css/shared.css">
+  <style>
+    /* Bare metric display */
+    .bare-metric {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .bare-metric-value {
+      font-family: var(--font-mono);
+      font-size: 1.4rem;
+      color: var(--accent-orange);
+      margin-bottom: 1.25rem;
+    }
+
+    .bare-metric-frustration {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    .bare-metric-frustration em {
+      color: var(--text-primary);
+      font-style: normal;
+    }
+
+    /* Challenge section */
+    .challenge-section {
+      margin-bottom: 2rem;
+    }
+
+    .challenge-intro {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Individual question rows */
+    .attr-question-row {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .attr-question-label {
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .attr-question-label em {
+      color: var(--text-primary);
+      font-style: normal;
+    }
+
+    .attr-select {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23484f58' d='M3 5l3 3 3-3'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      padding-right: 2.25rem;
+      min-width: 220px;
+      transition: border-color 0.2s;
+    }
+
+    .attr-select:hover {
+      border-color: var(--accent-blue);
+    }
+
+    .attr-select:focus {
+      outline: none;
+      border-color: var(--accent-blue);
+    }
+
+    .attr-select.correct {
+      border-color: var(--accent-green);
+      color: var(--accent-green);
+    }
+
+    .attr-select.wrong {
+      border-color: var(--accent-red);
+      color: var(--accent-red);
+    }
+
+    .row-feedback {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      min-width: 20px;
+      width: 20px;
+      text-align: center;
+    }
+
+    /* Check button area */
+    .check-area {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .check-status {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.75rem;
+      min-height: 1.5em;
+    }
+
+    .check-status.error {
+      color: var(--accent-red);
+    }
+
+    .check-status.success {
+      color: var(--accent-green);
+    }
+
+    /* Progressive hint text below each row */
+    .row-hint {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent-orange);
+      width: 100%;
+      min-height: 0;
+      overflow: hidden;
+      transition: opacity 0.3s;
+      opacity: 0;
+      padding-left: 0.25rem;
+    }
+
+    .row-hint.visible {
+      opacity: 1;
+      min-height: 1.4em;
+    }
+
+    .attr-question-label .kw-highlight {
+      color: var(--accent-orange);
+      font-weight: 600;
+    }
+
+    /* Enriched metric reveal */
+    .enriched-metric {
+      background: var(--bg-secondary);
+      border: 1px solid var(--accent-green);
+      border-radius: 8px;
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.6s, transform 0.6s;
+    }
+
+    .enriched-metric.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .enriched-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent-green);
+      margin-bottom: 1rem;
+    }
+
+    .enriched-name {
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      color: var(--accent-orange);
+      margin-bottom: 1rem;
+    }
+
+    .enriched-attrs {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .enriched-pair {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.4s, transform 0.4s;
+    }
+
+    .enriched-pair.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .enriched-key {
+      color: var(--accent-blue);
+    }
+
+    .enriched-eq {
+      color: var(--text-muted);
+    }
+
+    .enriched-val {
+      color: var(--text-secondary);
+    }
+
+    /* Other signals section */
+    .other-signals {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.6s, transform 0.6s;
+      margin-bottom: 2rem;
+    }
+
+    .other-signals.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .other-signals-title {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .signal-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .signal-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .signal-card-header {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .signal-card-header--span {
+      color: var(--accent-green);
+    }
+
+    .signal-card-header--log {
+      color: var(--accent-purple);
+    }
+
+    .signal-card-body {
+      padding: 1rem 1.25rem;
+    }
+
+    .signal-card-name {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .signal-card-attr {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 0.15rem 0;
+    }
+
+    .signal-card-attr .sk {
+      color: var(--accent-blue);
+    }
+
+    .signal-card-attr .se {
+      color: var(--text-muted);
+    }
+
+    .signal-card-attr .sv {
+      color: var(--text-secondary);
+    }
+
+    /* Insight */
+    .attr-insight {
+      text-align: center;
+      padding: 1.5rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.6s, transform 0.6s;
+    }
+
+    .attr-insight.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .attr-insight p {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .attr-insight p strong {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .attr-insight a {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--accent-blue);
+      text-decoration: none;
+    }
+
+    .attr-insight a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-gate">
+    <div class="mobile-gate-icon">&#9776;</div>
+    <div class="mobile-gate-title">Desktop Only</div>
+    <div class="mobile-gate-text">These koans require a larger screen. Please visit on a desktop browser.</div>
+  </div>
+
+  <div class="koan-page">
+    <div class="koan-header">
+      <div class="koan-number">Koan 8 of 19</div>
+      <div class="koan-nav">
+        <a href="07-log.html">&larr; What is a Log?</a>
+        <a href="10-naming.html">Naming Things &rarr;</a>
+      </div>
+    </div>
+
+    <h1 class="koan-title">Attributes</h1>
+
+    <div class="koan-text">
+      A number without a name is noise.<br>
+      A span without detail is a blank page.<br>
+      Attributes give telemetry its meaning — the who, what, where, and why.
+    </div>
+
+    <!-- The problem: a bare, useless metric -->
+    <div class="bare-metric">
+      <div class="bare-metric-value">request_duration: 142ms</div>
+      <div class="bare-metric-frustration">
+        A developer sees this metric in a dashboard. They ask:<br>
+        <em>Which endpoint was hit? What HTTP method? Did the request succeed?</em><br>
+        The metric alone cannot answer any of these questions.
+      </div>
+    </div>
+
+    <!-- Challenge: pick the right attribute for each question -->
+    <div class="challenge-section">
+      <div class="challenge-intro">Choose the attribute that answers each question</div>
+
+      <div class="attr-question-row" id="row1">
+        <div class="attr-question-label" id="label1"><em>"Which endpoint was hit?"</em></div>
+        <select class="attr-select" id="sel1">
+          <option value="" disabled selected>pick an attribute...</option>
+          <option value="http.route">http.route</option>
+          <option value="db.system">db.system</option>
+          <option value="error.type">error.type</option>
+        </select>
+        <div class="row-feedback" id="fb1"></div>
+        <div class="row-hint" id="hint1"></div>
+      </div>
+
+      <div class="attr-question-row" id="row2">
+        <div class="attr-question-label" id="label2"><em>"What HTTP method was used?"</em></div>
+        <select class="attr-select" id="sel2">
+          <option value="" disabled selected>pick an attribute...</option>
+          <option value="http.request.method">http.request.method</option>
+          <option value="pool.name">pool.name</option>
+          <option value="service.version">service.version</option>
+        </select>
+        <div class="row-feedback" id="fb2"></div>
+        <div class="row-hint" id="hint2"></div>
+      </div>
+
+      <div class="attr-question-row" id="row3">
+        <div class="attr-question-label" id="label3"><em>"Did the request succeed?"</em></div>
+        <select class="attr-select" id="sel3">
+          <option value="" disabled selected>pick an attribute...</option>
+          <option value="order.id">order.id</option>
+          <option value="http.response.status_code">http.response.status_code</option>
+          <option value="host.name">host.name</option>
+        </select>
+        <div class="row-feedback" id="fb3"></div>
+        <div class="row-hint" id="hint3"></div>
+      </div>
+    </div>
+
+    <div class="check-area">
+      <button class="koan-btn koan-btn--primary" id="checkBtn">Check</button>
+      <div class="check-status" id="checkStatus"></div>
+    </div>
+
+    <!-- Enriched metric (revealed on success) -->
+    <div class="enriched-metric" id="enriched">
+      <div class="enriched-label">metric + attributes</div>
+      <div class="enriched-name">request_duration: 142ms</div>
+      <div class="enriched-attrs">
+        <div class="enriched-pair" id="ep1">
+          <span class="enriched-key">http.route</span><span class="enriched-eq"> = </span><span class="enriched-val">"/checkout"</span>
+        </div>
+        <div class="enriched-pair" id="ep2">
+          <span class="enriched-key">http.request.method</span><span class="enriched-eq"> = </span><span class="enriched-val">"POST"</span>
+        </div>
+        <div class="enriched-pair" id="ep3">
+          <span class="enriched-key">http.response.status_code</span><span class="enriched-eq"> = </span><span class="enriched-val">200</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Other signals with attributes (revealed after enriched metric) -->
+    <div class="other-signals" id="otherSignals">
+      <div class="other-signals-title">Attributes work on every signal — not just metrics</div>
+      <div class="signal-cards">
+        <div class="signal-card">
+          <div class="signal-card-header signal-card-header--span">span</div>
+          <div class="signal-card-body">
+            <div class="signal-card-name">INSERT orders &middot; 85ms</div>
+            <div class="signal-card-attr"><span class="sk">db.system</span> <span class="se">=</span> <span class="sv">"postgresql"</span></div>
+            <div class="signal-card-attr"><span class="sk">db.name</span> <span class="se">=</span> <span class="sv">"orders"</span></div>
+            <div class="signal-card-attr"><span class="sk">db.operation</span> <span class="se">=</span> <span class="sv">"INSERT"</span></div>
+          </div>
+        </div>
+        <div class="signal-card">
+          <div class="signal-card-header signal-card-header--log">log</div>
+          <div class="signal-card-body">
+            <div class="signal-card-name">ERROR: pool exhausted</div>
+            <div class="signal-card-attr"><span class="sk">pool.name</span> <span class="se">=</span> <span class="sv">"orders"</span></div>
+            <div class="signal-card-attr"><span class="sk">pool.max</span> <span class="se">=</span> <span class="sv">10</span></div>
+            <div class="signal-card-attr"><span class="sk">pool.active</span> <span class="se">=</span> <span class="sv">10</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Final insight -->
+    <div class="attr-insight" id="insight">
+      <p><strong>Attributes are key-value pairs.</strong> They turn raw data into answers.</p>
+      <p>Every metric, span, and log can carry them.</p>
+      <a href="10-naming.html">Continue &rarr;</a>
+    </div>
+  </div>
+
+  <div class="koan-progress">
+    <div class="koan-progress-fill" style="width: 42%"></div>
+  </div>
+
+  <script>
+    (function () {
+      var answers = { sel1: 'http.route', sel2: 'http.request.method', sel3: 'http.response.status_code' };
+      var checkBtn = document.getElementById('checkBtn');
+      var checkStatus = document.getElementById('checkStatus');
+      var solved = false;
+
+      /* Per-dropdown wrong attempt counters */
+      var wrongCounts = { sel1: 0, sel2: 0, sel3: 0 };
+
+      /* Keyword to highlight on 1st wrong, and stronger hints for 2nd/3rd wrong */
+      var hintData = {
+        sel1: {
+          keyword: 'endpoint',
+          labelId: 'label1',
+          hint1: 'The keyword is "endpoint" — which attribute describes a route or path?',
+          hint2: 'It starts with "http." and describes which URL path was called.',
+          hint3: 'The answer is the attribute that maps to a URL route: http.route'
+        },
+        sel2: {
+          keyword: 'HTTP method',
+          labelId: 'label2',
+          hint1: 'Focus on "HTTP method" — which attribute contains a request method?',
+          hint2: 'Look for an attribute with both "http" and "method" in its name.',
+          hint3: 'The attribute is http.request.method — it stores GET, POST, etc.'
+        },
+        sel3: {
+          keyword: 'succeed',
+          labelId: 'label3',
+          hint1: 'The question asks if the request "succeeded" — what tells you success or failure?',
+          hint2: 'Success means a status code like 200. Which attribute carries a status code?',
+          hint3: 'The answer is http.response.status_code — it tells you if the request succeeded.'
+        }
+      };
+
+      /* Highlight keyword in question label */
+      function highlightKeyword(selId) {
+        var data = hintData[selId];
+        var label = document.getElementById(data.labelId);
+        var em = label.querySelector('em');
+        if (em && !em.querySelector('.kw-highlight')) {
+          var re = new RegExp('(' + data.keyword + ')', 'i');
+          em.innerHTML = em.textContent.replace(re, '<span class="kw-highlight">$1</span>');
+        }
+      }
+
+      /* Reset wrong selects on change */
+      Object.keys(answers).forEach(function (selId) {
+        var sel = document.getElementById(selId);
+        sel.addEventListener('change', function () {
+          sel.classList.remove('wrong');
+        });
+      });
+
+      checkBtn.addEventListener('click', function () {
+        if (solved) return;
+
+        var allCorrect = true;
+        var anyEmpty = false;
+
+        Object.keys(answers).forEach(function (selId) {
+          var sel = document.getElementById(selId);
+          var fb = document.getElementById('fb' + selId.charAt(3));
+          var hint = document.getElementById('hint' + selId.charAt(3));
+          var val = sel.value;
+
+          // Reset classes
+          sel.classList.remove('correct', 'wrong');
+          fb.textContent = '';
+
+          if (!val) {
+            anyEmpty = true;
+            return;
+          }
+
+          if (val === answers[selId]) {
+            sel.classList.add('correct');
+            fb.textContent = '\u2713';
+            fb.style.color = 'var(--accent-green)';
+            /* Clear hint on correct */
+            hint.textContent = '';
+            hint.classList.remove('visible');
+          } else {
+            sel.classList.add('wrong');
+            fb.textContent = '\u2717';
+            fb.style.color = 'var(--accent-red)';
+            allCorrect = false;
+
+            /* Increment wrong count and show progressive hint */
+            wrongCounts[selId]++;
+            var data = hintData[selId];
+
+            if (wrongCounts[selId] === 1) {
+              highlightKeyword(selId);
+              hint.textContent = data.hint1;
+              hint.classList.add('visible');
+            } else if (wrongCounts[selId] === 2) {
+              hint.textContent = data.hint2;
+              hint.classList.add('visible');
+            } else {
+              hint.textContent = data.hint3;
+              hint.classList.add('visible');
+            }
+          }
+        });
+
+        if (anyEmpty) {
+          checkStatus.textContent = 'Choose an attribute for each question first.';
+          checkStatus.className = 'check-status error';
+          return;
+        }
+
+        if (!allCorrect) {
+          checkStatus.textContent = 'Not quite. Read the hints below each wrong answer.';
+          checkStatus.className = 'check-status error';
+          // Allow retry — reset wrong selects after a moment
+          setTimeout(function () {
+            document.querySelectorAll('.attr-select.wrong').forEach(function (sel) {
+              sel.classList.remove('wrong');
+            });
+            document.querySelectorAll('.row-feedback').forEach(function (fb) {
+              if (fb.style.color === 'var(--accent-red)') {
+                fb.textContent = '';
+              }
+            });
+          }, 1200);
+          return;
+        }
+
+        // All correct
+        solved = true;
+        checkStatus.textContent = 'Now the metric can answer every question.';
+        checkStatus.className = 'check-status success';
+        checkBtn.style.opacity = '0.4';
+        checkBtn.style.pointerEvents = 'none';
+
+        // Clear all hints
+        document.querySelectorAll('.row-hint').forEach(function (h) {
+          h.textContent = '';
+          h.classList.remove('visible');
+        });
+
+        // Disable all selects
+        document.querySelectorAll('.attr-select').forEach(function (sel) {
+          sel.disabled = true;
+        });
+
+        // Reveal enriched metric
+        setTimeout(function () {
+          var enriched = document.getElementById('enriched');
+          enriched.classList.add('visible');
+
+          // Animate in the attribute pairs
+          var pairs = enriched.querySelectorAll('.enriched-pair');
+          pairs.forEach(function (pair, i) {
+            setTimeout(function () {
+              pair.classList.add('visible');
+            }, 300 + i * 250);
+          });
+        }, 600);
+
+        // Reveal other signals
+        setTimeout(function () {
+          document.getElementById('otherSignals').classList.add('visible');
+        }, 2000);
+
+        // Reveal final insight
+        setTimeout(function () {
+          document.getElementById('insight').classList.add('visible');
+        }, 3000);
+      });
+    })();
+  </script>
+</body>
+</html>

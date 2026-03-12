@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Koan 16: Sampling — OpenTelemetry Koans</title>
+  <link rel="stylesheet" href="../css/shared.css">
+  <style>
+    /* Bridge callout from Koan 15 */
+    .sampling-bridge {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      background: var(--bg-secondary);
+      border-left: 3px solid var(--border);
+      border-radius: 4px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    /* Pipeline visualization */
+    .sampling-scene {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .sampling-scene-header {
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sampling-counter {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent-green);
+      transition: color 0.3s;
+    }
+
+    .sampling-scene-body {
+      padding: 2rem;
+    }
+
+    /* Pipeline flow area */
+    .sampling-pipeline {
+      position: relative;
+      height: 420px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Pipeline track line */
+    .sampling-track {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--border);
+      transform: translateY(-1px);
+    }
+
+    /* Pipeline stages */
+    .sampling-stage {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.3rem 0.6rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      z-index: 2;
+    }
+
+    .sampling-stage--source {
+      left: 0;
+    }
+
+    .sampling-stage--sampler {
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-color: var(--accent-purple);
+      color: var(--accent-purple);
+    }
+
+    .sampling-stage--storage {
+      right: 0;
+    }
+
+    /* Trace item pills */
+    .trace-pill {
+      position: absolute;
+      left: -200px;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      padding: 0.35rem 0.7rem;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      white-space: nowrap;
+      z-index: 3;
+      opacity: 0;
+      transition: opacity 0.4s, background 0.6s, border-color 0.6s, color 0.6s, transform 0.3s;
+    }
+
+    .trace-pill--slow {
+      border-color: var(--accent-orange);
+      color: var(--accent-orange);
+    }
+
+    .trace-pill--error {
+      border-color: var(--accent-red);
+      color: var(--accent-red);
+    }
+
+    .trace-pill--fast {
+      border-color: var(--border);
+      color: var(--text-secondary);
+    }
+
+    .trace-pill.dropped {
+      opacity: 0.15 !important;
+      border-color: var(--text-muted) !important;
+      color: var(--text-muted) !important;
+      background: transparent !important;
+      text-decoration: line-through;
+    }
+
+    .trace-pill.kept {
+      border-color: var(--accent-green);
+      color: var(--accent-green);
+      background: rgba(63, 185, 80, 0.08);
+    }
+
+    /* Explanation text */
+    .sampling-explanation {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      text-align: center;
+      min-height: 2.5em;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .sampling-explanation .cost-high { color: var(--accent-red); }
+    .sampling-explanation .cost-med { color: var(--accent-orange); }
+    .sampling-explanation .cost-low { color: var(--accent-green); }
+
+    /* Strategy buttons */
+    .sampling-controls {
+      text-align: center;
+    }
+
+    .sampling-controls-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+
+    .sampling-strategies {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .sampling-strategy-btn {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .sampling-strategy-btn:hover {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+    }
+
+    .sampling-strategy-btn.active {
+      border-color: var(--accent-purple);
+      background: rgba(188, 140, 255, 0.1);
+      color: var(--accent-purple);
+    }
+
+    .sampling-strategy-btn.tried {
+      position: relative;
+    }
+
+    .sampling-strategy-btn.tried::after {
+      content: '';
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-green);
+    }
+
+    /* Question section */
+    .sampling-question {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 0.6s, max-height 0.6s, padding 0.6s, margin-bottom 0.6s;
+    }
+
+    .sampling-question.visible {
+      opacity: 1;
+      max-height: 20rem;
+      padding: 1.5rem;
+    }
+
+    .sampling-question p {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+
+    .sampling-opts {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .sampling-opt {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .sampling-opt:hover { border-color: var(--accent-blue); }
+    .sampling-opt.correct { border-color: var(--accent-green); background: rgba(63, 185, 80, 0.1); color: var(--accent-green); }
+    .sampling-opt.wrong { border-color: var(--accent-red); color: var(--accent-red); }
+    .sampling-opt.disabled { pointer-events: none; opacity: 0.4; }
+
+    .sampling-fb {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      min-height: 1.5em;
+      margin-top: 0.75rem;
+    }
+
+    .sampling-fb--correct { color: var(--accent-green); }
+    .sampling-fb--wrong { color: var(--accent-red); }
+
+    /* Insight */
+    .sampling-insight {
+      text-align: center;
+      padding: 1.5rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 0.6s, max-height 0.6s, padding 0.6s;
+    }
+
+    .sampling-insight.visible {
+      opacity: 1;
+      max-height: 15rem;
+      padding: 1.5rem;
+    }
+
+    .sampling-insight p {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .sampling-insight a {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--accent-blue);
+      text-decoration: none;
+    }
+
+    .sampling-insight a:hover { text-decoration: underline; }
+
+    /* Animation keyframes */
+    @keyframes flowRight {
+      0% {
+        left: 60px;
+        opacity: 0;
+      }
+      5% {
+        opacity: 1;
+      }
+      100% {
+        left: calc(100% - 80px);
+        opacity: 1;
+      }
+    }
+
+    @keyframes flowRightHalf {
+      0% {
+        left: 60px;
+        opacity: 0;
+      }
+      5% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        left: 50%;
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-gate">
+    <div class="mobile-gate-icon">&#9776;</div>
+    <div class="mobile-gate-title">Desktop Only</div>
+    <div class="mobile-gate-text">These koans require a larger screen. Please visit on a desktop browser.</div>
+  </div>
+
+  <div class="koan-page">
+    <div class="koan-header">
+      <div class="koan-number">Koan 16 of 19</div>
+      <div class="koan-nav">
+        <a href="15-pipeline.html">&larr; Pipeline</a>
+        <a href="17-service-map.html">Service Map &rarr;</a>
+      </div>
+    </div>
+
+    <h1 class="koan-title">Sampling</h1>
+
+    <div class="koan-text">
+      To see everything is to see nothing.<br>
+      The master does not watch every raindrop.<br>
+      They watch the ones that change the river's course.
+    </div>
+
+    <div class="sampling-bridge">
+      In the pipeline you just configured, a processor sits between receiving and exporting. Sampling is one such processor — it decides what to keep.
+    </div>
+
+    <div class="sampling-scene">
+      <div class="sampling-scene-header">
+        <span>trace pipeline</span>
+        <span class="sampling-counter" id="counter">20 / 20 kept</span>
+      </div>
+      <div class="sampling-scene-body">
+        <div class="sampling-pipeline" id="pipeline">
+          <div class="sampling-track"></div>
+          <div class="sampling-stage sampling-stage--source">source</div>
+          <div class="sampling-stage sampling-stage--sampler" id="samplerLabel">sampler: off</div>
+          <div class="sampling-stage sampling-stage--storage">storage</div>
+          <!-- Trace pills are created by JS -->
+        </div>
+
+        <div class="sampling-explanation" id="explanation">
+          20/20 traces kept.
+        </div>
+
+        <div class="sampling-controls">
+          <div class="sampling-controls-label">Apply sampling strategy</div>
+          <div class="sampling-strategies">
+            <button class="sampling-strategy-btn active" id="stratAll" data-strategy="all">Keep everything</button>
+            <button class="sampling-strategy-btn" id="stratRandom" data-strategy="random">Keep 50% randomly</button>
+            <button class="sampling-strategy-btn" id="stratSmart" data-strategy="smart">Keep only slow or error traces</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sampling-question" id="quizQuestion">
+      <p>Which sampling strategy kept the most useful data with the least volume?</p>
+      <div class="sampling-opts">
+        <button class="sampling-opt" data-answer="wrong" data-why="expensive">Keep everything</button>
+        <button class="sampling-opt" data-answer="wrong" data-why="random">Keep 50% randomly</button>
+        <button class="sampling-opt" data-answer="correct">Keep only slow or error traces</button>
+      </div>
+      <div class="sampling-fb" id="fb1"></div>
+    </div>
+
+    <div class="sampling-insight" id="insight">
+      <p>You can't keep everything. Sampling lets you choose what matters.</p>
+      <p>The art is keeping the needles, not the haystack.</p>
+      <a href="17-service-map.html">Continue &rarr;</a>
+    </div>
+  </div>
+
+  <div class="koan-progress">
+    <div class="koan-progress-fill" style="width: 84%"></div>
+  </div>
+
+  <script>
+    (function () {
+      /* ── Trace data ───────────────────────────────────────── */
+      var traces = [
+        { id: 1,  ms: 42,   error: false },
+        { id: 2,  ms: 890,  error: false },
+        { id: 3,  ms: 15,   error: false },
+        { id: 4,  ms: 73,   error: false },
+        { id: 5,  ms: 620,  error: false },
+        { id: 6,  ms: 8,    error: false },
+        { id: 7,  ms: 31,   error: true  },
+        { id: 8,  ms: 55,   error: false },
+        { id: 9,  ms: 1200, error: false },
+        { id: 10, ms: 19,   error: false },
+        { id: 11, ms: 44,   error: false },
+        { id: 12, ms: 780,  error: false },
+        { id: 13, ms: 12,   error: false },
+        { id: 14, ms: 67,   error: true  },
+        { id: 15, ms: 38,   error: false },
+        { id: 16, ms: 950,  error: false },
+        { id: 17, ms: 22,   error: false },
+        { id: 18, ms: 51,   error: false },
+        { id: 19, ms: 510,  error: true  },
+        { id: 20, ms: 29,   error: false }
+      ];
+
+      /* Deterministic "random" 50% — pick every other plus a couple extras for variety */
+      var randomKeptIds = [1, 3, 5, 8, 9, 12, 14, 16, 18, 20];
+
+      /* DOM refs */
+      var pipeline    = document.getElementById('pipeline');
+      var counter     = document.getElementById('counter');
+      var explanation = document.getElementById('explanation');
+      var samplerLabel = document.getElementById('samplerLabel');
+      var stratAll    = document.getElementById('stratAll');
+      var stratRandom = document.getElementById('stratRandom');
+      var stratSmart  = document.getElementById('stratSmart');
+      var quizQ       = document.getElementById('quizQuestion');
+      var fb1         = document.getElementById('fb1');
+      var insight     = document.getElementById('insight');
+
+      var stratButtons = [stratAll, stratRandom, stratSmart];
+      var triedStrategies = { all: true, random: false, smart: false };
+      var currentStrategy = 'all';
+      var animating = false;
+      var pills = [];
+
+      /* ── Helpers ──────────────────────────────────────────── */
+
+      function classify(t) {
+        if (t.error) return 'error';
+        if (t.ms > 500) return 'slow';
+        return 'fast';
+      }
+
+      function label(t) {
+        var tag = t.error ? ' err' : '';
+        return 'trace #' + t.id + ' \u2014 ' + t.ms + 'ms' + tag;
+      }
+
+      function isKept(t, strategy) {
+        if (strategy === 'all') return true;
+        if (strategy === 'random') return randomKeptIds.indexOf(t.id) !== -1;
+        if (strategy === 'smart') return t.error || t.ms > 500;
+        return true;
+      }
+
+      function countKept(strategy) {
+        var n = 0;
+        traces.forEach(function (t) { if (isKept(t, strategy)) n++; });
+        return n;
+      }
+
+      /* ── Build pills ─────────────────────────────────────── */
+
+      function buildPills() {
+        /* Remove old pills */
+        pills.forEach(function (el) { el.remove(); });
+        pills = [];
+
+        var pipelineHeight = pipeline.offsetHeight;
+        var verticalPadding = 50;
+        var usableHeight = pipelineHeight - verticalPadding * 2;
+        var rowHeight = usableHeight / traces.length;
+
+        traces.forEach(function (t, i) {
+          var pill = document.createElement('div');
+          pill.className = 'trace-pill trace-pill--' + classify(t);
+          pill.textContent = label(t);
+          pill.dataset.id = t.id;
+
+          /* Stagger vertically */
+          var topPos = verticalPadding + (i * rowHeight);
+          pill.style.top = topPos + 'px';
+
+          pipeline.appendChild(pill);
+          pills.push(pill);
+        });
+      }
+
+      /* ── Animate a strategy ──────────────────────────────── */
+
+      function runStrategy(strategy) {
+        if (animating) return;
+        animating = true;
+        currentStrategy = strategy;
+
+        /* Mark as tried */
+        triedStrategies[strategy] = true;
+
+        /* Update button states */
+        stratButtons.forEach(function (btn) {
+          btn.classList.remove('active');
+          if (triedStrategies[btn.dataset.strategy]) {
+            btn.classList.add('tried');
+          }
+        });
+        var activeBtn = document.querySelector('[data-strategy="' + strategy + '"]');
+        activeBtn.classList.add('active');
+
+        /* Update sampler label */
+        if (strategy === 'all') samplerLabel.textContent = 'sampler: off';
+        else if (strategy === 'random') samplerLabel.textContent = 'sampler: 50% random';
+        else samplerLabel.textContent = 'sampler: tail-based';
+
+        /* Reset pills */
+        buildPills();
+
+        var kept = countKept(strategy);
+        counter.textContent = '... / 20';
+
+        /* Animate each pill */
+        var stagger = 120;
+        var animDuration = 800;
+
+        pills.forEach(function (pill, i) {
+          var traceData = traces[i];
+          var pillKept = isKept(traceData, strategy);
+          var delay = i * stagger;
+
+          setTimeout(function () {
+            pill.style.opacity = '1';
+
+            if (strategy === 'all' || pillKept) {
+              /* Flow all the way right */
+              pill.style.transition = 'left ' + animDuration + 'ms ease-out, opacity 0.3s';
+              pill.style.left = '60px';
+              pill.style.opacity = '1';
+
+              /* Force reflow */
+              pill.offsetWidth;
+              pill.style.left = 'calc(100% - 140px)';
+
+              setTimeout(function () {
+                if (pillKept) {
+                  pill.classList.add('kept');
+                }
+              }, animDuration);
+            } else {
+              /* Flow to the middle (sampler) then drop */
+              pill.style.transition = 'left ' + (animDuration * 0.55) + 'ms ease-out, opacity 0.3s';
+              pill.style.left = '60px';
+              pill.style.opacity = '1';
+
+              pill.offsetWidth;
+              pill.style.left = 'calc(50% - 40px)';
+
+              setTimeout(function () {
+                pill.classList.add('dropped');
+              }, animDuration * 0.55);
+            }
+          }, delay);
+        });
+
+        /* Update counter and explanation after animation completes */
+        var totalTime = (traces.length * stagger) + animDuration + 200;
+
+        setTimeout(function () {
+          counter.textContent = kept + ' / 20 kept';
+
+          if (strategy === 'all') {
+            counter.style.color = 'var(--accent-red)';
+            explanation.innerHTML = '20/20 traces kept.';
+          } else if (strategy === 'random') {
+            counter.style.color = 'var(--accent-orange)';
+            /* Count how many error traces survived the random sample */
+            var errKept = 0;
+            var errTotal = 0;
+            traces.forEach(function (t) {
+              if (t.error) {
+                errTotal++;
+                if (isKept(t, 'random')) errKept++;
+              }
+            });
+            explanation.innerHTML = '~' + kept + '/20 traces kept. ' + errKept + ' of ' + errTotal + ' error traces survived.';
+          } else {
+            counter.style.color = 'var(--accent-green)';
+            explanation.innerHTML = kept + '/20 traces kept &mdash; all slow (&gt;500 ms) and error traces included.';
+          }
+
+          animating = false;
+
+          /* Check if smart has been tried — if so, show quiz */
+          if (triedStrategies.smart) {
+            setTimeout(function () {
+              quizQ.classList.add('visible');
+            }, 600);
+          }
+        }, totalTime);
+      }
+
+      /* ── Wire up strategy buttons ────────────────────────── */
+
+      stratButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          if (animating) return;
+          runStrategy(this.dataset.strategy);
+        });
+      });
+
+      /* ── Quiz logic ──────────────────────────────────────── */
+
+      var quizOpts = quizQ.querySelectorAll('.sampling-opt');
+      var wrongAttempts = 0;
+      quizOpts.forEach(function (opt) {
+        opt.addEventListener('click', function () {
+          if (this.dataset.answer === 'correct') {
+            this.classList.add('correct');
+            quizOpts.forEach(function (o) { o.classList.add('disabled'); });
+            fb1.textContent = 'Tail-based sampling keeps what matters and drops the noise. Maximum signal, minimum cost.';
+            fb1.className = 'sampling-fb sampling-fb--correct';
+            setTimeout(function () {
+              insight.classList.add('visible');
+            }, 800);
+          } else {
+            wrongAttempts++;
+            this.classList.add('wrong');
+            if (wrongAttempts === 1) {
+              fb1.textContent = 'Compare the three strategies. Which kept the error and slow traces while storing the fewest total?';
+            } else {
+              fb1.textContent = "Look at what the \u2018smart\u2019 strategy kept vs. what \u2018random\u2019 dropped.";
+            }
+            fb1.className = 'sampling-fb sampling-fb--wrong';
+            var self = this;
+            setTimeout(function () { self.classList.remove('wrong'); }, 500);
+          }
+        });
+      });
+
+      /* ── Initial state: run "all" strategy ───────────────── */
+
+      /* Wait for layout, then build and run */
+      setTimeout(function () {
+        runStrategy('all');
+      }, 300);
+    })();
+  </script>
+</body>
+</html>

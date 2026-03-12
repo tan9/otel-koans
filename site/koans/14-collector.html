@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Koan 14: The Hub — OpenTelemetry Koans</title>
+  <link rel="stylesheet" href="../css/shared.css">
+  <style>
+    /* Architecture diagram scene */
+    .collector-scene {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .collector-scene-header {
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .connection-counter {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent-orange);
+      transition: color 0.4s;
+    }
+
+    .connection-counter.reduced {
+      color: var(--accent-green);
+    }
+
+    .collector-scene-body {
+      padding: 2.5rem 2rem;
+    }
+
+    .diagram-wrapper {
+      position: relative;
+    }
+
+    /* Three-column grid: services | (gap for SVG lines) | backends */
+    .arch-diagram {
+      display: grid;
+      grid-template-columns: 140px 1fr 140px;
+      gap: 0;
+      align-items: start;
+      min-height: 280px;
+      position: relative;
+    }
+
+    .arch-column {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      z-index: 2;
+    }
+
+    .arch-column-label {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      text-align: center;
+      margin-bottom: 0.4rem;
+    }
+
+    /* Service boxes */
+    .svc-box {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.55rem 0.75rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-primary);
+      text-align: center;
+      position: relative;
+      transition: all 0.5s ease;
+    }
+
+    .svc-box .svc-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      margin-right: 0.35rem;
+      vertical-align: middle;
+    }
+
+    .svc-box.new-service {
+      border-color: var(--accent-orange);
+      animation: fadeSlideIn 0.6s ease;
+    }
+
+    @keyframes fadeSlideIn {
+      0% { opacity: 0; transform: translateY(-12px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Backend boxes */
+    .backend-box {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.55rem 0.75rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-primary);
+      text-align: center;
+    }
+
+    .backend-box .backend-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-purple);
+      margin-right: 0.35rem;
+      vertical-align: middle;
+    }
+
+    /* Middle zone: starts empty, hub appears later */
+    .middle-zone {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 280px;
+      z-index: 2;
+    }
+
+    /* The hub box (invisible until summoned) */
+    .hub-box {
+      border: 2px dashed var(--text-muted);
+      border-radius: 8px;
+      padding: 1.2rem 1rem;
+      text-align: center;
+      width: 130px;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: scale(0.85);
+      transition: all 0.7s ease;
+      flex-direction: column;
+    }
+
+    .hub-box.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .hub-box.revealed {
+      border-color: var(--accent-blue);
+      border-style: solid;
+      background: rgba(88, 166, 255, 0.05);
+    }
+
+    .hub-label {
+      font-family: var(--font-mono);
+      font-size: 1.4rem;
+      color: var(--text-muted);
+    }
+
+    .hub-box.revealed .hub-label { display: none; }
+
+    .collector-inner {
+      display: none;
+      flex-direction: column;
+      gap: 0;
+      width: 100%;
+    }
+
+    .hub-box.revealed .collector-inner { display: flex; }
+
+    .collector-title {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--accent-blue);
+      text-align: center;
+      margin-bottom: 0.6rem;
+      letter-spacing: 0.05em;
+    }
+
+    .collector-section {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.35rem 0.4rem;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      color: var(--text-secondary);
+      background: var(--bg-tertiary);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .collector-section + .collector-section { margin-top: 0.3rem; }
+    .collector-section .section-icon { margin-right: 0.25rem; }
+
+    .section-receive { border-color: var(--accent-green); }
+    .section-receive .section-icon { color: var(--accent-green); }
+    .section-process { border-color: var(--accent-orange); }
+    .section-process .section-icon { color: var(--accent-orange); }
+    .section-export { border-color: var(--accent-purple); }
+    .section-export .section-icon { color: var(--accent-purple); }
+
+    @keyframes pulse-glow {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.6); }
+    }
+
+    .collector-section.active {
+      animation: pulse-glow 1.4s ease infinite;
+    }
+
+    /* SVG overlay for connection lines */
+    .diagram-arrow-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .arrow-path {
+      fill: none;
+      stroke: var(--text-muted);
+      stroke-width: 1.2;
+      stroke-dasharray: 5 3;
+      opacity: 0.35;
+      transition: all 0.6s;
+    }
+
+    .arrow-path.messy {
+      stroke: var(--accent-red);
+      opacity: 0.5;
+      stroke-dasharray: 4 3;
+    }
+
+    .arrow-path.hub-line {
+      stroke: var(--accent-blue);
+      stroke-dasharray: none;
+      opacity: 0.7;
+      stroke-width: 1.8;
+    }
+
+    /* Question blocks */
+    .cq {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 0.6s, max-height 0.8s ease, padding 0.6s, margin-bottom 0.6s;
+    }
+
+    .cq.visible {
+      opacity: 1;
+      max-height: 28rem;
+      padding: 1.5rem;
+    }
+
+    .cq p {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+
+    .cq p.cq-context {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.6rem;
+    }
+
+    .cq-opts {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .cq-opt {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.2s;
+      min-width: 80px;
+    }
+
+    .cq-opt:hover { border-color: var(--accent-blue); }
+    .cq-opt.correct { border-color: var(--accent-green); background: rgba(63, 185, 80, 0.1); color: var(--accent-green); pointer-events: none; }
+    .cq-opt.wrong { border-color: var(--accent-red); color: var(--accent-red); }
+    .cq-opt.disabled { pointer-events: none; opacity: 0.35; }
+
+    .cq-fb {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      min-height: 1.5em;
+      margin-top: 0.75rem;
+    }
+
+    .cq-fb--correct { color: var(--accent-green); }
+    .cq-fb--wrong { color: var(--accent-red); }
+
+    /* Math callout */
+    .math-callout {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--accent-orange);
+      background: rgba(210, 153, 34, 0.08);
+      border: 1px solid rgba(210, 153, 34, 0.2);
+      border-radius: 6px;
+      padding: 0.5rem 1rem;
+      margin: 0.5rem 0;
+    }
+
+    .math-callout.green {
+      color: var(--accent-green);
+      background: rgba(63, 185, 80, 0.08);
+      border-color: rgba(63, 185, 80, 0.2);
+    }
+
+    /* Narrative text blocks */
+    .narrative {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 0.6s, max-height 0.8s ease, padding 0.6s, margin-bottom 0.6s;
+    }
+
+    .narrative.visible {
+      opacity: 1;
+      max-height: 20rem;
+      padding: 1.25rem 1.5rem;
+    }
+
+    .narrative p {
+      font-family: var(--font-sans);
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 0.5rem;
+    }
+
+    .narrative p:last-child { margin-bottom: 0; }
+
+    .narrative .math-callout { margin-top: 0.75rem; }
+
+    /* Insight */
+    .collector-insight {
+      text-align: center;
+      padding: 0;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 0.6s, max-height 0.8s ease, padding 0.6s;
+    }
+
+    .collector-insight.visible {
+      opacity: 1;
+      max-height: 18rem;
+      padding: 1.5rem;
+    }
+
+    .collector-insight p {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .collector-insight a {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--accent-blue);
+      text-decoration: none;
+    }
+
+    .collector-insight a:hover { text-decoration: underline; }
+
+    /* Matching exercise for Q3 */
+    .match-exercise {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .match-row {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .match-stage {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      padding: 0.4rem 0.6rem;
+      border-radius: 4px;
+      text-align: center;
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      background: var(--bg-tertiary);
+    }
+
+    .match-stage.stage-1 { border-color: var(--accent-green); }
+    .match-stage.stage-2 { border-color: var(--accent-orange); }
+    .match-stage.stage-3 { border-color: var(--accent-purple); }
+
+    .match-options {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .match-opt {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 0.35rem 0.6rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .match-opt:hover { border-color: var(--accent-blue); color: var(--text-primary); }
+    .match-opt.selected { border-color: var(--accent-blue); background: rgba(88, 166, 255, 0.1); color: var(--accent-blue); pointer-events: none; }
+    .match-opt.match-correct { border-color: var(--accent-green); background: rgba(63, 185, 80, 0.1); color: var(--accent-green); pointer-events: none; }
+    .match-opt.match-wrong { border-color: var(--accent-red); color: var(--accent-red); }
+    .match-opt.disabled { pointer-events: none; opacity: 0.3; }
+  </style>
+</head>
+<body>
+  <div class="mobile-gate">
+    <div class="mobile-gate-icon">&#9776;</div>
+    <div class="mobile-gate-title">Desktop Only</div>
+    <div class="mobile-gate-text">These koans require a larger screen. Please visit on a desktop browser.</div>
+  </div>
+
+  <div class="koan-page">
+    <div class="koan-header">
+      <div class="koan-number">Koan 14 of 19</div>
+      <div class="koan-nav">
+        <a href="13-formats.html">&larr; Data Formats</a>
+        <a href="15-pipeline.html">Pipeline &rarr;</a>
+      </div>
+    </div>
+
+    <h1 class="koan-title">The Hub</h1>
+
+    <div class="koan-text">
+      Many rivers flow. They do not each find the sea alone.
+    </div>
+
+    <!-- Architecture diagram -->
+    <div class="collector-scene">
+      <div class="collector-scene-header">
+        <span>architecture</span>
+        <span class="connection-counter" id="connCounter"></span>
+      </div>
+      <div class="collector-scene-body">
+        <div class="diagram-wrapper" id="diagramWrapper">
+          <div class="arch-diagram" id="archDiagram">
+            <!-- Left column: services -->
+            <div class="arch-column" id="colServices">
+              <div class="arch-column-label">services</div>
+              <div class="svc-box" id="svc0"><span class="svc-dot"></span>gateway</div>
+              <div class="svc-box" id="svc1"><span class="svc-dot"></span>api</div>
+              <div class="svc-box" id="svc2"><span class="svc-dot"></span>orders</div>
+            </div>
+
+            <!-- Middle column: hub appears here later -->
+            <div class="middle-zone" id="middleZone">
+              <div class="hub-box" id="hubBox">
+                <span class="hub-label">?</span>
+                <div class="collector-inner">
+                  <div class="collector-title" id="collectorTitle"></div>
+                  <div class="collector-section section-receive" id="secReceive">
+                    <span class="section-icon">&#9660;</span> Receivers
+                  </div>
+                  <div class="collector-section section-process" id="secProcess">
+                    <span class="section-icon">&#9881;</span> Processors
+                  </div>
+                  <div class="collector-section section-export" id="secExport">
+                    <span class="section-icon">&#9654;</span> Exporters
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right column: backends -->
+            <div class="arch-column" id="colBackends">
+              <div class="arch-column-label">backends</div>
+              <div class="backend-box" id="be0"><span class="backend-dot"></span>Jaeger</div>
+              <div class="backend-box" id="be1"><span class="backend-dot"></span>Prometheus</div>
+              <div class="backend-box" id="be2"><span class="backend-dot"></span>Loki</div>
+            </div>
+          </div>
+
+          <!-- SVG overlay for arrows and particles -->
+          <svg class="diagram-arrow-svg" id="arrowSvg" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="arrowHeadMuted" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto">
+                <path d="M0,0 L7,2.5 L0,5 Z" fill="var(--text-muted)" opacity="0.4" />
+              </marker>
+              <marker id="arrowHeadRed" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto">
+                <path d="M0,0 L7,2.5 L0,5 Z" fill="var(--accent-red)" opacity="0.5" />
+              </marker>
+              <marker id="arrowHeadBlue" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto">
+                <path d="M0,0 L7,2.5 L0,5 Z" fill="var(--accent-blue)" opacity="0.7" />
+              </marker>
+            </defs>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q1: Connection math -->
+    <div class="cq visible" id="q1">
+      <p>Each service sends telemetry to <em>every</em> backend. With 3 services and 3 backends, that is 9 connections.</p>
+      <p>You add a 4th service. How many total connections do you need now?</p>
+      <div class="cq-opts">
+        <button class="cq-opt" data-answer="wrong" id="q1a">10</button>
+        <button class="cq-opt" data-answer="correct" id="q1b">12</button>
+        <button class="cq-opt" data-answer="wrong" id="q1c">15</button>
+      </div>
+      <div class="cq-fb" id="fb1"></div>
+    </div>
+
+    <!-- Narrative: scaling problem -->
+    <div class="narrative" id="narr1">
+      <p>Every new service adds 3 connections. Every new backend adds N more. The total is always services &times; backends.</p>
+      <div class="math-callout">3 &times; 3 = 9 &nbsp;&rarr;&nbsp; 4 &times; 3 = 12 &nbsp;&rarr;&nbsp; 10 &times; 5 = 50</div>
+      <p>What if there was a single point in the middle?</p>
+    </div>
+
+    <!-- Q2: Hub advantage -->
+    <div class="cq" id="q2">
+      <p class="cq-context">A hub appears between the services and backends. Services send to the hub. The hub sends to backends.</p>
+      <p>What did this pattern achieve?</p>
+      <div class="cq-opts">
+        <button class="cq-opt" data-answer="wrong" id="q2a">It deleted some telemetry</button>
+        <button class="cq-opt" data-answer="correct" id="q2b">It reduced N&times;M connections to N+M</button>
+        <button class="cq-opt" data-answer="wrong" id="q2c">It made the services faster</button>
+      </div>
+      <div class="cq-fb" id="fb2"></div>
+    </div>
+
+    <!-- Narrative: name reveal -->
+    <div class="narrative" id="narr2">
+      <p>This hub is called the <strong style="color: var(--accent-blue);">OpenTelemetry Collector</strong>.</p>
+      <p>It has three internal stages. Based on its position in the diagram &mdash; between services and backends &mdash; what do you think each stage does?</p>
+    </div>
+
+    <!-- Q3: Match stages to descriptions -->
+    <div class="cq" id="q3">
+      <p>Match each stage to what it does:</p>
+      <div class="match-exercise" id="matchExercise">
+        <div class="match-row" data-stage="receive">
+          <div class="match-stage stage-1">Receivers</div>
+          <div class="match-options">
+            <button class="match-opt" data-choice="receive">Accept incoming data</button>
+            <button class="match-opt" data-choice="export">Send data to backends</button>
+            <button class="match-opt" data-choice="process">Filter, batch, transform</button>
+          </div>
+        </div>
+        <div class="match-row" data-stage="process">
+          <div class="match-stage stage-2">Processors</div>
+          <div class="match-options">
+            <button class="match-opt" data-choice="export">Send data to backends</button>
+            <button class="match-opt" data-choice="process">Filter, batch, transform</button>
+            <button class="match-opt" data-choice="receive">Accept incoming data</button>
+          </div>
+        </div>
+        <div class="match-row" data-stage="export">
+          <div class="match-stage stage-3">Exporters</div>
+          <div class="match-options">
+            <button class="match-opt" data-choice="process">Filter, batch, transform</button>
+            <button class="match-opt" data-choice="receive">Accept incoming data</button>
+            <button class="match-opt" data-choice="export">Send data to backends</button>
+          </div>
+        </div>
+      </div>
+      <div class="cq-fb" id="fb3"></div>
+    </div>
+
+    <!-- Insight -->
+    <div class="collector-insight" id="insight">
+      <p>The Collector is the hub. Services send to it. It processes and forwards to backends.</p>
+      <p>One component, many destinations.</p>
+      <a href="15-pipeline.html">Continue &rarr;</a>
+    </div>
+  </div>
+
+  <div class="koan-progress">
+    <div class="koan-progress-fill" style="width: 73%"></div>
+  </div>
+
+  <script>
+    (function () {
+      /* ---- Element references ---- */
+      var diagramWrapper = document.getElementById('diagramWrapper');
+      var arrowSvg = document.getElementById('arrowSvg');
+      var colServices = document.getElementById('colServices');
+      var colBackends = document.getElementById('colBackends');
+      var hubBox = document.getElementById('hubBox');
+      var connCounter = document.getElementById('connCounter');
+      var collectorTitle = document.getElementById('collectorTitle');
+
+      var secReceive = document.getElementById('secReceive');
+      var secProcess = document.getElementById('secProcess');
+      var secExport = document.getElementById('secExport');
+
+      /* State */
+      var svcEls = [];
+      var beEls = [];
+      var allPaths = [];
+      var phase = 'direct-3'; /* direct-3, direct-4, hub, named, matched */
+      var particleTimers = [];
+
+      function getSvcEls() {
+        return Array.prototype.slice.call(colServices.querySelectorAll('.svc-box'));
+      }
+      function getBeEls() {
+        return Array.prototype.slice.call(colBackends.querySelectorAll('.backend-box'));
+      }
+
+      svcEls = getSvcEls();
+      beEls = getBeEls();
+
+      /* ---- Coordinate helpers ---- */
+      function getRight(el) {
+        var r = el.getBoundingClientRect();
+        var wr = diagramWrapper.getBoundingClientRect();
+        return { x: r.right - wr.left, y: r.top + r.height / 2 - wr.top };
+      }
+
+      function getLeft(el) {
+        var r = el.getBoundingClientRect();
+        var wr = diagramWrapper.getBoundingClientRect();
+        return { x: r.left - wr.left, y: r.top + r.height / 2 - wr.top };
+      }
+
+      function getCenter(el) {
+        var r = el.getBoundingClientRect();
+        var wr = diagramWrapper.getBoundingClientRect();
+        return { x: r.left + r.width / 2 - wr.left, y: r.top + r.height / 2 - wr.top };
+      }
+
+      /* ---- Drawing ---- */
+      function clearPaths() {
+        allPaths.forEach(function (p) { if (p.parentNode) p.parentNode.removeChild(p); });
+        allPaths = [];
+      }
+
+      function sizeSvg() {
+        var wr = diagramWrapper.getBoundingClientRect();
+        arrowSvg.setAttribute('width', wr.width);
+        arrowSvg.setAttribute('height', wr.height);
+        arrowSvg.style.width = wr.width + 'px';
+        arrowSvg.style.height = wr.height + 'px';
+      }
+
+      function makeLine(x1, y1, x2, y2, cls, marker) {
+        var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', x1);
+        line.setAttribute('y1', y1);
+        line.setAttribute('x2', x2);
+        line.setAttribute('y2', y2);
+        line.setAttribute('class', cls);
+        line.setAttribute('marker-end', 'url(#' + marker + ')');
+        arrowSvg.appendChild(line);
+        allPaths.push(line);
+        return line;
+      }
+
+      /* Draw direct (messy) connections: every service to every backend */
+      function drawDirect() {
+        clearPaths();
+        sizeSvg();
+        svcEls = getSvcEls();
+        beEls = getBeEls();
+        var count = 0;
+        svcEls.forEach(function (svc) {
+          beEls.forEach(function (be) {
+            var from = getRight(svc);
+            var to = getLeft(be);
+            makeLine(from.x, from.y, to.x, to.y, 'arrow-path messy', 'arrowHeadRed');
+            count++;
+          });
+        });
+        connCounter.textContent = count + ' connections';
+        connCounter.classList.remove('reduced');
+      }
+
+      /* Draw hub connections: services -> hub, hub -> backends */
+      function drawHub() {
+        clearPaths();
+        sizeSvg();
+        svcEls = getSvcEls();
+        beEls = getBeEls();
+        var hubL = getLeft(hubBox);
+        var hubR = getRight(hubBox);
+        var count = 0;
+
+        svcEls.forEach(function (svc) {
+          var from = getRight(svc);
+          makeLine(from.x, from.y, hubL.x, hubL.y, 'arrow-path hub-line', 'arrowHeadBlue');
+          count++;
+        });
+
+        beEls.forEach(function (be) {
+          var to = getLeft(be);
+          makeLine(hubR.x, hubR.y, to.x, to.y, 'arrow-path hub-line', 'arrowHeadBlue');
+          count++;
+        });
+
+        connCounter.textContent = count + ' connections';
+        connCounter.classList.add('reduced');
+      }
+
+      /* Initial draw */
+      setTimeout(drawDirect, 150);
+
+      /* Redraw on resize */
+      var resizeTimer;
+      window.addEventListener('resize', function () {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function () {
+          if (phase === 'direct-3' || phase === 'direct-4') drawDirect();
+          else drawHub();
+        }, 120);
+      });
+
+      /* ---- Add 4th service ---- */
+      function addFourthService() {
+        var el = document.createElement('div');
+        el.className = 'svc-box new-service';
+        el.id = 'svc3';
+        el.innerHTML = '<span class="svc-dot"></span>payment';
+        colServices.appendChild(el);
+        phase = 'direct-4';
+        setTimeout(drawDirect, 80);
+      }
+
+      /* ---- Show hub ---- */
+      function showHub() {
+        phase = 'hub';
+        hubBox.classList.add('visible');
+        setTimeout(function () {
+          drawHub();
+        }, 500);
+      }
+
+      /* ---- Name reveal: show "OpenTelemetry Collector" ---- */
+      function revealName() {
+        phase = 'named';
+        hubBox.classList.add('revealed');
+        collectorTitle.textContent = 'OTel Collector';
+        /* Redraw to account for box size change */
+        setTimeout(function () {
+          drawHub();
+          startParticles();
+        }, 600);
+      }
+
+      /* ---- Particle animation ---- */
+      function startParticles() {
+        var colors = ['var(--accent-green)', 'var(--accent-orange)', 'var(--accent-purple)'];
+
+        function spawnParticle(line, color, delay) {
+          var x1 = parseFloat(line.getAttribute('x1'));
+          var y1 = parseFloat(line.getAttribute('y1'));
+          var x2 = parseFloat(line.getAttribute('x2'));
+          var y2 = parseFloat(line.getAttribute('y2'));
+
+          var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          circle.setAttribute('cx', x1);
+          circle.setAttribute('cy', y1);
+          circle.setAttribute('r', '3');
+          circle.setAttribute('fill', color);
+          circle.setAttribute('opacity', '0');
+          arrowSvg.appendChild(circle);
+
+          var duration = 1000;
+          var start = null;
+
+          setTimeout(function () {
+            function step(ts) {
+              if (!start) start = ts;
+              var t = Math.min((ts - start) / duration, 1);
+              var ease = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+
+              circle.setAttribute('cx', x1 + (x2 - x1) * ease);
+              circle.setAttribute('cy', y1 + (y2 - y1) * ease);
+
+              var opacity = t < 0.1 ? t / 0.1 : t > 0.85 ? (1 - t) / 0.15 : 1;
+              circle.setAttribute('opacity', opacity * 0.85);
+
+              if (t < 1) {
+                requestAnimationFrame(step);
+              } else {
+                if (circle.parentNode) circle.parentNode.removeChild(circle);
+              }
+            }
+            requestAnimationFrame(step);
+          }, delay);
+        }
+
+        function runWave() {
+          allPaths.forEach(function (p, i) {
+            spawnParticle(p, colors[i % 3], i * 120);
+          });
+        }
+
+        runWave();
+        var interval = setInterval(runWave, 2000);
+        particleTimers.push(interval);
+
+        secReceive.classList.add('active');
+        setTimeout(function () { secProcess.classList.add('active'); }, 250);
+        setTimeout(function () { secExport.classList.add('active'); }, 500);
+      }
+
+      /* ---- Q1: Connection math ---- */
+      var q1 = document.getElementById('q1');
+      var fb1 = document.getElementById('fb1');
+      var q1opts = q1.querySelectorAll('.cq-opt');
+
+      q1opts.forEach(function (opt) {
+        opt.addEventListener('click', function () {
+          if (this.dataset.answer === 'correct') {
+            this.classList.add('correct');
+            q1opts.forEach(function (o) { o.classList.add('disabled'); });
+            fb1.textContent = '4 services \u00d7 3 backends = 12 connections. Every service must know every backend.';
+            fb1.className = 'cq-fb cq-fb--correct';
+
+            /* Add the 4th service and redraw messy lines */
+            addFourthService();
+
+            /* Show narrative about scaling */
+            setTimeout(function () {
+              document.getElementById('narr1').classList.add('visible');
+            }, 1400);
+
+            /* Show Q2 */
+            setTimeout(function () {
+              document.getElementById('q2').classList.add('visible');
+            }, 2600);
+          } else {
+            this.classList.add('wrong');
+            if (this.id === 'q1a') {
+              fb1.textContent = 'Each of the 4 services needs a connection to each of the 3 backends. Multiply, don\'t add.';
+            } else {
+              fb1.textContent = '15 would be 5\u00d73. We only have 4 services and 3 backends.';
+            }
+            fb1.className = 'cq-fb cq-fb--wrong';
+            var self = this;
+            setTimeout(function () { self.classList.remove('wrong'); }, 600);
+          }
+        });
+      });
+
+      /* ---- Q2: Hub advantage ---- */
+      var q2 = document.getElementById('q2');
+      var fb2 = document.getElementById('fb2');
+      var q2opts = q2.querySelectorAll('.cq-opt');
+
+      q2opts.forEach(function (opt) {
+        opt.addEventListener('click', function () {
+          if (this.dataset.answer === 'correct') {
+            this.classList.add('correct');
+            q2opts.forEach(function (o) { o.classList.add('disabled'); });
+            fb2.innerHTML = '4 + 3 = 7 connections instead of 12. With 10 services and 5 backends: 15 instead of 50.';
+            fb2.className = 'cq-fb cq-fb--correct';
+
+            /* Show the hub in the diagram */
+            showHub();
+
+            /* Show name-reveal narrative */
+            setTimeout(function () {
+              document.getElementById('narr2').classList.add('visible');
+            }, 1400);
+
+            /* Reveal the collector name + internals */
+            setTimeout(function () {
+              revealName();
+            }, 2000);
+
+            /* Show Q3: matching */
+            setTimeout(function () {
+              document.getElementById('q3').classList.add('visible');
+            }, 3200);
+          } else {
+            this.classList.add('wrong');
+            if (this.id === 'q2a') {
+              fb2.textContent = 'The hub forwards all telemetry \u2014 nothing is deleted.';
+            } else {
+              fb2.textContent = 'The hub adds a hop, so latency doesn\'t improve. Think about connections.';
+            }
+            fb2.className = 'cq-fb cq-fb--wrong';
+            var self = this;
+            setTimeout(function () { self.classList.remove('wrong'); }, 600);
+          }
+        });
+      });
+
+      /* ---- Q3: Match exercise ---- */
+      var matchRows = document.querySelectorAll('.match-row');
+      var fb3 = document.getElementById('fb3');
+      var matchedCount = 0;
+
+      matchRows.forEach(function (row) {
+        var stage = row.dataset.stage;
+        var opts = row.querySelectorAll('.match-opt');
+
+        opts.forEach(function (opt) {
+          opt.addEventListener('click', function () {
+            if (this.dataset.choice === stage) {
+              /* Correct */
+              this.classList.add('match-correct');
+              opts.forEach(function (o) { o.classList.add('disabled'); });
+              matchedCount++;
+              if (matchedCount === 3) {
+                fb3.textContent = 'Receive \u2192 Process \u2192 Export. The three stages of the Collector pipeline.';
+                fb3.className = 'cq-fb cq-fb--correct';
+                setTimeout(function () {
+                  document.getElementById('insight').classList.add('visible');
+                }, 800);
+              }
+            } else {
+              /* Wrong */
+              this.classList.add('match-wrong');
+              fb3.textContent = 'Think about what "' + row.querySelector('.match-stage').textContent + '" means in context.';
+              fb3.className = 'cq-fb cq-fb--wrong';
+              var self = this;
+              setTimeout(function () { self.classList.remove('match-wrong'); }, 500);
+            }
+          });
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

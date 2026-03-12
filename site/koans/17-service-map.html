@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Koan 17: Service Maps — OpenTelemetry Koans</title>
+  <link rel="stylesheet" href="../css/shared.css">
+  <style>
+    /* Layout: two-column workspace */
+    .workspace {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    /* Traces panel (left) */
+    .traces-panel {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .panel-body {
+      padding: 1rem;
+    }
+
+    .trace-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .trace-row {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 0.75rem;
+      background: var(--bg-tertiary);
+      border-radius: 6px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+      user-select: none;
+    }
+
+    .trace-row:hover:not(.processed):not(.locked) {
+      border-color: var(--accent-blue);
+      background: rgba(88, 166, 255, 0.04);
+    }
+
+    .trace-row.active {
+      border-color: var(--accent-blue);
+      background: rgba(88, 166, 255, 0.06);
+      box-shadow: 0 0 12px rgba(88, 166, 255, 0.1);
+    }
+
+    .trace-row.processed {
+      border-color: var(--accent-green);
+      background: rgba(63, 185, 80, 0.04);
+      cursor: default;
+      opacity: 0.5;
+    }
+
+    .trace-row.locked {
+      cursor: default;
+      opacity: 0.35;
+    }
+
+    .trace-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      min-width: 4.5em;
+      flex-shrink: 0;
+    }
+
+    .trace-chain {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+    }
+
+    .trace-svc {
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      color: var(--text-primary);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    .trace-row.active .trace-svc {
+      border-color: var(--accent-blue);
+    }
+
+    .trace-arrow {
+      color: var(--text-muted);
+      font-size: 0.7rem;
+    }
+
+    .trace-row.active .trace-arrow {
+      color: var(--accent-blue);
+    }
+
+    .trace-hint {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-align: center;
+      padding: 0.75rem 0.5rem 0.25rem;
+      min-height: 2em;
+    }
+
+    /* SVG map panel (right) */
+    .map-panel {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .map-canvas-body {
+      padding: 1.5rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .map-svg {
+      width: 100%;
+      max-width: 520px;
+      height: 380px;
+    }
+
+    .map-node-circle {
+      fill: var(--bg-tertiary);
+      stroke: var(--border);
+      stroke-width: 2;
+      transition: stroke 0.4s, fill 0.4s;
+    }
+
+    .map-node-circle.connected {
+      stroke: var(--accent-green);
+      fill: rgba(63, 185, 80, 0.08);
+    }
+
+    .map-node-label {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 11px;
+      fill: var(--text-muted);
+      text-anchor: middle;
+      dominant-baseline: central;
+      transition: fill 0.4s;
+    }
+
+    .map-node-label.connected {
+      fill: var(--text-primary);
+    }
+
+    .map-edge {
+      stroke: var(--accent-green);
+      fill: none;
+      stroke-linecap: round;
+      opacity: 0;
+      transition: opacity 0.6s, stroke-width 0.4s;
+    }
+
+    .map-edge.visible {
+      opacity: 0.7;
+    }
+
+    /* Glow animation for newly added edges */
+    @keyframes edge-glow {
+      0% { stroke: #7ee787; filter: drop-shadow(0 0 6px rgba(63, 185, 80, 0.6)); }
+      100% { stroke: var(--accent-green); filter: none; }
+    }
+
+    .map-edge.glow {
+      animation: edge-glow 1.2s ease-out forwards;
+      opacity: 0.9;
+    }
+
+    .map-edge-count {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 9px;
+      fill: var(--text-muted);
+      text-anchor: middle;
+      dominant-baseline: central;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+
+    .map-edge-count.visible {
+      opacity: 1;
+    }
+
+    /* Legend */
+    .map-legend {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      padding: 0.5rem 1rem 0.75rem;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      opacity: 0;
+      transition: opacity 0.6s;
+    }
+
+    .map-legend.visible { opacity: 1; }
+
+    .map-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .map-legend-line-thin {
+      width: 20px;
+      height: 2px;
+      background: var(--accent-green);
+      opacity: 0.7;
+      border-radius: 1px;
+    }
+
+    .map-legend-line-thick {
+      width: 20px;
+      height: 5px;
+      background: var(--accent-green);
+      opacity: 0.9;
+      border-radius: 2px;
+    }
+
+    /* Prediction challenge inline between panels */
+    .prediction-box {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0;
+      margin-bottom: 2rem;
+      text-align: center;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 0.5s, max-height 0.5s, padding 0.5s, margin-bottom 0.5s;
+    }
+
+    .prediction-box.visible {
+      opacity: 1;
+      max-height: 20rem;
+      padding: 1.25rem 1.5rem;
+    }
+
+    .prediction-box p {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+
+    .prediction-box p .mono {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--accent-blue);
+    }
+
+    .pred-opts {
+      display: flex;
+      justify-content: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .pred-opt {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      padding: 0.45rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .pred-opt:hover { border-color: var(--accent-blue); }
+    .pred-opt.correct { border-color: var(--accent-green); background: rgba(63, 185, 80, 0.1); color: var(--accent-green); pointer-events: none; }
+    .pred-opt.wrong { border-color: var(--accent-red); color: var(--accent-red); }
+    .pred-opt.disabled { pointer-events: none; opacity: 0.4; }
+
+    .pred-fb {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      min-height: 1.5em;
+      margin-top: 0.75rem;
+    }
+
+    .pred-fb--correct { color: var(--accent-green); }
+    .pred-fb--wrong { color: var(--accent-red); }
+
+    /* Question blocks */
+    .map-question {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0;
+      text-align: center;
+      margin-bottom: 2rem;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 0.6s, max-height 0.6s, padding 0.6s, margin-bottom 0.6s;
+    }
+
+    .map-question.visible {
+      opacity: 1;
+      max-height: 20rem;
+      padding: 1.5rem;
+    }
+
+    .map-question p {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+
+    .map-opts {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .map-opt {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .map-opt:hover { border-color: var(--accent-blue); }
+    .map-opt.correct { border-color: var(--accent-green); background: rgba(63, 185, 80, 0.1); color: var(--accent-green); }
+    .map-opt.wrong { border-color: var(--accent-red); color: var(--accent-red); }
+    .map-opt.disabled { pointer-events: none; opacity: 0.4; }
+
+    .map-fb {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      min-height: 1.5em;
+      margin-top: 0.75rem;
+    }
+
+    .map-fb--correct { color: var(--accent-green); }
+    .map-fb--wrong { color: var(--accent-red); }
+
+    /* Insight */
+    .map-insight {
+      text-align: center;
+      padding: 0;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 0.6s, max-height 0.6s, padding 0.6s;
+    }
+
+    .map-insight.visible {
+      opacity: 1;
+      max-height: 15rem;
+      padding: 1.5rem;
+    }
+
+    .map-insight p {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .map-insight a {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--accent-blue);
+      text-decoration: none;
+    }
+
+    .map-insight a:hover { text-decoration: underline; }
+
+  </style>
+</head>
+<body>
+  <div class="mobile-gate">
+    <div class="mobile-gate-icon">&#9776;</div>
+    <div class="mobile-gate-title">Desktop Only</div>
+    <div class="mobile-gate-text">These koans require a larger screen. Please visit on a desktop browser.</div>
+  </div>
+
+  <div class="koan-page">
+    <div class="koan-header">
+      <div class="koan-number">Koan 17 of 19</div>
+      <div class="koan-nav">
+        <a href="16-sampling.html">&larr; Sampling</a>
+        <a href="18-correlation.html">Correlation &rarr;</a>
+      </div>
+    </div>
+
+    <h1 class="koan-title">Service Maps</h1>
+
+    <div class="koan-text">
+      No one drew the map.<br>
+      The requests drew it themselves &mdash;<br>
+      each call a line, each service a point,<br>
+      until the shape of the system appeared.
+    </div>
+
+    <!-- Q1: Prediction question BEFORE building the map -->
+    <div class="map-question visible" id="q1">
+      <p>You have 6 services but no architecture diagram. You do have trace data from production. Can you figure out how the services are connected?</p>
+      <div class="map-opts">
+        <button class="map-opt" data-answer="wrong">No, you need documentation</button>
+        <button class="map-opt" data-answer="correct">Yes &mdash; each trace shows which services called which</button>
+        <button class="map-opt" data-answer="wrong">Only if you read the source code</button>
+      </div>
+      <div class="map-fb" id="fb1"></div>
+    </div>
+
+    <!-- Workspace: traces + map side by side (hidden until Q1 answered) -->
+    <div class="workspace" id="workspace" style="opacity: 0; pointer-events: none; transition: opacity 0.6s;">
+      <!-- Left: trace data -->
+      <div class="traces-panel">
+        <div class="panel-header">trace data from collector</div>
+        <div class="panel-body">
+          <div class="trace-list">
+            <div class="trace-row locked" id="trace-0" data-index="0">
+              <span class="trace-label">Trace 1</span>
+              <div class="trace-chain">
+                <span class="trace-svc">gateway</span>
+                <span class="trace-arrow">&rarr;</span>
+                <span class="trace-svc">api</span>
+                <span class="trace-arrow">&rarr;</span>
+                <span class="trace-svc">orders</span>
+              </div>
+            </div>
+            <div class="trace-row locked" id="trace-1" data-index="1">
+              <span class="trace-label">Trace 2</span>
+              <div class="trace-chain">
+                <span class="trace-svc">gateway</span>
+                <span class="trace-arrow">&rarr;</span>
+                <span class="trace-svc">api</span>
+                <span class="trace-arrow">&rarr;</span>
+                <span class="trace-svc">payment</span>
+              </div>
+            </div>
+            <div class="trace-row locked" id="trace-2" data-index="2">
+              <span class="trace-label">Trace 3</span>
+              <div class="trace-chain">
+                <span class="trace-svc">gateway</span>
+                <span class="trace-arrow">&rarr;</span>
+                <span class="trace-svc">api</span>
+                <span class="trace-arrow">&rarr;</span>
+                <span class="trace-svc">orders</span>
+                <span class="trace-arrow">&rarr;</span>
+                <span class="trace-svc">database</span>
+              </div>
+            </div>
+            <div class="trace-row locked" id="trace-3" data-index="3">
+              <span class="trace-label">Trace 4</span>
+              <div class="trace-chain">
+                <span class="trace-svc">gateway</span>
+                <span class="trace-arrow">&rarr;</span>
+                <span class="trace-svc">api</span>
+                <span class="trace-arrow">&rarr;</span>
+                <span class="trace-svc">inventory</span>
+              </div>
+            </div>
+            <div class="trace-row locked" id="trace-4" data-index="4">
+              <span class="trace-label">Trace 5</span>
+              <div class="trace-chain">
+                <span class="trace-svc">gateway</span>
+                <span class="trace-arrow">&rarr;</span>
+                <span class="trace-svc">api</span>
+                <span class="trace-arrow">&rarr;</span>
+                <span class="trace-svc">payment</span>
+                <span class="trace-arrow">&rarr;</span>
+                <span class="trace-svc">database</span>
+              </div>
+            </div>
+          </div>
+          <div class="trace-hint" id="traceHint"></div>
+        </div>
+      </div>
+
+      <!-- Right: SVG service map with disconnected nodes -->
+      <div class="map-panel">
+        <div class="panel-header">service map</div>
+        <div class="map-canvas-body">
+          <svg class="map-svg" viewBox="0 0 520 380" xmlns="http://www.w3.org/2000/svg">
+            <!-- Edges (hidden initially) -->
+            <line class="map-edge" id="edge-gateway-api" x1="90" y1="190" x2="230" y2="90" />
+            <text class="map-edge-count" id="ecount-gateway-api" x="155" y="130"></text>
+            <line class="map-edge" id="edge-api-orders" x1="230" y1="90" x2="380" y2="50" />
+            <text class="map-edge-count" id="ecount-api-orders" x="305" y="60"></text>
+            <line class="map-edge" id="edge-api-payment" x1="230" y1="90" x2="380" y2="160" />
+            <text class="map-edge-count" id="ecount-api-payment" x="305" y="135"></text>
+            <line class="map-edge" id="edge-api-inventory" x1="230" y1="90" x2="380" y2="270" />
+            <text class="map-edge-count" id="ecount-api-inventory" x="305" y="190"></text>
+            <line class="map-edge" id="edge-orders-database" x1="380" y1="50" x2="460" y2="160" />
+            <text class="map-edge-count" id="ecount-orders-database" x="430" y="95"></text>
+            <line class="map-edge" id="edge-payment-database" x1="380" y1="160" x2="460" y2="160" />
+            <text class="map-edge-count" id="ecount-payment-database" x="420" y="148"></text>
+
+            <!-- Service nodes (visible but disconnected) -->
+            <circle class="map-node-circle" id="node-gateway" cx="90" cy="190" r="32" />
+            <text class="map-node-label" id="label-gateway" x="90" y="190">gateway</text>
+            <circle class="map-node-circle" id="node-api" cx="230" cy="90" r="32" />
+            <text class="map-node-label" id="label-api" x="230" y="90">api</text>
+            <circle class="map-node-circle" id="node-orders" cx="380" cy="50" r="32" />
+            <text class="map-node-label" id="label-orders" x="380" y="50">orders</text>
+            <circle class="map-node-circle" id="node-payment" cx="380" cy="160" r="32" />
+            <text class="map-node-label" id="label-payment" x="380" y="160">payment</text>
+            <circle class="map-node-circle" id="node-inventory" cx="380" cy="270" r="32" />
+            <text class="map-node-label" id="label-inventory" x="380" y="270">inventory</text>
+            <circle class="map-node-circle" id="node-database" cx="460" cy="160" r="32" />
+            <text class="map-node-label" id="label-database" x="460" y="160">database</text>
+          </svg>
+        </div>
+        <div class="map-legend" id="legend">
+          <div class="map-legend-item">
+            <div class="map-legend-line-thin"></div>
+            <span>fewer calls</span>
+          </div>
+          <div class="map-legend-item">
+            <div class="map-legend-line-thick"></div>
+            <span>more calls</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Prediction challenge (appears before each trace after the first) -->
+    <div class="prediction-box" id="predictionBox">
+      <p id="predQuestion"></p>
+      <div class="pred-opts" id="predOpts"></div>
+      <div class="pred-fb" id="predFb"></div>
+    </div>
+
+    <!-- Q2: After map is fully built -->
+    <div class="map-question" id="q2">
+      <p>Look at the map you just built. Which service receives the most incoming calls?</p>
+      <div class="map-opts">
+        <button class="map-opt" data-answer="wrong">gateway</button>
+        <button class="map-opt" data-answer="correct">api</button>
+        <button class="map-opt" data-answer="wrong">database</button>
+      </div>
+      <div class="map-fb" id="fb2"></div>
+    </div>
+
+    <!-- Insight -->
+    <div class="map-insight" id="insight">
+      <p>No one drew the map. The traces drew it. Every span is a connection between services.</p>
+      <a href="18-correlation.html">Continue &rarr;</a>
+    </div>
+  </div>
+
+  <div class="koan-progress">
+    <div class="koan-progress-fill" style="width: 89%"></div>
+  </div>
+
+  <script>
+    (function () {
+      /* ----- Data ----- */
+      var traces = [
+        ['gateway', 'api', 'orders'],
+        ['gateway', 'api', 'payment'],
+        ['gateway', 'api', 'orders', 'database'],
+        ['gateway', 'api', 'inventory'],
+        ['gateway', 'api', 'payment', 'database']
+      ];
+
+      /* Edges that each trace introduces */
+      function traceEdges(trace) {
+        var edges = [];
+        for (var i = 0; i < trace.length - 1; i++) {
+          edges.push(trace[i] + '-' + trace[i + 1]);
+        }
+        return edges;
+      }
+
+      /* Track what edges exist on the map so far */
+      var edgeCounts = {};
+      var maxEdge = 5; /* gateway->api appears in all 5 traces */
+
+      var awaitingPrediction = false;
+
+      /* ----- DOM refs ----- */
+      var workspace = document.getElementById('workspace');
+      var traceHint = document.getElementById('traceHint');
+      var predictionBox = document.getElementById('predictionBox');
+      var predQuestion = document.getElementById('predQuestion');
+      var predOpts = document.getElementById('predOpts');
+      var predFb = document.getElementById('predFb');
+      var legend = document.getElementById('legend');
+
+      /* ----- Q1: gate question (visible on load) ----- */
+      (function setupQ1() {
+        var q1 = document.getElementById('q1');
+        var fb1 = document.getElementById('fb1');
+        var opts = q1.querySelectorAll('.map-opt');
+
+        opts.forEach(function (opt) {
+          opt.addEventListener('click', function () {
+            if (this.dataset.answer === 'correct') {
+              this.classList.add('correct');
+              opts.forEach(function (o) { o.classList.add('disabled'); });
+              fb1.textContent = 'Exactly. Every trace is a record of which service called which. Let\u2019s prove it.';
+              fb1.className = 'map-fb map-fb--correct';
+              /* Reveal workspace and unlock first trace */
+              setTimeout(function () {
+                workspace.style.opacity = '1';
+                workspace.style.pointerEvents = 'auto';
+                unlockTrace(0, false);
+                traceHint.textContent = 'Click Trace 1 to begin building the map.';
+              }, 800);
+            } else {
+              this.classList.add('wrong');
+              fb1.textContent = 'Think about what a trace records \u2014 it captures the path a request takes through services.';
+              fb1.className = 'map-fb map-fb--wrong';
+              var self = this;
+              setTimeout(function () { self.classList.remove('wrong'); }, 600);
+            }
+          });
+        });
+      })();
+
+      /* ----- Unlock a trace row for clicking ----- */
+      function unlockTrace(index, usePrediction) {
+        var row = document.getElementById('trace-' + index);
+        if (!row) return;
+        row.classList.remove('locked');
+
+        if (usePrediction) {
+          /* Traces 1-4: show prediction challenge before processing */
+          row.addEventListener('click', function handler() {
+            if (awaitingPrediction) return;
+            row.removeEventListener('click', handler);
+            traceHint.textContent = '';
+            showPrediction(index, function () {
+              processTraceClick(index);
+            });
+          });
+        } else {
+          /* Trace 0: process directly on click */
+          row.addEventListener('click', function handler() {
+            row.removeEventListener('click', handler);
+            processTraceClick(index);
+          });
+        }
+      }
+
+      /* ----- Determine which edges are NEW for a given trace ----- */
+      function newEdgesForTrace(index) {
+        var edges = traceEdges(traces[index]);
+        var novel = [];
+        for (var i = 0; i < edges.length; i++) {
+          if (!edgeCounts[edges[i]]) {
+            novel.push(edges[i]);
+          }
+        }
+        return novel;
+      }
+
+      /* ----- Format an edge key into readable form ----- */
+      function edgeLabel(key) {
+        var parts = key.split('-');
+        return parts[0] + ' \u2192 ' + parts[1];
+      }
+
+      /* ----- Show prediction challenge BEFORE processing a trace ----- */
+      function showPrediction(traceIndex, callback) {
+        awaitingPrediction = true;
+        var trace = traces[traceIndex];
+        var actual = newEdgesForTrace(traceIndex);
+        var allEdges = traceEdges(traces[traceIndex]);
+
+        /* Build the trace description */
+        var traceDesc = trace.join(' \u2192 ');
+
+        /* Generate answer options: the actual new edges + 1-2 distractors */
+        var distractors = ['api-database', 'gateway-orders', 'inventory-database', 'gateway-payment', 'orders-payment'];
+        var wrongOptions = [];
+        for (var d = 0; d < distractors.length; d++) {
+          /* Only use distractors that are not actual edges in this trace and not already on the map */
+          if (allEdges.indexOf(distractors[d]) === -1 && !edgeCounts[distractors[d]]) {
+            wrongOptions.push(distractors[d]);
+            if (wrongOptions.length >= 2) break;
+          }
+        }
+
+        if (actual.length === 0) {
+          /* All edges already on map - different question */
+          predQuestion.innerHTML = 'Trace ' + (traceIndex + 1) + ' shows: <span class="mono">' + traceDesc + '</span><br>All these connections are already on the map. What will change?';
+
+          predOpts.innerHTML = '';
+          var correctOpt = document.createElement('button');
+          correctOpt.className = 'pred-opt';
+          correctOpt.textContent = 'Existing edges get thicker';
+          correctOpt.dataset.answer = 'correct';
+          predOpts.appendChild(correctOpt);
+
+          var wrongOpt = document.createElement('button');
+          wrongOpt.className = 'pred-opt';
+          wrongOpt.textContent = 'Nothing changes';
+          wrongOpt.dataset.answer = 'wrong';
+          predOpts.appendChild(wrongOpt);
+
+          var wrongOpt2 = document.createElement('button');
+          wrongOpt2.className = 'pred-opt';
+          wrongOpt2.textContent = 'New edges appear';
+          wrongOpt2.dataset.answer = 'wrong';
+          predOpts.appendChild(wrongOpt2);
+        } else {
+          predQuestion.innerHTML = 'Trace ' + (traceIndex + 1) + ' shows: <span class="mono">' + traceDesc + '</span><br>Which new connection will appear on the map?';
+
+          predOpts.innerHTML = '';
+          /* Correct: the first new edge */
+          var correctOpt = document.createElement('button');
+          correctOpt.className = 'pred-opt';
+          correctOpt.textContent = edgeLabel(actual[0]);
+          correctOpt.dataset.answer = 'correct';
+
+          /* Wrong options */
+          var allOpts = [correctOpt];
+          for (var w = 0; w < wrongOptions.length; w++) {
+            var wBtn = document.createElement('button');
+            wBtn.className = 'pred-opt';
+            wBtn.textContent = edgeLabel(wrongOptions[w]);
+            wBtn.dataset.answer = 'wrong';
+            allOpts.push(wBtn);
+          }
+
+          /* Shuffle */
+          for (var s = allOpts.length - 1; s > 0; s--) {
+            var j = Math.floor(Math.random() * (s + 1));
+            var tmp = allOpts[s];
+            allOpts[s] = allOpts[j];
+            allOpts[j] = tmp;
+          }
+
+          for (var a = 0; a < allOpts.length; a++) {
+            predOpts.appendChild(allOpts[a]);
+          }
+        }
+
+        predFb.textContent = '';
+        predFb.className = 'pred-fb';
+        predictionBox.classList.add('visible');
+
+        /* Wire up option clicks */
+        var opts = predOpts.querySelectorAll('.pred-opt');
+        opts.forEach(function (opt) {
+          opt.addEventListener('click', function handler() {
+            if (opt.dataset.answer === 'correct') {
+              opt.classList.add('correct');
+              opts.forEach(function (o) { o.classList.add('disabled'); });
+              if (actual.length === 0) {
+                predFb.textContent = 'Right \u2014 repeated traces thicken existing edges, showing call frequency.';
+              } else {
+                predFb.textContent = 'Correct! You predicted the new connection.';
+              }
+              predFb.className = 'pred-fb pred-fb--correct';
+              setTimeout(function () {
+                predictionBox.classList.remove('visible');
+                awaitingPrediction = false;
+                callback();
+              }, 1200);
+            } else {
+              opt.classList.add('wrong');
+              predFb.textContent = 'Look at the trace chain carefully \u2014 which pair of services isn\u2019t on the map yet?';
+              predFb.className = 'pred-fb pred-fb--wrong';
+              setTimeout(function () { opt.classList.remove('wrong'); }, 500);
+            }
+          });
+        });
+      }
+
+      /* ----- Process a trace: animate edges onto the map ----- */
+      function processTraceClick(index) {
+        var row = document.getElementById('trace-' + index);
+        row.classList.add('active');
+        traceHint.textContent = '';
+
+        var trace = traces[index];
+        var edges = [];
+        for (var i = 0; i < trace.length - 1; i++) {
+          edges.push([trace[i], trace[i + 1]]);
+        }
+
+        var edgeDelay = 400;
+        edges.forEach(function (edge, ei) {
+          setTimeout(function () {
+            addEdgeToMap(edge[0], edge[1]);
+          }, ei * edgeDelay);
+        });
+
+        /* After all edges in this trace are drawn */
+        setTimeout(function () {
+          row.classList.remove('active');
+          row.classList.add('processed');
+
+          var next = index + 1;
+          if (next < traces.length) {
+            /* Unlock next trace with prediction gate */
+            unlockTrace(next, true);
+            traceHint.textContent = 'Click Trace ' + (next + 1) + ' to process it.';
+          } else {
+            /* All traces processed — map is complete */
+            traceHint.textContent = 'All 5 traces processed \u2014 map complete.';
+            legend.classList.add('visible');
+            setTimeout(function () {
+              document.getElementById('q2').classList.add('visible');
+            }, 800);
+          }
+        }, edges.length * edgeDelay + 200);
+      }
+
+      /* ----- Add/thicken an edge on the SVG map ----- */
+      function addEdgeToMap(from, to) {
+        var key = from + '-' + to;
+        if (!edgeCounts[key]) { edgeCounts[key] = 0; }
+        edgeCounts[key]++;
+
+        var count = edgeCounts[key];
+        var line = document.getElementById('edge-' + key);
+        var countLabel = document.getElementById('ecount-' + key);
+
+        if (line) {
+          var isNew = count === 1;
+          line.classList.add('visible');
+
+          if (isNew) {
+            /* New edge: glow animation */
+            line.classList.add('glow');
+            setTimeout(function () { line.classList.remove('glow'); }, 1200);
+          }
+
+          /* Stroke width: 2 for 1 call, scaling up to 7 for maxEdge */
+          var sw = 2 + (count - 1) * (5 / (maxEdge - 1));
+          line.style.strokeWidth = sw + 'px';
+          /* Opacity scales from 0.5 to 1 */
+          var op = 0.5 + (count / maxEdge) * 0.5;
+          line.style.opacity = op;
+        }
+
+        if (countLabel) {
+          countLabel.classList.add('visible');
+          countLabel.textContent = '\u00d7' + count;
+        }
+
+        markNode(from);
+        markNode(to);
+      }
+
+      function markNode(name) {
+        var circle = document.getElementById('node-' + name);
+        var label = document.getElementById('label-' + name);
+        if (circle && !circle.classList.contains('connected')) {
+          circle.classList.add('connected');
+        }
+        if (label && !label.classList.contains('connected')) {
+          label.classList.add('connected');
+        }
+      }
+
+      /* ----- Q2: after map is built ----- */
+      (function setupQ2() {
+        var q2 = document.getElementById('q2');
+        var fb2 = document.getElementById('fb2');
+        var opts = q2.querySelectorAll('.map-opt');
+
+        opts.forEach(function (opt) {
+          opt.addEventListener('click', function () {
+            if (this.dataset.answer === 'correct') {
+              this.classList.add('correct');
+              opts.forEach(function (o) { o.classList.add('disabled'); });
+              fb2.textContent = 'Every trace passes through api \u2014 it receives 5 incoming calls. You can see it in the map you built.';
+              fb2.className = 'map-fb map-fb--correct';
+              setTimeout(function () {
+                document.getElementById('insight').classList.add('visible');
+              }, 800);
+            } else {
+              this.classList.add('wrong');
+              fb2.textContent = 'Count the arrows pointing into each service on the map you built.';
+              fb2.className = 'map-fb map-fb--wrong';
+              var self = this;
+              setTimeout(function () { self.classList.remove('wrong'); }, 500);
+            }
+          });
+        });
+      })();
+    })();
+  </script>
+</body>
+</html>

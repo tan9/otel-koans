@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Koan 19: The Full Picture — OpenTelemetry Koans</title>
+  <link rel="stylesheet" href="../css/shared.css">
+  <style>
+    /* Alert banner */
+    .alert-banner {
+      background: rgba(248, 81, 73, 0.12);
+      border: 1px solid var(--accent-red);
+      border-radius: 8px;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      animation: alertPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes alertPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(248, 81, 73, 0.3); }
+      50% { box-shadow: 0 0 16px 2px rgba(248, 81, 73, 0.15); }
+    }
+
+    .alert-icon {
+      font-size: 1.4rem;
+      line-height: 1;
+      flex-shrink: 0;
+      color: var(--accent-red);
+      font-family: var(--font-mono);
+      font-weight: 700;
+    }
+
+    .alert-body { flex: 1; }
+
+    .alert-title {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent-red);
+      margin-bottom: 0.25rem;
+    }
+
+    .alert-detail {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+    }
+
+    .alert-time {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    /* Narrative text */
+    .fp-narrative {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      text-align: center;
+      margin: 1.5rem 0;
+      line-height: 1.7;
+      opacity: 0;
+      transition: opacity 0.6s;
+    }
+
+    .fp-narrative.visible { opacity: 1; }
+
+    .fp-narrative strong { color: var(--text-primary); }
+
+    /* ── Investigation chooser ── */
+    .fp-chooser {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 0.6s, max-height 0.6s ease, padding 0.6s, margin 0.6s;
+    }
+
+    .fp-chooser.visible {
+      opacity: 1;
+      max-height: 12rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .fp-chooser p {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+
+    .fp-chooser-hint {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .fp-choice-btns {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .fp-choice-btn {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      padding: 0.6rem 1.25rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.25s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .fp-choice-btn.metric-btn {
+      background: rgba(210, 153, 34, 0.08);
+      border: 1px solid rgba(210, 153, 34, 0.35);
+      color: var(--accent-orange);
+    }
+    .fp-choice-btn.metric-btn:hover { border-color: var(--accent-orange); background: rgba(210, 153, 34, 0.15); }
+
+    .fp-choice-btn.trace-btn {
+      background: rgba(63, 185, 80, 0.08);
+      border: 1px solid rgba(63, 185, 80, 0.35);
+      color: var(--accent-green);
+    }
+    .fp-choice-btn.trace-btn:hover { border-color: var(--accent-green); background: rgba(63, 185, 80, 0.15); }
+
+    .fp-choice-btn.log-btn {
+      background: rgba(188, 140, 255, 0.08);
+      border: 1px solid rgba(188, 140, 255, 0.35);
+      color: var(--accent-purple);
+    }
+    .fp-choice-btn.log-btn:hover { border-color: var(--accent-purple); background: rgba(188, 140, 255, 0.15); }
+
+    .fp-choice-btn.chosen {
+      opacity: 1;
+      pointer-events: none;
+      box-shadow: 0 0 10px rgba(88, 166, 255, 0.15);
+    }
+
+    .fp-choice-btn.unchosen {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    /* ── Signal panels ── */
+    .fp-panel {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 1.25rem;
+      opacity: 0;
+      max-height: 0;
+      transition: opacity 0.6s, max-height 0.8s ease;
+    }
+
+    .fp-panel.visible {
+      opacity: 1;
+      max-height: 700px;
+    }
+
+    .fp-panel-header {
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .fp-panel-body { padding: 1.25rem; }
+
+    /* Signal badges */
+    .fp-badge {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .fp-badge--metric {
+      background: rgba(210, 153, 34, 0.15);
+      color: var(--accent-orange);
+      border: 1px solid rgba(210, 153, 34, 0.3);
+    }
+
+    .fp-badge--trace {
+      background: rgba(63, 185, 80, 0.15);
+      color: var(--accent-green);
+      border: 1px solid rgba(63, 185, 80, 0.3);
+    }
+
+    .fp-badge--log {
+      background: rgba(188, 140, 255, 0.15);
+      color: var(--accent-purple);
+      border: 1px solid rgba(188, 140, 255, 0.3);
+    }
+
+    /* ── Metric chart content ── */
+    .fp-metric-chart {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+    }
+
+    .fp-metric-chart-title {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--accent-orange);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.75rem;
+    }
+
+    .fp-chart-svg {
+      width: 100%;
+      height: 100px;
+    }
+
+    .fp-chart-labels {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .fp-metric-finding {
+      margin-top: 0.75rem;
+      padding: 0.5rem 0.75rem;
+      background: var(--bg-secondary);
+      border: 1px solid rgba(210, 153, 34, 0.3);
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    .fp-metric-finding .key { color: var(--accent-orange); }
+    .fp-metric-finding .val { color: var(--text-primary); }
+
+    .fp-partial-clue {
+      margin-top: 0.75rem;
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-style: italic;
+      text-align: center;
+      padding: 0.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .fp-partial-clue strong { color: var(--text-primary); font-style: normal; }
+
+    /* ── Trace waterfall content ── */
+    .fp-trace-waterfall {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+    }
+
+    .fp-trace-title {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--accent-green);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.75rem;
+    }
+
+    .fp-span-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.4rem;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+    }
+
+    .fp-span-name {
+      width: 80px;
+      flex-shrink: 0;
+      color: var(--text-secondary);
+      text-align: right;
+    }
+
+    .fp-span-bar-wrap {
+      flex: 1;
+      height: 20px;
+      background: var(--bg-primary);
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .fp-span-bar {
+      height: 100%;
+      border-radius: 4px;
+      opacity: 0.6;
+      position: absolute;
+      top: 0;
+    }
+
+    .fp-span-bar.ok { background: var(--accent-green); }
+    .fp-span-bar.err { background: var(--accent-red); }
+
+    .fp-span-dur {
+      width: 70px;
+      flex-shrink: 0;
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    .fp-span-dur.err-text { color: var(--accent-red); }
+
+    .fp-trace-id {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      margin-top: 0.75rem;
+      text-align: center;
+    }
+
+    .fp-trace-id .hl { color: var(--accent-green); }
+
+    /* ── Log content ── */
+    .fp-log-block {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+    }
+
+    .fp-log-title {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--accent-purple);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.75rem;
+    }
+
+    .fp-log-line {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      line-height: 2;
+      color: var(--text-secondary);
+      padding: 0.1rem 0.4rem;
+      border-radius: 3px;
+    }
+
+    .fp-log-line .ts { color: var(--text-muted); }
+    .fp-log-line .svc { color: var(--accent-blue); }
+    .fp-log-line .sev-warn { color: var(--accent-orange); }
+    .fp-log-line .sev-err { color: var(--accent-red); font-weight: 600; }
+    .fp-log-line .msg { color: var(--text-primary); }
+    .fp-log-line .attr-k { color: var(--accent-purple); }
+    .fp-log-line .attr-v { color: var(--text-secondary); }
+
+    /* ── Service map (interactive) ── */
+    .fp-service-map {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+      text-align: center;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 0.6s, max-height 0.8s ease;
+    }
+
+    .fp-service-map.visible {
+      opacity: 1;
+      max-height: 400px;
+    }
+
+    .fp-smap-prompt {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .fp-smap-hint {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .fp-smap-svg {
+      width: 100%;
+      max-width: 580px;
+      height: 200px;
+      margin: 0 auto;
+      display: block;
+    }
+
+    .fp-smap-node {
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .fp-smap-node:hover rect {
+      stroke: var(--accent-blue);
+    }
+
+    .fp-smap-node.disabled {
+      cursor: default;
+      opacity: 0.4;
+    }
+
+    .fp-smap-node.disabled rect {
+      stroke: var(--border);
+    }
+
+    .fp-smap-node.correct rect {
+      stroke: var(--accent-green);
+      fill: rgba(63, 185, 80, 0.1);
+    }
+
+    .fp-smap-node.correct text {
+      fill: var(--accent-green);
+    }
+
+    .fp-smap-node.wrong rect {
+      stroke: var(--accent-red);
+    }
+
+    .fp-smap-fb {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      min-height: 1.5em;
+      margin-top: 0.75rem;
+    }
+
+    .fp-smap-fb.correct { color: var(--accent-green); }
+    .fp-smap-fb.wrong { color: var(--accent-red); }
+
+    /* ── Root cause panel ── */
+    .fp-root-cause {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 0.6s, max-height 0.6s ease;
+    }
+
+    .fp-root-cause.visible {
+      opacity: 1;
+      max-height: 20rem;
+    }
+
+    .fp-root-cause-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--accent-green);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+
+    .fp-root-cause p {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .fp-root-cause p strong {
+      color: var(--text-primary);
+    }
+
+    .fp-root-cause .fp-root-detail {
+      margin-top: 0.75rem;
+      padding: 0.6rem 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      display: inline-block;
+    }
+
+    /* ── Journey summary ── */
+    .fp-journey {
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 0.8s, max-height 1s ease;
+    }
+
+    .fp-journey.visible {
+      opacity: 1;
+      max-height: 250px;
+    }
+
+    .fp-journey-title {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .fp-journey-steps {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      flex-wrap: wrap;
+    }
+
+    .fp-journey-step {
+      text-align: center;
+      padding: 0.75rem 1rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      min-width: 130px;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+
+    .fp-journey-step.visible { opacity: 1; }
+
+    .fp-journey-step .step-signal {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.3rem;
+    }
+
+    .fp-journey-step .step-found {
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      color: var(--text-primary);
+    }
+
+    .fp-journey-step .step-detail {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    .fp-journey-arrow {
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      color: var(--text-muted);
+      padding: 0 0.3rem;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+
+    .fp-journey-arrow.visible { opacity: 1; }
+
+    /* ── Koan 0 callback: service diagram ── */
+    .fp-system-callback {
+      position: relative;
+      margin: 2rem auto;
+      max-width: 700px;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 1s, max-height 1.2s ease;
+    }
+
+    .fp-system-callback.visible {
+      opacity: 1;
+      max-height: 600px;
+    }
+
+    .fp-callback-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .fp-callback-svg {
+      width: 100%;
+      height: 400px;
+    }
+
+    .fp-callback-svg .svc-circle {
+      fill: var(--bg-tertiary);
+      stroke: var(--border);
+      stroke-width: 1.5;
+      transition: all 0.8s ease;
+    }
+
+    .fp-callback-svg .svc-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      fill: var(--text-muted);
+      text-anchor: middle;
+      transition: fill 0.8s ease;
+    }
+
+    .fp-callback-svg .svc-edge {
+      stroke: var(--border);
+      stroke-width: 1;
+      fill: none;
+      opacity: 0.3;
+      transition: all 0.8s ease;
+    }
+
+    .fp-callback-svg .tel-label {
+      font-family: var(--font-mono);
+      font-size: 8px;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+
+    /* Completion section */
+    .fp-completion {
+      text-align: center;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2.5rem 2rem;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 1s ease, max-height 1s ease;
+    }
+
+    .fp-completion.visible {
+      opacity: 1;
+      max-height: 400px;
+    }
+
+    .fp-completion-line {
+      font-family: var(--font-sans);
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      line-height: 2;
+      margin-bottom: 0.25rem;
+    }
+
+    .fp-completion-line.hl {
+      color: var(--accent-green);
+      font-style: italic;
+    }
+
+    .fp-completion-divider {
+      width: 40px;
+      height: 1px;
+      background: var(--border);
+      margin: 1.5rem auto;
+    }
+
+    .fp-completion-link {
+      display: inline-block;
+      margin-top: 2rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--accent-blue);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .fp-completion-link:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="mobile-gate">
+    <div class="mobile-gate-icon">&#9776;</div>
+    <div class="mobile-gate-title">Desktop Only</div>
+    <div class="mobile-gate-text">These koans require a larger screen. Please visit on a desktop browser.</div>
+  </div>
+
+  <div class="koan-page">
+    <div class="koan-header">
+      <div class="koan-number">Koan 19 of 19</div>
+      <div class="koan-nav">
+        <a href="18-correlation.html">&larr; Correlation</a>
+        <a href="../index.html">Return to Beginning &rarr;</a>
+      </div>
+    </div>
+
+    <h1 class="koan-title">The Full Picture</h1>
+
+    <div class="koan-text">
+      The system failed on a Tuesday.<br>
+      But this time, the developer did not ask "When did this begin?"<br>
+      They opened three windows and found the answer themselves.
+    </div>
+
+    <!-- ═══ The Alert ═══ -->
+    <div class="alert-banner" id="alertBanner">
+      <div class="alert-icon">!</div>
+      <div class="alert-body">
+        <div class="alert-title">PRODUCTION ALERT: orders error rate > 5%</div>
+        <div class="alert-detail">orders &middot; error_rate = 12.4% &middot; threshold = 5%</div>
+      </div>
+      <div class="alert-time">14:37 UTC</div>
+    </div>
+
+    <div class="fp-narrative visible" id="narr0" style="opacity:1;">
+      An alert fires. Something is wrong. You have three tools at your disposal.<br>
+      <strong>Where do you start?</strong>
+    </div>
+
+    <!-- ═══ First choice: pick any signal ═══ -->
+    <div class="fp-chooser visible" id="chooser1" style="opacity:1;max-height:12rem;">
+      <p>Choose your first investigation step.</p>
+      <div class="fp-chooser-hint">There is no wrong answer. Each reveals a different piece.</div>
+      <div class="fp-choice-btns" id="choice1Btns">
+        <button class="fp-choice-btn metric-btn" data-signal="metric">Check metrics dashboard</button>
+        <button class="fp-choice-btn trace-btn" data-signal="trace">Search traces</button>
+        <button class="fp-choice-btn log-btn" data-signal="log">Search logs</button>
+      </div>
+    </div>
+
+    <!-- ═══ Metric panel ═══ -->
+    <div class="fp-panel" id="metricPanel">
+      <div class="fp-panel-header">
+        <span>metrics dashboard &mdash; orders service</span>
+        <span class="fp-badge fp-badge--metric">metric</span>
+      </div>
+      <div class="fp-panel-body">
+        <div class="fp-metric-chart">
+          <div class="fp-metric-chart-title">http.server.errors / http.server.requests &mdash; orders</div>
+          <svg class="fp-chart-svg" viewBox="0 0 500 100" preserveAspectRatio="none">
+            <line x1="0" y1="80" x2="500" y2="80" stroke="var(--border)" stroke-width="0.5" />
+            <line x1="0" y1="50" x2="500" y2="50" stroke="var(--accent-red)" stroke-width="1" stroke-dasharray="6,4" opacity="0.5" />
+            <text x="505" y="53" font-family="var(--font-mono)" font-size="8" fill="var(--accent-red)" opacity="0.5">5%</text>
+            <polyline
+              points="0,78 50,77 100,79 150,78 200,77 250,78 280,76 300,70 320,55 340,38 360,28 380,22 400,20 420,22 440,21 460,23 480,22 500,24"
+              fill="none"
+              stroke="var(--accent-orange)"
+              stroke-width="2"
+            />
+            <circle cx="340" cy="38" r="4" fill="var(--accent-red)" opacity="0.8">
+              <animate attributeName="r" values="4;6;4" dur="1.5s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0.8;0.4;0.8" dur="1.5s" repeatCount="indefinite" />
+            </circle>
+          </svg>
+          <div class="fp-chart-labels">
+            <span>14:20</span>
+            <span style="color: var(--accent-red);">14:37</span>
+            <span>14:55</span>
+          </div>
+        </div>
+        <div class="fp-metric-finding">
+          <span class="key">resource.service.name</span> = <span class="val">orders</span><br>
+          <span class="key">error_rate</span> = <span class="val">12.4%</span>
+          &nbsp;&middot;&nbsp; <span class="key">p99_latency</span> = <span class="val">3,200ms</span>
+          &nbsp;&middot;&nbsp; <span class="key">window</span> = <span class="val">14:30 &ndash; 14:40 UTC</span>
+        </div>
+        <div class="fp-partial-clue">
+          You know <strong>THAT</strong> something is wrong with orders, and <strong>WHEN</strong> it started. But not <strong>WHAT</strong> is failing or <strong>WHY</strong>.
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ Trace panel ═══ -->
+    <div class="fp-panel" id="tracePanel">
+      <div class="fp-panel-header">
+        <span>trace search &mdash; orders service &mdash; errors only</span>
+        <span class="fp-badge fp-badge--trace">trace</span>
+      </div>
+      <div class="fp-panel-body">
+        <div class="fp-trace-waterfall">
+          <div class="fp-trace-title">Trace f7a2c9e1 &middot; 14:37:22 UTC &middot; status: ERROR</div>
+          <div class="fp-span-row">
+            <div class="fp-span-name">gateway</div>
+            <div class="fp-span-bar-wrap">
+              <div class="fp-span-bar err" style="left: 0%; width: 100%;"></div>
+            </div>
+            <div class="fp-span-dur">3180ms</div>
+          </div>
+          <div class="fp-span-row">
+            <div class="fp-span-name">api</div>
+            <div class="fp-span-bar-wrap">
+              <div class="fp-span-bar ok" style="left: 2%; width: 95%;"></div>
+            </div>
+            <div class="fp-span-dur">3040ms</div>
+          </div>
+          <div class="fp-span-row">
+            <div class="fp-span-name">orders</div>
+            <div class="fp-span-bar-wrap">
+              <div class="fp-span-bar ok" style="left: 5%; width: 88%;"></div>
+            </div>
+            <div class="fp-span-dur">2810ms</div>
+          </div>
+          <div class="fp-span-row">
+            <div class="fp-span-name" style="color:var(--accent-red);">database</div>
+            <div class="fp-span-bar-wrap">
+              <div class="fp-span-bar err" style="left: 10%; width: 80%;"></div>
+            </div>
+            <div class="fp-span-dur err-text">2560ms ERR</div>
+          </div>
+          <div class="fp-trace-id">
+            trace_id: <span class="hl">f7a2c9e1...3b8d</span> &nbsp;&middot;&nbsp; root: gateway &nbsp;&middot;&nbsp; error at: database span
+          </div>
+        </div>
+        <div class="fp-partial-clue">
+          You can see <strong>WHERE</strong> the error happens &mdash; the database span. But the trace doesn't say <strong>WHY</strong> the database call failed.
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ Log panel ═══ -->
+    <div class="fp-panel" id="logPanel">
+      <div class="fp-panel-header">
+        <span>log search &mdash; severity >= WARN &mdash; 14:30 to 14:40</span>
+        <span class="fp-badge fp-badge--log">log</span>
+      </div>
+      <div class="fp-panel-body">
+        <div class="fp-log-block">
+          <div class="fp-log-title">Recent error logs (multiple services)</div>
+          <div class="fp-log-line">
+            <span class="ts">14:36:58</span> <span class="svc">gateway</span> <span class="sev-warn">WARN</span> <span class="msg">upstream timeout</span> <span class="attr-k">target</span>=<span class="attr-v">api</span>
+          </div>
+          <div class="fp-log-line">
+            <span class="ts">14:37:01</span> <span class="svc">payment</span> <span class="sev-warn">WARN</span> <span class="msg">retrying charge</span> <span class="attr-k">attempt</span>=<span class="attr-v">2</span>
+          </div>
+          <div class="fp-log-line">
+            <span class="ts">14:37:04</span> <span class="svc">inventory</span> <span class="sev-warn">WARN</span> <span class="msg">stock check slow</span> <span class="attr-k">latency</span>=<span class="attr-v">1200ms</span>
+          </div>
+          <div class="fp-log-line">
+            <span class="ts">14:37:09</span> <span class="svc">api</span> <span class="sev-err">ERROR</span> <span class="msg">request failed</span> <span class="attr-k">path</span>=<span class="attr-v">/orders</span>
+          </div>
+          <div class="fp-log-line">
+            <span class="ts">14:37:11</span> <span class="svc">orders</span> <span class="sev-err">ERROR</span> <span class="msg">db write failed</span> <span class="attr-k">table</span>=<span class="attr-v">orders</span>
+          </div>
+          <div class="fp-log-line">
+            <span class="ts">14:37:14</span> <span class="svc">gateway</span> <span class="sev-err">ERROR</span> <span class="msg">502 bad gateway</span> <span class="attr-k">route</span>=<span class="attr-v">/checkout</span>
+          </div>
+        </div>
+        <div class="fp-partial-clue">
+          Errors are scattered across <strong>six services</strong>. Without knowing the request path, it is hard to tell which error is the cause and which is a symptom.
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ After first signal: narrative + second chooser ═══ -->
+    <div class="fp-narrative" id="narr1">
+      One signal gave you a piece. <strong>Not the whole answer.</strong><br>
+      What do you check next?
+    </div>
+
+    <div class="fp-chooser" id="chooser2">
+      <p>Choose your second signal.</p>
+      <div class="fp-chooser-hint">You need at least two signals to narrow down the problem.</div>
+      <div class="fp-choice-btns" id="choice2Btns">
+        <!-- Populated dynamically: only the two remaining signals -->
+      </div>
+    </div>
+
+    <!-- ═══ After second signal: narrative + final chooser ═══ -->
+    <div class="fp-narrative" id="narr2">
+      Two signals, two perspectives. One showed the shape, the other added context.<br>
+      <strong>The last signal will complete the picture.</strong>
+    </div>
+
+    <div class="fp-chooser" id="chooser3">
+      <p>Check the final signal.</p>
+      <div class="fp-chooser-hint">You know what is left.</div>
+      <div class="fp-choice-btns" id="choice3Btns">
+        <!-- Populated dynamically: the one remaining signal -->
+      </div>
+    </div>
+
+    <!-- ═══ After all three: service map question ═══ -->
+    <div class="fp-narrative" id="narr3">
+      You have seen all three signals. Errors appear in gateway, api, and orders. Logs mention payment and inventory too.<br>
+      <strong>But which service is the actual root cause?</strong>
+    </div>
+
+    <div class="fp-service-map" id="serviceMap">
+      <div class="fp-smap-prompt">Click the service where the failure originates.</div>
+      <div class="fp-smap-hint">Think about what the trace showed you.</div>
+      <svg class="fp-smap-svg" viewBox="0 0 580 200" id="smapSvg">
+        <!-- Edges -->
+        <line x1="90" y1="50" x2="170" y2="50" stroke="var(--border)" stroke-width="1.5" />
+        <polygon points="168,46 168,54 176,50" fill="var(--border)" />
+        <line x1="240" y1="50" x2="320" y2="50" stroke="var(--border)" stroke-width="1.5" />
+        <polygon points="318,46 318,54 326,50" fill="var(--border)" />
+        <!-- orders to database -->
+        <line x1="390" y1="50" x2="480" y2="50" stroke="var(--border)" stroke-width="1.5" />
+        <polygon points="478,46 478,54 486,50" fill="var(--border)" />
+        <!-- payment branch -->
+        <line x1="355" y1="68" x2="355" y2="130" stroke="var(--border)" stroke-width="1.5" />
+        <polygon points="351,128 359,128 355,136" fill="var(--border)" />
+        <!-- inventory branch -->
+        <line x1="355" y1="68" x2="220" y2="130" stroke="var(--border)" stroke-width="1.5" />
+        <polygon points="216,127 224,131 218,135" fill="var(--border)" />
+
+        <!-- Nodes -->
+        <g class="fp-smap-node" data-svc="gateway">
+          <rect x="20" y="30" width="70" height="40" rx="6" fill="var(--bg-tertiary)" stroke="var(--border)" stroke-width="1.5" />
+          <text x="55" y="55" font-family="var(--font-mono)" font-size="9" fill="var(--text-muted)" text-anchor="middle">gateway</text>
+        </g>
+        <g class="fp-smap-node" data-svc="api">
+          <rect x="178" y="30" width="60" height="40" rx="6" fill="var(--bg-tertiary)" stroke="var(--border)" stroke-width="1.5" />
+          <text x="208" y="55" font-family="var(--font-mono)" font-size="9" fill="var(--text-muted)" text-anchor="middle">api</text>
+        </g>
+        <g class="fp-smap-node" data-svc="orders">
+          <rect x="328" y="30" width="60" height="40" rx="6" fill="var(--bg-tertiary)" stroke="var(--border)" stroke-width="1.5" />
+          <text x="358" y="55" font-family="var(--font-mono)" font-size="9" fill="var(--text-muted)" text-anchor="middle">orders</text>
+        </g>
+        <g class="fp-smap-node" data-svc="database">
+          <rect x="488" y="30" width="70" height="40" rx="6" fill="var(--bg-tertiary)" stroke="var(--border)" stroke-width="1.5" />
+          <text x="523" y="55" font-family="var(--font-mono)" font-size="9" fill="var(--text-muted)" text-anchor="middle">database</text>
+        </g>
+        <g class="fp-smap-node" data-svc="payment">
+          <rect x="318" y="138" width="74" height="40" rx="6" fill="var(--bg-tertiary)" stroke="var(--border)" stroke-width="1.5" />
+          <text x="355" y="163" font-family="var(--font-mono)" font-size="9" fill="var(--text-muted)" text-anchor="middle">payment</text>
+        </g>
+        <g class="fp-smap-node" data-svc="inventory">
+          <rect x="168" y="138" width="74" height="40" rx="6" fill="var(--bg-tertiary)" stroke="var(--border)" stroke-width="1.5" />
+          <text x="205" y="163" font-family="var(--font-mono)" font-size="9" fill="var(--text-muted)" text-anchor="middle">inventory</text>
+        </g>
+      </svg>
+      <div class="fp-smap-fb" id="smapFb"></div>
+    </div>
+
+    <!-- ═══ Root cause ═══ -->
+    <div class="fp-root-cause" id="rootCause">
+      <div class="fp-root-cause-label">Root cause identified</div>
+      <p>
+        The <strong>database</strong> connection pool is exhausted.<br>
+        Every service above it in the call chain &mdash; orders, api, gateway &mdash; fails as a consequence.
+        The log warnings from payment and inventory are symptoms of the same bottleneck.
+      </p>
+      <div class="fp-root-detail">
+        pool=orders &middot; max_connections=10 &middot; active=10 &middot; waiting=34
+      </div>
+    </div>
+
+    <!-- ═══ Your investigation journey ═══ -->
+    <div class="fp-journey" id="journey">
+      <div class="fp-journey-title">Your investigation path</div>
+      <div class="fp-journey-steps" id="journeySteps">
+        <!-- Filled dynamically based on the order the learner chose -->
+      </div>
+    </div>
+
+    <!-- ═══ Callback to Koan 0: the same system diagram ═══ -->
+    <div class="fp-system-callback" id="systemCallback">
+      <div class="fp-callback-label">Remember this?</div>
+      <svg class="fp-callback-svg" viewBox="0 0 700 400" id="callbackDiagram">
+        <!-- Edges (same topology as index.html Koan 0) -->
+        <g>
+          <path class="svc-edge" id="cb-edge-gw-api" d="M 200,80 Q 280,140 350,200" />
+          <path class="svc-edge" id="cb-edge-api-orders" d="M 350,200 Q 300,260 250,300" />
+          <path class="svc-edge" id="cb-edge-api-payment" d="M 350,200 Q 450,260 500,300" />
+          <path class="svc-edge" id="cb-edge-api-inventory" d="M 350,200 Q 200,260 150,300" />
+          <path class="svc-edge" id="cb-edge-orders-db" d="M 250,300 Q 400,360 550,200" />
+          <path class="svc-edge" id="cb-edge-payment-db" d="M 500,300 Q 530,260 550,200" />
+        </g>
+
+        <!-- Particles container -->
+        <g id="cbParticles"></g>
+
+        <!-- Nodes (same as index.html) -->
+        <g>
+          <g data-cb-svc="gateway" transform="translate(200, 80)">
+            <circle class="svc-circle" r="28" />
+            <text class="svc-label" dy="4">gateway</text>
+          </g>
+          <g data-cb-svc="api" transform="translate(350, 200)">
+            <circle class="svc-circle" r="30" />
+            <text class="svc-label" dy="4">api</text>
+          </g>
+          <g data-cb-svc="orders" transform="translate(250, 300)">
+            <circle class="svc-circle" r="24" />
+            <text class="svc-label" dy="4">orders</text>
+          </g>
+          <g data-cb-svc="payment" transform="translate(500, 300)">
+            <circle class="svc-circle" r="22" />
+            <text class="svc-label" dy="4">payment</text>
+          </g>
+          <g data-cb-svc="inventory" transform="translate(150, 300)">
+            <circle class="svc-circle" r="22" />
+            <text class="svc-label" dy="4">inventory</text>
+          </g>
+          <g data-cb-svc="database" transform="translate(550, 200)">
+            <circle class="svc-circle" r="26" />
+            <text class="svc-label" dy="4">database</text>
+          </g>
+        </g>
+
+        <!-- Telemetry labels (appear after illumination) -->
+        <g>
+          <text class="tel-label" x="140" y="55" fill="var(--accent-green)">traces</text>
+          <text class="tel-label" x="580" y="170" fill="var(--accent-orange)">metrics</text>
+          <text class="tel-label" x="80" y="340" fill="var(--accent-purple)">logs</text>
+        </g>
+      </svg>
+    </div>
+
+    <!-- ═══ Completion ═══ -->
+    <div class="fp-completion" id="completion">
+      <div class="fp-completion-line">You have walked the path of 19 koans.</div>
+      <div class="fp-completion-line">From a silent system to one that speaks in metrics, traces, and logs.</div>
+      <div class="fp-completion-divider"></div>
+      <div class="fp-completion-line hl">You began with silence.</div>
+      <div class="fp-completion-line hl">Now you can see.</div>
+      <div class="fp-completion-divider"></div>
+      <a class="fp-completion-link" href="../index.html">&larr; Return to the beginning</a>
+    </div>
+  </div>
+
+  <div class="koan-progress">
+    <div class="koan-progress-fill" style="width: 100%"></div>
+  </div>
+
+  <script>
+    (function () {
+      /* ═══ State ═══ */
+      var signalOrder = [];   // tracks which signals the learner chose, in order
+      var allSignals = ['metric', 'trace', 'log'];
+
+      var signalPanelIds = {
+        metric: 'metricPanel',
+        trace: 'tracePanel',
+        log: 'logPanel'
+      };
+
+      var signalLabels = {
+        metric: 'Metrics',
+        trace: 'Traces',
+        log: 'Logs'
+      };
+
+      var signalColors = {
+        metric: 'var(--accent-orange)',
+        trace: 'var(--accent-green)',
+        log: 'var(--accent-purple)'
+      };
+
+      var signalFindings = {
+        metric: { found: 'Something is wrong', detail: 'orders 12.4% errors' },
+        trace:  { found: 'Where it breaks', detail: 'database span ERROR' },
+        log:    { found: 'Many errors, scattered', detail: '6 services logging' }
+      };
+
+      /* ═══ Utility ═══ */
+      function reveal(id, delay) {
+        setTimeout(function () {
+          var el = document.getElementById(id);
+          if (el) el.classList.add('visible');
+        }, delay || 0);
+      }
+
+      function remaining() {
+        return allSignals.filter(function (s) {
+          return signalOrder.indexOf(s) === -1;
+        });
+      }
+
+      function makeChoiceBtn(signal) {
+        var btn = document.createElement('button');
+        var cssClass = signal === 'metric' ? 'metric-btn' : signal === 'trace' ? 'trace-btn' : 'log-btn';
+        btn.className = 'fp-choice-btn ' + cssClass;
+        btn.dataset.signal = signal;
+        var labels = { metric: 'Check metrics dashboard', trace: 'Search traces', log: 'Search logs' };
+        btn.textContent = labels[signal];
+        return btn;
+      }
+
+      /* ═══ Handle a signal choice ═══ */
+      function handleChoice(chooserId, signal, nextNarrId, nextChooserId) {
+        signalOrder.push(signal);
+
+        /* Mark buttons */
+        var btns = document.getElementById(chooserId).querySelectorAll('.fp-choice-btn');
+        btns.forEach(function (b) {
+          if (b.dataset.signal === signal) {
+            b.classList.add('chosen');
+          } else {
+            b.classList.add('unchosen');
+          }
+        });
+
+        /* Show the signal panel */
+        setTimeout(function () {
+          reveal(signalPanelIds[signal], 0);
+        }, 400);
+
+        /* After reading time, show next narrative + chooser */
+        var step = signalOrder.length;
+        if (step < 3) {
+          setTimeout(function () {
+            reveal(nextNarrId, 0);
+            populateNextChooser(nextChooserId);
+            reveal(nextChooserId, 300);
+          }, 1200);
+        } else {
+          /* All three seen: proceed to service map */
+          setTimeout(function () {
+            reveal('narr3', 0);
+            reveal('serviceMap', 600);
+          }, 1200);
+        }
+      }
+
+      function populateNextChooser(chooserId) {
+        var container = document.getElementById(chooserId.replace('chooser', 'choice') + 'Btns');
+        var left = remaining();
+        left.forEach(function (sig) {
+          var btn = makeChoiceBtn(sig);
+          btn.addEventListener('click', function () {
+            var nextStep = signalOrder.length + 1; // will be 2 or 3 after push
+            if (nextStep === 2) {
+              handleChoice(chooserId, sig, 'narr2', 'chooser3');
+            } else {
+              handleChoice(chooserId, sig, null, null);
+            }
+          });
+          container.appendChild(btn);
+        });
+      }
+
+      /* ═══ First chooser: wire up ═══ */
+      var firstBtns = document.getElementById('choice1Btns').querySelectorAll('.fp-choice-btn');
+      firstBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          handleChoice('chooser1', this.dataset.signal, 'narr1', 'chooser2');
+        });
+      });
+
+      /* ═══ Service map interaction ═══ */
+      var smapResolved = false;
+      var smapNodes = document.querySelectorAll('.fp-smap-node');
+      var smapFb = document.getElementById('smapFb');
+
+      smapNodes.forEach(function (node) {
+        node.addEventListener('click', function () {
+          if (smapResolved) return;
+          var svc = this.dataset.svc;
+
+          if (svc === 'database') {
+            smapResolved = true;
+            this.classList.add('correct');
+            smapNodes.forEach(function (n) {
+              if (n.dataset.svc !== 'database') n.classList.add('disabled');
+            });
+            smapFb.textContent = 'Correct. The database is the origin. Everything upstream failed because of it.';
+            smapFb.className = 'fp-smap-fb correct';
+
+            /* Cascade: root cause -> journey -> koan 0 callback -> completion */
+            setTimeout(function () { showRootCause(); }, 800);
+          } else {
+            this.classList.add('wrong');
+            var msgs = {
+              gateway: 'Gateway returned 502, but only because it never got a response. Look deeper.',
+              api: 'The api forwarded the request. The error originated further downstream.',
+              orders: 'Close. Orders failed, but the trace showed the error in the span below orders.',
+              payment: 'Payment had warnings, but the primary error path goes through orders, not payment.',
+              inventory: 'Inventory was slow, but the failing trace never even reached inventory.'
+            };
+            smapFb.textContent = msgs[svc] || 'Look at the trace waterfall again.';
+            smapFb.className = 'fp-smap-fb wrong';
+            var self = this;
+            setTimeout(function () { self.classList.remove('wrong'); }, 800);
+          }
+        });
+      });
+
+      /* ═══ Root cause -> Journey -> Callback -> Completion ═══ */
+      function showRootCause() {
+        reveal('rootCause', 0);
+        setTimeout(function () { showJourney(); }, 1200);
+      }
+
+      function showJourney() {
+        /* Build the journey steps based on the actual order chosen */
+        var container = document.getElementById('journeySteps');
+        signalOrder.forEach(function (sig, i) {
+          if (i > 0) {
+            var arrow = document.createElement('span');
+            arrow.className = 'fp-journey-arrow';
+            arrow.innerHTML = '&rarr;';
+            arrow.id = 'jarrow-' + i;
+            container.appendChild(arrow);
+          }
+          var step = document.createElement('div');
+          step.className = 'fp-journey-step';
+          step.id = 'jstep-' + i;
+          step.innerHTML =
+            '<div class="step-signal" style="color:' + signalColors[sig] + ';">' + signalLabels[sig] + '</div>' +
+            '<div class="step-found">' + signalFindings[sig].found + '</div>' +
+            '<div class="step-detail">' + signalFindings[sig].detail + '</div>';
+          container.appendChild(step);
+        });
+
+        /* Add the final node: root cause */
+        var finalArrow = document.createElement('span');
+        finalArrow.className = 'fp-journey-arrow';
+        finalArrow.innerHTML = '&rarr;';
+        finalArrow.id = 'jarrow-final';
+        container.appendChild(finalArrow);
+
+        var finalStep = document.createElement('div');
+        finalStep.className = 'fp-journey-step';
+        finalStep.id = 'jstep-final';
+        finalStep.innerHTML =
+          '<div class="step-signal" style="color:var(--accent-red);">Root Cause</div>' +
+          '<div class="step-found">Connection pool exhausted</div>' +
+          '<div class="step-detail">database &middot; orders pool</div>';
+        container.appendChild(finalStep);
+
+        reveal('journey', 0);
+
+        /* Animate steps one by one */
+        var total = signalOrder.length;
+        for (var i = 0; i < total; i++) {
+          (function (idx) {
+            setTimeout(function () {
+              if (idx > 0) {
+                document.getElementById('jarrow-' + idx).classList.add('visible');
+              }
+              document.getElementById('jstep-' + idx).classList.add('visible');
+            }, 400 + idx * 500);
+          })(i);
+        }
+
+        setTimeout(function () {
+          document.getElementById('jarrow-final').classList.add('visible');
+        }, 400 + total * 500);
+
+        setTimeout(function () {
+          document.getElementById('jstep-final').classList.add('visible');
+        }, 600 + total * 500);
+
+        /* After journey, show Koan 0 callback */
+        setTimeout(function () {
+          showSystemCallback();
+        }, 1500 + total * 500);
+      }
+
+      /* ═══ Koan 0 visual callback ═══ */
+      function showSystemCallback() {
+        reveal('systemCallback', 0);
+
+        var diagram = document.getElementById('callbackDiagram');
+        var particlesGroup = document.getElementById('cbParticles');
+
+        /* Illuminate services one by one, same order as Koan 0 */
+        var svcGroups = diagram.querySelectorAll('[data-cb-svc]');
+        var svcOrder = ['gateway', 'api', 'orders', 'inventory', 'payment', 'database'];
+
+        svcOrder.forEach(function (name, i) {
+          setTimeout(function () {
+            svcGroups.forEach(function (g) {
+              if (g.dataset.cbSvc === name) {
+                var circle = g.querySelector('.svc-circle');
+                var label = g.querySelector('.svc-label');
+                circle.style.stroke = 'var(--accent-blue)';
+                circle.style.filter = 'drop-shadow(0 0 6px rgba(88, 166, 255, 0.3))';
+                label.style.fill = 'var(--text-primary)';
+              }
+            });
+          }, 800 + i * 300);
+        });
+
+        /* Illuminate edges */
+        var edges = diagram.querySelectorAll('.svc-edge');
+        edges.forEach(function (edge, i) {
+          setTimeout(function () {
+            edge.style.stroke = 'var(--accent-blue)';
+            edge.style.opacity = '0.5';
+          }, 1200 + i * 200);
+        });
+
+        /* Show telemetry labels */
+        var telLabels = diagram.querySelectorAll('.tel-label');
+        telLabels.forEach(function (label, i) {
+          setTimeout(function () {
+            label.style.opacity = '1';
+          }, 2200 + i * 400);
+        });
+
+        /* Create flowing particles */
+        var edgePaths = [
+          'cb-edge-gw-api', 'cb-edge-api-orders', 'cb-edge-api-payment',
+          'cb-edge-api-inventory', 'cb-edge-orders-db', 'cb-edge-payment-db'
+        ];
+
+        setTimeout(function () {
+          edgePaths.forEach(function (edgeId, i) {
+            createParticle(edgeId, particlesGroup, i * 200);
+            createParticle(edgeId, particlesGroup, i * 200 + 800);
+          });
+        }, 2800);
+
+        /* Show completion */
+        setTimeout(function () {
+          reveal('completion', 0);
+        }, 4500);
+      }
+
+      function createParticle(edgeId, group, delay) {
+        var path = document.getElementById(edgeId);
+        if (!path) return;
+        var length = path.getTotalLength();
+        var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('r', '2.5');
+        circle.setAttribute('fill', 'var(--accent-green)');
+        group.appendChild(circle);
+
+        var duration = 1500 + Math.random() * 1000;
+        var startTime = performance.now() + delay;
+
+        function step(now) {
+          var elapsed = now - startTime;
+          if (elapsed < 0) {
+            requestAnimationFrame(step);
+            return;
+          }
+          var t = (elapsed % duration) / duration;
+          var point = path.getPointAtLength(t * length);
+          circle.setAttribute('cx', point.x);
+          circle.setAttribute('cy', point.y);
+          circle.setAttribute('opacity', t < 0.1 ? t / 0.1 : t > 0.9 ? (1 - t) / 0.1 : 1);
+          requestAnimationFrame(step);
+        }
+
+        requestAnimationFrame(step);
+      }
+    })();
+  </script>
+</body>
+</html>

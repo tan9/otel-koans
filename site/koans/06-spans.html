@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Koan 6: Steps in a Trace — OpenTelemetry Koans</title>
+  <link rel="stylesheet" href="../css/shared.css">
+  <style>
+    .wf-scene {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .wf-scene-header {
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .wf-scene-body {
+      padding: 2rem;
+    }
+
+    /* Waterfall grid */
+    .waterfall {
+      width: 100%;
+    }
+
+    .waterfall-header {
+      display: grid;
+      grid-template-columns: 120px 1fr 60px;
+      gap: 1rem;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0.5rem;
+    }
+
+    .waterfall-header span {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .waterfall-header span:last-child {
+      text-align: right;
+    }
+
+    .waterfall-row {
+      display: grid;
+      grid-template-columns: 120px 1fr 60px;
+      gap: 1rem;
+      align-items: center;
+      padding: 0.4rem 0;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .waterfall-row.visible {
+      opacity: 1;
+    }
+
+    .waterfall-svc {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding-left: 0;
+    }
+
+    /* Indent child rows to show nesting */
+    .waterfall-row.depth-1 .waterfall-svc { padding-left: 14px; }
+    .waterfall-row.depth-2 .waterfall-svc { padding-left: 28px; }
+    .waterfall-row.depth-3 .waterfall-svc { padding-left: 42px; }
+
+    .waterfall-svc-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .waterfall-bar-track {
+      height: 22px;
+      position: relative;
+    }
+
+    .waterfall-bar {
+      position: absolute;
+      height: 100%;
+      border-radius: 3px;
+      transition: opacity 0.3s;
+    }
+
+    .waterfall-bar-label {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--text-primary);
+      padding: 0 6px;
+      white-space: nowrap;
+    }
+
+    .waterfall-dur {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    /* Highlight state for the slow bar */
+    .waterfall-row.highlighted .waterfall-bar {
+      opacity: 1;
+      box-shadow: 0 0 12px rgba(248, 81, 73, 0.3);
+    }
+
+    .waterfall-row.highlighted .waterfall-dur {
+      color: var(--accent-red);
+      font-weight: 600;
+    }
+
+    /* Time axis */
+    .waterfall-axis {
+      display: grid;
+      grid-template-columns: 120px 1fr 60px;
+      gap: 1rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--border);
+      margin-top: 0.5rem;
+    }
+
+    .waterfall-axis-labels {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .waterfall-axis-labels span {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--text-muted);
+    }
+
+    /* Nesting guide lines */
+    .nesting-guides {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    /* Controls */
+    .wf-controls {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .wf-status {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.75rem;
+      min-height: 1.5em;
+    }
+
+    /* Question blocks */
+    .wf-question {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      opacity: 0;
+      transition: opacity 0.6s;
+    }
+
+    .wf-question.visible { opacity: 1; }
+
+    .wf-question p {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+
+    .wf-opts {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .wf-opt {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .wf-opt:hover { border-color: var(--accent-blue); }
+    .wf-opt.correct { border-color: var(--accent-green); background: rgba(63, 185, 80, 0.1); color: var(--accent-green); }
+    .wf-opt.wrong { border-color: var(--accent-red); color: var(--accent-red); }
+    .wf-opt.disabled { pointer-events: none; opacity: 0.4; }
+
+    .wf-fb {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      min-height: 1.5em;
+      margin-top: 0.75rem;
+    }
+
+    .wf-fb--correct { color: var(--accent-green); }
+    .wf-fb--wrong { color: var(--accent-red); }
+
+    /* Mid-flow insight text (appears between questions) */
+    .wf-mid-insight {
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      font-style: italic;
+      color: var(--text-secondary);
+      text-align: center;
+      margin-bottom: 2rem;
+      opacity: 0;
+      transition: opacity 0.6s;
+    }
+
+    .wf-mid-insight.visible { opacity: 1; }
+
+    /* Final insight */
+    .wf-insight {
+      text-align: center;
+      padding: 1.5rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      opacity: 0;
+      transition: opacity 0.6s;
+    }
+
+    .wf-insight.visible { opacity: 1; }
+
+    .wf-insight p {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .wf-insight a {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--accent-blue);
+      text-decoration: none;
+    }
+
+    .wf-insight a:hover { text-decoration: underline; }
+
+    /* All span bars use green (trace color), differentiated by opacity for nesting depth.
+       The database bar uses red to highlight it as the bottleneck / problem span. */
+    .bar-gateway { background: var(--accent-green); opacity: 0.5; }
+    .bar-api { background: var(--accent-green); opacity: 0.6; }
+    .bar-orders { background: var(--accent-green); opacity: 0.7; }
+    .bar-database { background: var(--accent-red); opacity: 0.8; }
+
+    .dot-gateway { background: var(--accent-green); opacity: 0.5; }
+    .dot-api { background: var(--accent-green); opacity: 0.6; }
+    .dot-orders { background: var(--accent-green); opacity: 0.7; }
+    .dot-database { background: var(--accent-red); opacity: 0.8; }
+
+    /* Total line at bottom of waterfall */
+    .wf-total {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-align: right;
+      margin-top: 0.75rem;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+
+    .wf-total.visible { opacity: 1; }
+
+    .wf-total strong {
+      color: var(--text-secondary);
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-gate">
+    <div class="mobile-gate-icon">&#9776;</div>
+    <div class="mobile-gate-title">Desktop Only</div>
+    <div class="mobile-gate-text">These koans require a larger screen. Please visit on a desktop browser.</div>
+  </div>
+
+  <div class="koan-page">
+    <div class="koan-header">
+      <div class="koan-number">Koan 6 of 19</div>
+      <div class="koan-nav">
+        <a href="05-trace.html">&larr; What is a Trace?</a>
+        <a href="07-log.html">What is a Log? &rarr;</a>
+      </div>
+    </div>
+
+    <h1 class="koan-title">The Steps Within</h1>
+
+    <div class="koan-text">
+      The trace showed the path. But the path has steps.<br>
+      Each step has a story.
+    </div>
+
+    <!-- Waterfall visualization — no mention of "span" anywhere -->
+    <div class="wf-scene">
+      <div class="wf-scene-header">
+        <span>trace: order #8842</span>
+        <span>trace_id: a1b2c3d4e5f6</span>
+      </div>
+      <div class="wf-scene-body">
+        <div class="waterfall">
+          <div class="waterfall-header">
+            <span>Operation</span>
+            <span>Timeline</span>
+            <span>Duration</span>
+          </div>
+
+          <!-- Row 0: gateway (root) — full width, 0–210ms -->
+          <div class="waterfall-row depth-0" id="row-0">
+            <div class="waterfall-svc">
+              <div class="waterfall-svc-dot dot-gateway"></div>
+              gateway
+            </div>
+            <div class="waterfall-bar-track">
+              <div class="waterfall-bar bar-gateway" style="left: 0%; width: 100%;">
+                <span class="waterfall-bar-label" style="left: 4px;">GET /checkout</span>
+              </div>
+            </div>
+            <div class="waterfall-dur">210ms</div>
+          </div>
+
+          <!-- Row 1: api — child of gateway, 12ms–195ms => left ~5.7%, width ~87.1% -->
+          <div class="waterfall-row depth-1" id="row-1">
+            <div class="waterfall-svc">
+              <div class="waterfall-svc-dot dot-api"></div>
+              api
+            </div>
+            <div class="waterfall-bar-track">
+              <div class="waterfall-bar bar-api" style="left: 5.7%; width: 87.1%;">
+                <span class="waterfall-bar-label" style="left: 4px;">process order</span>
+              </div>
+            </div>
+            <div class="waterfall-dur">183ms</div>
+          </div>
+
+          <!-- Row 2: orders — child of api, 28ms–160ms => left ~13.3%, width ~62.9% -->
+          <div class="waterfall-row depth-2" id="row-2">
+            <div class="waterfall-svc">
+              <div class="waterfall-svc-dot dot-orders"></div>
+              orders
+            </div>
+            <div class="waterfall-bar-track">
+              <div class="waterfall-bar bar-orders" style="left: 13.3%; width: 62.9%;">
+                <span class="waterfall-bar-label" style="left: 4px;">create order</span>
+              </div>
+            </div>
+            <div class="waterfall-dur">132ms</div>
+          </div>
+
+          <!-- Row 3: database — child of orders, 30ms–210ms => left ~14.3%, width ~85.7%
+               This is the suspicious one: 180ms, dominates the trace -->
+          <div class="waterfall-row depth-3" id="row-3">
+            <div class="waterfall-svc">
+              <div class="waterfall-svc-dot dot-database"></div>
+              database
+            </div>
+            <div class="waterfall-bar-track">
+              <div class="waterfall-bar bar-database" style="left: 14.3%; width: 85.7%;">
+                <span class="waterfall-bar-label" style="left: 4px;">INSERT orders</span>
+              </div>
+            </div>
+            <div class="waterfall-dur">180ms</div>
+          </div>
+
+          <!-- Time axis -->
+          <div class="waterfall-axis">
+            <div></div>
+            <div class="waterfall-axis-labels">
+              <span>0ms</span>
+              <span>50ms</span>
+              <span>100ms</span>
+              <span>150ms</span>
+              <span>210ms</span>
+            </div>
+            <div></div>
+          </div>
+        </div>
+
+        <div class="wf-total" id="totalLine">Total trace duration: <strong>210ms</strong></div>
+      </div>
+    </div>
+
+    <div class="wf-controls">
+      <button class="koan-btn koan-btn--primary" id="revealBtn">Examine this trace</button>
+      <div class="wf-status" id="status"></div>
+    </div>
+
+    <!-- Q1: Count the operations — requires looking at the visual -->
+    <div class="wf-question" id="q1">
+      <p>This trace crossed four services. Look at the bars above. How many individual operations can you count?</p>
+      <div class="wf-opts">
+        <button class="wf-opt" data-answer="wrong">3</button>
+        <button class="wf-opt" data-answer="correct">4</button>
+        <button class="wf-opt" data-answer="wrong">1</button>
+      </div>
+      <div class="wf-fb" id="fb1"></div>
+    </div>
+
+    <!-- Mid-insight after Q1 -->
+    <div class="wf-mid-insight" id="mid1">
+      Each of those bars represents one step &mdash; one unit of work within the trace.
+    </div>
+
+    <!-- Q2: Reason about what individual bars mean — diagnostic value -->
+    <div class="wf-question" id="q2">
+      <p>The database bar took 180ms out of the total 210ms. What does this tell you?</p>
+      <div class="wf-opts">
+        <button class="wf-opt" data-answer="correct">The database is the bottleneck</button>
+        <button class="wf-opt" data-answer="wrong">All services are equally slow</button>
+        <button class="wf-opt" data-answer="wrong">The trace is broken</button>
+      </div>
+      <div class="wf-fb" id="fb2"></div>
+    </div>
+
+    <!-- Mid-insight after Q2 -->
+    <div class="wf-mid-insight" id="mid2">
+      By breaking a trace into its individual steps, you can see exactly where time is spent.
+    </div>
+
+    <!-- Q3: Vocabulary — comes AFTER conceptual understanding -->
+    <div class="wf-question" id="q3">
+      <p>Each of these individual steps in a trace has a name in OpenTelemetry. What is it called?</p>
+      <div class="wf-opts">
+        <button class="wf-opt" data-answer="wrong">A segment</button>
+        <button class="wf-opt" data-answer="correct">A span</button>
+        <button class="wf-opt" data-answer="wrong">A frame</button>
+      </div>
+      <div class="wf-fb" id="fb3"></div>
+    </div>
+
+    <div class="wf-insight" id="insight">
+      <p>A span is one step in a trace. Each span has a start, an end, and tells you what happened during that step.</p>
+      <p>The waterfall shows how spans nest inside each other, revealing where time is spent.</p>
+      <a href="07-log.html">Continue &rarr;</a>
+    </div>
+  </div>
+
+  <div class="koan-progress">
+    <div class="koan-progress-fill" style="width: 31%"></div>
+  </div>
+
+  <script>
+    (function () {
+      var revealBtn = document.getElementById('revealBtn');
+      var status = document.getElementById('status');
+      var started = false;
+
+      var rows = [
+        document.getElementById('row-0'),
+        document.getElementById('row-1'),
+        document.getElementById('row-2'),
+        document.getElementById('row-3')
+      ];
+
+      revealBtn.addEventListener('click', function () {
+        if (started) return;
+        started = true;
+        revealBtn.style.opacity = '0';
+        revealBtn.style.pointerEvents = 'none';
+        status.textContent = 'Loading trace data...';
+
+        // Reveal rows one at a time with a cascade
+        rows.forEach(function (row, i) {
+          setTimeout(function () {
+            row.classList.add('visible');
+          }, i * 450);
+        });
+
+        // Show total line
+        setTimeout(function () {
+          document.getElementById('totalLine').classList.add('visible');
+          status.textContent = 'Trace loaded. Study the bars above.';
+        }, 2000);
+
+        // Highlight the database row to draw attention to it
+        setTimeout(function () {
+          rows[3].classList.add('highlighted');
+        }, 2600);
+
+        // Show Q1
+        setTimeout(function () {
+          document.getElementById('q1').classList.add('visible');
+          status.textContent = '';
+        }, 3200);
+      });
+
+      // Quiz engine
+      function setupQuiz(qId, fbId, nextIds, correctMsg, wrongMsg) {
+        var q = document.getElementById(qId);
+        var fb = document.getElementById(fbId);
+        var opts = q.querySelectorAll('.wf-opt');
+
+        opts.forEach(function (opt) {
+          opt.addEventListener('click', function () {
+            if (this.dataset.answer === 'correct') {
+              this.classList.add('correct');
+              opts.forEach(function (o) { o.classList.add('disabled'); });
+              fb.textContent = correctMsg;
+              fb.className = 'wf-fb wf-fb--correct';
+              // Reveal next elements in sequence
+              var delay = 800;
+              nextIds.forEach(function (id) {
+                setTimeout(function () {
+                  document.getElementById(id).classList.add('visible');
+                }, delay);
+                delay += 600;
+              });
+            } else {
+              this.classList.add('wrong');
+              fb.textContent = wrongMsg;
+              fb.className = 'wf-fb wf-fb--wrong';
+              var self = this;
+              setTimeout(function () { self.classList.remove('wrong'); }, 500);
+            }
+          });
+        });
+      }
+
+      setupQuiz(
+        'q1', 'fb1', ['mid1', 'q2'],
+        'Four bars, four operations: gateway, api, orders, database.',
+        'Count each colored bar in the waterfall. Each bar is one operation.'
+      );
+
+      setupQuiz(
+        'q2', 'fb2', ['mid2', 'q3'],
+        'The database operation consumed 86% of the total time. That is where you would investigate.',
+        'Look at the durations. The database bar is 180ms and the entire trace is 210ms.'
+      );
+
+      setupQuiz(
+        'q3', 'fb3', ['insight'],
+        'In OpenTelemetry, each step in a trace is called a span.',
+        'Close, but OpenTelemetry uses a specific term for each step in a trace.'
+      );
+    })();
+  </script>
+</body>
+</html>

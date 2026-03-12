@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Koan 5: What is a Trace? — OpenTelemetry Koans</title>
+  <link rel="stylesheet" href="../css/shared.css">
+  <style>
+    /* Scenario panel */
+    .scenario-panel {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .scenario-header {
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .scenario-body {
+      padding: 1.5rem 2rem;
+    }
+
+    .scenario-alert {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--accent-orange);
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+
+    .scenario-detail {
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Metric panel */
+    .metric-panel {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+      opacity: 0;
+      transition: opacity 0.6s;
+    }
+
+    .metric-panel.visible { opacity: 1; }
+
+    .metric-panel-header {
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .metric-panel-body {
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .metric-stat {
+      text-align: center;
+    }
+
+    .metric-stat-value {
+      font-family: var(--font-mono);
+      font-size: 1.8rem;
+      color: var(--accent-orange);
+      font-weight: 600;
+    }
+
+    .metric-stat-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 0.25rem;
+    }
+
+    .metric-stat-ok .metric-stat-value {
+      color: var(--accent-green);
+    }
+
+    .metric-verdict {
+      flex: 1;
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      border-left: 1px solid var(--border);
+      padding-left: 2rem;
+    }
+
+    /* Log panel */
+    .log-panel {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+      opacity: 0;
+      transition: opacity 0.6s;
+    }
+
+    .log-panel.visible { opacity: 1; }
+
+    .log-panel-header {
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .log-panel-body {
+      padding: 1rem 1.5rem;
+    }
+
+    .log-line {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      line-height: 1.9;
+      color: var(--text-secondary);
+      opacity: 0;
+      transform: translateX(-6px);
+      transition: opacity 0.35s, transform 0.35s;
+    }
+
+    .log-line.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .log-ts { color: var(--text-muted); }
+    .log-svc-gateway { color: var(--accent-blue); }
+    .log-svc-api { color: var(--accent-purple); }
+    .log-svc-orders { color: var(--accent-orange); }
+    .log-svc-db { color: var(--accent-red); }
+    .log-msg { color: var(--text-secondary); }
+
+    /* Question panels */
+    .trace-question {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      opacity: 0;
+      transition: opacity 0.6s;
+    }
+
+    .trace-question.visible { opacity: 1; }
+
+    .trace-question p {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+
+    .trace-opts {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .trace-opt {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.2s;
+      max-width: 340px;
+      text-align: left;
+    }
+
+    .trace-opt:hover { border-color: var(--accent-blue); }
+    .trace-opt.correct { border-color: var(--accent-green); background: rgba(63, 185, 80, 0.1); color: var(--accent-green); }
+    .trace-opt.wrong { border-color: var(--accent-red); color: var(--accent-red); }
+    .trace-opt.disabled { pointer-events: none; opacity: 0.4; }
+
+    .trace-fb {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      min-height: 1.5em;
+      margin-top: 0.75rem;
+      line-height: 1.5;
+    }
+
+    .trace-fb--correct { color: var(--accent-green); }
+    .trace-fb--wrong { color: var(--accent-red); }
+
+    /* Follow-request scene */
+    .trace-scene {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+      opacity: 0;
+      transition: opacity 0.6s;
+    }
+
+    .trace-scene.visible { opacity: 1; }
+
+    .trace-scene-header {
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .trace-scene-body {
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Service chain */
+    .svc-chain {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 2rem;
+    }
+
+    .svc-node {
+      width: 100px;
+      height: 56px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      transition: all 0.4s;
+      position: relative;
+    }
+
+    .svc-node.visited {
+      border-color: var(--accent-green);
+      color: var(--accent-green);
+      box-shadow: 0 0 12px rgba(63, 185, 80, 0.2);
+    }
+
+    .svc-arrow {
+      width: 40px;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: var(--border);
+      transition: color 0.4s;
+    }
+
+    .svc-arrow.lit {
+      color: var(--accent-green);
+    }
+
+    /* Waterfall timing bars */
+    .waterfall {
+      width: 100%;
+      max-width: 600px;
+      margin-top: 1rem;
+    }
+
+    .waterfall-title {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+      opacity: 0;
+      transition: opacity 0.6s;
+    }
+
+    .waterfall-title.visible { opacity: 1; }
+
+    .wf-row {
+      display: flex;
+      align-items: center;
+      padding: 0.4rem 0;
+      opacity: 0;
+      transform: translateX(-8px);
+      transition: opacity 0.4s, transform 0.4s;
+    }
+
+    .wf-row.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .wf-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      margin-right: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .wf-svc {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-primary);
+      width: 100px;
+    }
+
+    .wf-track {
+      flex: 1;
+      height: 6px;
+      background: var(--bg-tertiary);
+      border-radius: 3px;
+      margin-left: 0.5rem;
+      position: relative;
+    }
+
+    .wf-bar {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      background: var(--accent-green);
+      border-radius: 3px;
+      opacity: 0.6;
+    }
+
+    .wf-bar.bottleneck {
+      background: var(--accent-red);
+      opacity: 0.8;
+    }
+
+    .wf-time {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      margin-left: 0.75rem;
+      min-width: 60px;
+      text-align: right;
+    }
+
+    .wf-time.bottleneck { color: var(--accent-red); }
+
+    .wf-connector {
+      width: 1px;
+      height: 8px;
+      background: var(--accent-green);
+      opacity: 0.3;
+      margin-left: 3.5px;
+    }
+
+    /* Controls */
+    .trace-controls {
+      text-align: center;
+      margin-bottom: 2rem;
+      opacity: 0;
+      transition: opacity 0.6s;
+    }
+
+    .trace-controls.visible { opacity: 1; }
+
+    .trace-status {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.75rem;
+      min-height: 1.5em;
+    }
+
+    /* Reveal label */
+    .trace-label-reveal {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      transition: opacity 0.8s;
+    }
+
+    .trace-label-reveal.visible { opacity: 1; }
+
+    .trace-label-word {
+      font-family: var(--font-mono);
+      font-size: 1.6rem;
+      color: var(--accent-green);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    /* Insight */
+    .trace-insight {
+      text-align: center;
+      padding: 1.5rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      opacity: 0;
+      transition: opacity 0.6s;
+    }
+
+    .trace-insight.visible { opacity: 1; }
+
+    .trace-insight p {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+      line-height: 1.6;
+    }
+
+    .trace-insight a {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--accent-blue);
+      text-decoration: none;
+    }
+
+    .trace-insight a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="mobile-gate">
+    <div class="mobile-gate-icon">&#9776;</div>
+    <div class="mobile-gate-title">Desktop Only</div>
+    <div class="mobile-gate-text">These koans require a larger screen. Please visit on a desktop browser.</div>
+  </div>
+
+  <div class="koan-page">
+    <div class="koan-header">
+      <div class="koan-number">Koan 5 of 19</div>
+      <div class="koan-nav">
+        <a href="04-metric-types.html">&larr; Kinds of Metrics</a>
+        <a href="06-spans.html">Spans &rarr;</a>
+      </div>
+    </div>
+
+    <h1 class="koan-title">What is a Trace?</h1>
+
+    <div class="koan-text">
+      The metric said something was slow.<br>
+      The logs said something went wrong.<br>
+      But neither could say where, or in what order.
+    </div>
+
+    <!-- Scenario: the problem -->
+    <div class="scenario-panel" id="scenario">
+      <div class="scenario-header">incident report</div>
+      <div class="scenario-body">
+        <div class="scenario-alert">Users report that checkout is slow.</div>
+        <div class="scenario-detail">You have metrics and logs from four services: gateway, api, orders, and database. Can you find the bottleneck?</div>
+      </div>
+    </div>
+
+    <!-- Metric panel -->
+    <div class="metric-panel" id="metricPanel">
+      <div class="metric-panel-header">metrics dashboard</div>
+      <div class="metric-panel-body">
+        <div class="metric-stat metric-stat-ok">
+          <div class="metric-stat-value">842</div>
+          <div class="metric-stat-label">requests / min</div>
+        </div>
+        <div class="metric-stat">
+          <div class="metric-stat-value">1.2s</div>
+          <div class="metric-stat-label">latency p99</div>
+        </div>
+        <div class="metric-verdict">
+          Request count looks normal. But latency is high.<br>
+          The metric tells you <em>something</em> is slow &mdash; but not <em>which service</em>.
+        </div>
+      </div>
+    </div>
+
+    <!-- Log panel -->
+    <div class="log-panel" id="logPanel">
+      <div class="log-panel-header">log viewer &mdash; last 5 seconds</div>
+      <div class="log-panel-body">
+        <div class="log-line" id="log0"><span class="log-ts">14:32:01.204</span> <span class="log-svc-gateway">[gateway]</span> <span class="log-msg">incoming POST /checkout</span></div>
+        <div class="log-line" id="log1"><span class="log-ts">14:32:01.218</span> <span class="log-svc-api">[api]</span> <span class="log-msg">validating cart items</span></div>
+        <div class="log-line" id="log2"><span class="log-ts">14:32:01.307</span> <span class="log-svc-db">[database]</span> <span class="log-msg">query inventory_check: OK</span></div>
+        <div class="log-line" id="log3"><span class="log-ts">14:32:01.412</span> <span class="log-svc-orders">[orders]</span> <span class="log-msg">reserve_stock called</span></div>
+        <div class="log-line" id="log4"><span class="log-ts">14:32:01.884</span> <span class="log-svc-db">[database]</span> <span class="log-msg">write order_record: OK</span></div>
+        <div class="log-line" id="log5"><span class="log-ts">14:32:02.003</span> <span class="log-svc-orders">[orders]</span> <span class="log-msg">confirmation generated</span></div>
+        <div class="log-line" id="log6"><span class="log-ts">14:32:02.117</span> <span class="log-svc-api">[api]</span> <span class="log-msg">response sent: 200 OK</span></div>
+        <div class="log-line" id="log7"><span class="log-ts">14:32:02.130</span> <span class="log-svc-gateway">[gateway]</span> <span class="log-msg">POST /checkout completed</span></div>
+      </div>
+    </div>
+
+    <!-- Q1: Can you find the bottleneck? -->
+    <div class="trace-question" id="q1">
+      <p>From the metrics and logs alone, can you tell which service is causing the slowness?</p>
+      <div class="trace-opts">
+        <button class="trace-opt" data-answer="wrong" data-fb="wrong-db">Yes &mdash; the database</button>
+        <button class="trace-opt" data-answer="wrong" data-fb="wrong-gw">Yes &mdash; the gateway</button>
+        <button class="trace-opt" data-answer="correct" data-fb="correct">No &mdash; I can&rsquo;t see how the request flowed through the services</button>
+      </div>
+      <div class="trace-fb" id="fb1"></div>
+    </div>
+
+    <!-- Follow-request scene (hidden until Q1 correct) -->
+    <div class="trace-scene" id="traceScene">
+      <div class="trace-scene-header">following one request</div>
+      <div class="trace-scene-body">
+        <div class="svc-chain" id="svcChain">
+          <div class="svc-node" id="svc-gateway">gateway</div>
+          <div class="svc-arrow" id="arrow-1">&rarr;</div>
+          <div class="svc-node" id="svc-api">api</div>
+          <div class="svc-arrow" id="arrow-2">&rarr;</div>
+          <div class="svc-node" id="svc-orders">orders</div>
+          <div class="svc-arrow" id="arrow-3">&rarr;</div>
+          <div class="svc-node" id="svc-db">database</div>
+        </div>
+
+        <div class="waterfall" id="waterfall">
+          <div class="waterfall-title" id="wfTitle">timing breakdown:</div>
+
+          <div class="wf-row" id="wf-0">
+            <div class="wf-dot"></div>
+            <div class="wf-svc">gateway</div>
+            <div class="wf-track"><div class="wf-bar" style="left: 0%; width: 100%;"></div></div>
+            <div class="wf-time">0 &ndash; 1200ms</div>
+          </div>
+          <div class="wf-connector" id="wfc-0"></div>
+
+          <div class="wf-row" id="wf-1">
+            <div class="wf-dot"></div>
+            <div class="wf-svc">api</div>
+            <div class="wf-track"><div class="wf-bar" style="left: 2%; width: 78%;"></div></div>
+            <div class="wf-time">14 &ndash; 950ms</div>
+          </div>
+          <div class="wf-connector" id="wfc-1"></div>
+
+          <div class="wf-row" id="wf-2">
+            <div class="wf-dot"></div>
+            <div class="wf-svc">orders</div>
+            <div class="wf-track"><div class="wf-bar bottleneck" style="left: 8%; width: 58%;"></div></div>
+            <div class="wf-time bottleneck">100 &ndash; 800ms</div>
+          </div>
+          <div class="wf-connector" id="wfc-2"></div>
+
+          <div class="wf-row" id="wf-3">
+            <div class="wf-dot"></div>
+            <div class="wf-svc">database</div>
+            <div class="wf-track"><div class="wf-bar" style="left: 12%; width: 18%;"></div></div>
+            <div class="wf-time">140 &ndash; 360ms</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="trace-controls" id="followControls">
+      <button class="koan-btn koan-btn--primary" id="followBtn">Follow a request</button>
+      <div class="trace-status" id="status"></div>
+    </div>
+
+    <!-- Q2: What is this called? -->
+    <div class="trace-question" id="q2">
+      <p>What you just did &mdash; following one request through multiple services &mdash; is called a...</p>
+      <div class="trace-opts">
+        <button class="trace-opt" data-answer="wrong" data-fb="wrong-metric">A metric</button>
+        <button class="trace-opt" data-answer="wrong" data-fb="wrong-log">A log</button>
+        <button class="trace-opt" data-answer="correct" data-fb="correct-trace">A trace</button>
+      </div>
+      <div class="trace-fb" id="fb2"></div>
+    </div>
+
+    <!-- Trace label reveal -->
+    <div class="trace-label-reveal" id="traceReveal">
+      <div class="trace-label-word">trace</div>
+    </div>
+
+    <div class="trace-insight" id="insight">
+      <p>A trace follows a single request from beginning to end.</p>
+      <p>What metrics and logs could not reveal alone, the trace shows.</p>
+      <a href="06-spans.html">Continue &rarr;</a>
+    </div>
+  </div>
+
+  <div class="koan-progress">
+    <div class="koan-progress-fill" style="width: 26%"></div>
+  </div>
+
+  <script>
+    (function () {
+      // Phase 1: Reveal metric and log panels with staggered entrance
+      var metricPanel = document.getElementById('metricPanel');
+      var logPanel = document.getElementById('logPanel');
+      var q1 = document.getElementById('q1');
+      var traceScene = document.getElementById('traceScene');
+      var followControls = document.getElementById('followControls');
+      var followBtn = document.getElementById('followBtn');
+      var status = document.getElementById('status');
+      var q2 = document.getElementById('q2');
+
+      // Show metric panel after brief pause
+      setTimeout(function () {
+        metricPanel.classList.add('visible');
+      }, 600);
+
+      // Show log lines one by one
+      setTimeout(function () {
+        logPanel.classList.add('visible');
+        var logLines = logPanel.querySelectorAll('.log-line');
+        logLines.forEach(function (line, i) {
+          setTimeout(function () {
+            line.classList.add('visible');
+          }, 200 + i * 180);
+        });
+
+        // Show Q1 after all logs appear
+        var totalLogTime = 200 + logLines.length * 180 + 400;
+        setTimeout(function () {
+          q1.classList.add('visible');
+        }, totalLogTime);
+      }, 1400);
+
+      // Q1 logic
+      var fb1 = document.getElementById('fb1');
+      var q1Opts = q1.querySelectorAll('.trace-opt');
+
+      q1Opts.forEach(function (opt) {
+        opt.addEventListener('click', function () {
+          var fbType = this.dataset.fb;
+
+          if (this.dataset.answer === 'correct') {
+            this.classList.add('correct');
+            q1Opts.forEach(function (o) { o.classList.add('disabled'); });
+            fb1.textContent = 'Right. The logs show activity from multiple services, but not how one request flowed through them.';
+            fb1.className = 'trace-fb trace-fb--correct';
+
+            // Reveal the trace scene and follow button
+            setTimeout(function () {
+              status.textContent = 'You need to follow a single request through all four services.';
+              traceScene.classList.add('visible');
+              followControls.classList.add('visible');
+            }, 1000);
+          } else {
+            this.classList.add('wrong');
+            if (fbType === 'wrong-db') {
+              fb1.textContent = 'The database appears in the logs, but so do three other services. Can you be sure it is the cause?';
+            } else {
+              fb1.textContent = 'The gateway appears in the logs, but so do three other services. Can you be sure it is the cause?';
+            }
+            fb1.className = 'trace-fb trace-fb--wrong';
+            var self = this;
+            setTimeout(function () { self.classList.remove('wrong'); }, 600);
+          }
+        });
+      });
+
+      // Phase 2: Follow-request animation
+      var traceStarted = false;
+
+      function runRequestAnimation() {
+        var steps = [
+          { delay: 0,    svc: 'svc-gateway', wf: 'wf-0' },
+          { delay: 700,  arrow: 'arrow-1', svc: 'svc-api',     wf: 'wf-1', conn: 'wfc-0' },
+          { delay: 1400, arrow: 'arrow-2', svc: 'svc-orders',  wf: 'wf-2', conn: 'wfc-1' },
+          { delay: 2100, arrow: 'arrow-3', svc: 'svc-db',      wf: 'wf-3', conn: 'wfc-2' }
+        ];
+
+        status.textContent = 'Request enters the system...';
+
+        steps.forEach(function (s) {
+          setTimeout(function () {
+            document.getElementById(s.svc).classList.add('visited');
+
+            if (s.arrow) {
+              document.getElementById(s.arrow).classList.add('lit');
+            }
+
+            // Show waterfall row
+            document.getElementById(s.wf).classList.add('visible');
+
+            if (s.conn) {
+              document.getElementById(s.conn).style.opacity = '0.3';
+            }
+          }, s.delay);
+        });
+
+        // After animation completes, show waterfall title and Q2
+        setTimeout(function () {
+          document.getElementById('wfTitle').classList.add('visible');
+          status.textContent = 'Now you can see where the time went.';
+
+          setTimeout(function () {
+            q2.classList.add('visible');
+          }, 800);
+        }, 3000);
+      }
+
+      followBtn.addEventListener('click', function () {
+        if (traceStarted) return;
+        traceStarted = true;
+        followBtn.style.opacity = '0';
+        followBtn.style.pointerEvents = 'none';
+        runRequestAnimation();
+      });
+
+      // Q2 logic
+      var fb2 = document.getElementById('fb2');
+      var q2Opts = q2.querySelectorAll('.trace-opt');
+
+      q2Opts.forEach(function (opt) {
+        opt.addEventListener('click', function () {
+          var fbType = this.dataset.fb;
+
+          if (this.dataset.answer === 'correct') {
+            this.classList.add('correct');
+            q2Opts.forEach(function (o) { o.classList.add('disabled'); });
+            fb2.textContent = 'Correct.';
+            fb2.className = 'trace-fb trace-fb--correct';
+
+            // Reveal the word "trace" and the insight
+            setTimeout(function () {
+              document.getElementById('traceReveal').classList.add('visible');
+            }, 600);
+
+            setTimeout(function () {
+              document.getElementById('insight').classList.add('visible');
+            }, 1400);
+          } else {
+            this.classList.add('wrong');
+            if (fbType === 'wrong-metric') {
+              fb2.textContent = 'Metrics measure aggregate numbers, not individual request paths.';
+            } else {
+              fb2.textContent = 'Logs capture events at one point. You followed the request across all four services.';
+            }
+            fb2.className = 'trace-fb trace-fb--wrong';
+            var self = this;
+            setTimeout(function () { self.classList.remove('wrong'); }, 600);
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

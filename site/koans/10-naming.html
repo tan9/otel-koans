@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Koan 10: Naming Things — OpenTelemetry Koans</title>
+  <link rel="stylesheet" href="../css/shared.css">
+  <style>
+    /* Service panels */
+    .nm-services {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .nm-svc {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .nm-svc.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .nm-svc-header {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .nm-svc-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-green);
+    }
+
+    .nm-svc-body {
+      padding: 1rem 1.25rem;
+    }
+
+    .nm-svc-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+
+    .nm-attr {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 0.2rem 0;
+    }
+
+    .nm-attr-key { color: var(--accent-orange); }
+    .nm-attr-eq { color: var(--text-muted); }
+    .nm-attr-val { color: var(--text-secondary); }
+
+    /* Unified panel (post-fix) */
+    .nm-svc.nm-unified .nm-attr-key { color: var(--accent-green); }
+
+    .nm-svc-fixed {
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px dashed var(--border);
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.5s ease, opacity 0.4s ease;
+    }
+
+    .nm-svc-fixed.visible {
+      max-height: 80px;
+      opacity: 1;
+    }
+
+    .nm-svc-fixed-label {
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      color: var(--accent-green);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.3rem;
+    }
+
+    .nm-svc-fixed .nm-attr-key { color: var(--accent-green); }
+
+    /* Task prompt */
+    .nm-task {
+      text-align: center;
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+      opacity: 0;
+      transition: opacity 0.6s;
+    }
+
+    .nm-task.visible { opacity: 1; }
+    .nm-task strong { color: var(--accent-red); }
+
+    /* Query builder */
+    .nm-query-area {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+      opacity: 0;
+      max-height: 0;
+      transition: opacity 0.5s, max-height 0.6s ease;
+    }
+
+    .nm-query-area.visible {
+      opacity: 1;
+      max-height: 600px;
+      overflow: visible;
+    }
+
+    .nm-query-header {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .nm-query-body {
+      padding: 1.5rem;
+    }
+
+    .nm-search-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .nm-search-box {
+      flex: 1;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .nm-search-box:focus { border-color: var(--accent-blue); }
+    .nm-search-box::placeholder { color: var(--text-muted); }
+
+    .nm-search-btn {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--accent-blue);
+      border-radius: 6px;
+      background: var(--accent-blue);
+      color: var(--bg-primary);
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .nm-search-btn:hover { background: #79c0ff; border-color: #79c0ff; }
+    .nm-search-btn:disabled { opacity: 0.4; cursor: default; }
+
+    /* Query results */
+    .nm-results {
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+
+    .nm-results.visible { opacity: 1; }
+
+    .nm-result-line {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      margin-bottom: 0.4rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      background: var(--bg-tertiary);
+    }
+
+    .nm-result-svc {
+      color: var(--text-muted);
+      min-width: 100px;
+    }
+
+    .nm-result-query {
+      color: var(--accent-orange);
+      flex: 1;
+    }
+
+    .nm-result-badge {
+      font-size: 0.65rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .nm-result-badge--hit {
+      background: rgba(63, 185, 80, 0.15);
+      color: var(--accent-green);
+      border: 1px solid rgba(63, 185, 80, 0.3);
+    }
+
+    .nm-result-badge--miss {
+      background: rgba(248, 81, 73, 0.1);
+      color: var(--accent-red);
+      border: 1px solid rgba(248, 81, 73, 0.2);
+    }
+
+    .nm-result-note {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent-red);
+      margin-top: 0.75rem;
+      text-align: center;
+      padding: 0.5rem;
+    }
+
+    .nm-result-note--good {
+      color: var(--accent-green);
+    }
+
+    /* Frustration counter */
+    .nm-frustration {
+      text-align: center;
+      margin-top: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent-red);
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .nm-frustration.visible { opacity: 1; }
+
+    /* Unified query area */
+    .nm-unified-query {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+      opacity: 0;
+      max-height: 0;
+      transition: opacity 0.5s, max-height 0.6s ease;
+    }
+
+    .nm-unified-query.visible {
+      opacity: 1;
+      max-height: 300px;
+      overflow: visible;
+    }
+
+    .nm-unified-query .nm-query-header { border-color: rgba(63, 185, 80, 0.3); }
+
+    .nm-unified-result {
+      padding: 1.5rem;
+    }
+
+    .nm-unified-result .nm-result-line {
+      border: 1px solid rgba(63, 185, 80, 0.15);
+    }
+
+    /* Question blocks */
+    .nm-question {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 0.5s, max-height 0.5s ease;
+    }
+
+    .nm-question.visible {
+      opacity: 1;
+      max-height: 400px;
+      overflow: visible;
+    }
+
+    .nm-question p {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+
+    .nm-opts {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .nm-opt {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.2s;
+      max-width: 380px;
+      line-height: 1.4;
+    }
+
+    .nm-opt:hover { border-color: var(--accent-blue); }
+    .nm-opt.correct { border-color: var(--accent-green); background: rgba(63, 185, 80, 0.1); color: var(--accent-green); cursor: default; }
+    .nm-opt.wrong { border-color: var(--accent-red); color: var(--accent-red); }
+    .nm-opt.disabled { pointer-events: none; opacity: 0.35; }
+
+    .nm-fb {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      min-height: 1.5em;
+      margin-top: 0.75rem;
+    }
+
+    .nm-fb--correct { color: var(--accent-green); }
+    .nm-fb--wrong { color: var(--accent-red); }
+
+    /* Insight */
+    .nm-insight {
+      text-align: center;
+      padding: 1.5rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 0.6s, max-height 0.5s ease;
+    }
+
+    .nm-insight.visible {
+      opacity: 1;
+      max-height: 300px;
+      overflow: visible;
+    }
+
+    .nm-insight p {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+      line-height: 1.5;
+    }
+
+    .nm-insight strong { color: var(--accent-blue); }
+
+    .nm-insight a {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--accent-blue);
+      text-decoration: none;
+    }
+
+    .nm-insight a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="mobile-gate">
+    <div class="mobile-gate-icon">&#9776;</div>
+    <div class="mobile-gate-title">Desktop Only</div>
+    <div class="mobile-gate-text">These koans require a larger screen. Please visit on a desktop browser.</div>
+  </div>
+
+  <div class="koan-page">
+    <div class="koan-header">
+      <div class="koan-number">Koan 9 of 19</div>
+      <div class="koan-nav">
+        <a href="08-attributes.html">&larr; Attributes</a>
+        <a href="09-resources.html">Resources &rarr;</a>
+      </div>
+    </div>
+
+    <h1 class="koan-title">Naming Things</h1>
+
+    <div class="koan-text">
+      Three teams. Three services. Three names for the same thing.<br>
+      When the data arrives, it speaks three dialects.
+    </div>
+
+    <!-- Three service panels showing inconsistent naming -->
+    <div class="nm-services">
+      <div class="nm-svc" id="svcA">
+        <div class="nm-svc-header"><span class="nm-svc-dot"></span> orders &mdash; team a</div>
+        <div class="nm-svc-body">
+          <div class="nm-svc-label">telemetry emitted</div>
+          <div class="nm-attr"><span class="nm-attr-key">statusCode</span> <span class="nm-attr-eq">=</span> <span class="nm-attr-val">200</span></div>
+          <div class="nm-svc-fixed" id="fixA">
+            <div class="nm-svc-fixed-label">with shared naming</div>
+            <div class="nm-attr"><span class="nm-attr-key">http.response.status_code</span> <span class="nm-attr-eq">=</span> <span class="nm-attr-val">200</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nm-svc" id="svcB">
+        <div class="nm-svc-header"><span class="nm-svc-dot"></span> payment &mdash; team b</div>
+        <div class="nm-svc-body">
+          <div class="nm-svc-label">telemetry emitted</div>
+          <div class="nm-attr"><span class="nm-attr-key">response_status</span> <span class="nm-attr-eq">=</span> <span class="nm-attr-val">"200"</span></div>
+          <div class="nm-svc-fixed" id="fixB">
+            <div class="nm-svc-fixed-label">with shared naming</div>
+            <div class="nm-attr"><span class="nm-attr-key">http.response.status_code</span> <span class="nm-attr-eq">=</span> <span class="nm-attr-val">200</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nm-svc" id="svcC">
+        <div class="nm-svc-header"><span class="nm-svc-dot"></span> inventory &mdash; team c</div>
+        <div class="nm-svc-body">
+          <div class="nm-svc-label">telemetry emitted</div>
+          <div class="nm-attr"><span class="nm-attr-key">http_code</span> <span class="nm-attr-eq">=</span> <span class="nm-attr-val">200</span></div>
+          <div class="nm-svc-fixed" id="fixC">
+            <div class="nm-svc-fixed-label">with shared naming</div>
+            <div class="nm-attr"><span class="nm-attr-key">http.response.status_code</span> <span class="nm-attr-eq">=</span> <span class="nm-attr-val">200</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Task prompt -->
+    <div class="nm-task" id="taskPrompt">
+      An incident: <strong>500 errors</strong> are spiking across all three services.<br>
+      You need to find every request that returned a 500. Try querying for them.
+    </div>
+
+    <!-- Query builder — the frustrating part -->
+    <div class="nm-query-area" id="queryArea">
+      <div class="nm-query-header">query builder</div>
+      <div class="nm-query-body">
+        <div class="nm-search-row">
+          <input class="nm-search-box" id="searchBox" type="text" placeholder="e.g. statusCode = 500" readonly>
+          <button class="nm-search-btn" id="searchBtn">Run query</button>
+        </div>
+
+        <div class="nm-results" id="results1">
+          <div class="nm-result-line">
+            <span class="nm-result-svc">Team A</span>
+            <span class="nm-result-query">statusCode = 500</span>
+            <span class="nm-result-badge nm-result-badge--hit">match</span>
+          </div>
+          <div class="nm-result-line">
+            <span class="nm-result-svc">Team B</span>
+            <span class="nm-result-query">statusCode = 500</span>
+            <span class="nm-result-badge nm-result-badge--miss">no match</span>
+          </div>
+          <div class="nm-result-line">
+            <span class="nm-result-svc">Team C</span>
+            <span class="nm-result-query">statusCode = 500</span>
+            <span class="nm-result-badge nm-result-badge--miss">no match</span>
+          </div>
+          <div class="nm-result-note">Only 1 of 3 services found. Team B calls it response_status. Team C calls it http_code.</div>
+        </div>
+
+        <div class="nm-results" id="results2">
+          <div class="nm-result-line">
+            <span class="nm-result-svc">Team A</span>
+            <span class="nm-result-query">response_status = "500"</span>
+            <span class="nm-result-badge nm-result-badge--miss">no match</span>
+          </div>
+          <div class="nm-result-line">
+            <span class="nm-result-svc">Team B</span>
+            <span class="nm-result-query">response_status = "500"</span>
+            <span class="nm-result-badge nm-result-badge--hit">match</span>
+          </div>
+          <div class="nm-result-line">
+            <span class="nm-result-svc">Team C</span>
+            <span class="nm-result-query">response_status = "500"</span>
+            <span class="nm-result-badge nm-result-badge--miss">no match</span>
+          </div>
+          <div class="nm-result-note">Query 2 of 3. Still missing Team C.</div>
+        </div>
+
+        <div class="nm-results" id="results3">
+          <div class="nm-result-line">
+            <span class="nm-result-svc">Team A</span>
+            <span class="nm-result-query">http_code = 500</span>
+            <span class="nm-result-badge nm-result-badge--miss">no match</span>
+          </div>
+          <div class="nm-result-line">
+            <span class="nm-result-svc">Team B</span>
+            <span class="nm-result-query">http_code = 500</span>
+            <span class="nm-result-badge nm-result-badge--miss">no match</span>
+          </div>
+          <div class="nm-result-line">
+            <span class="nm-result-svc">Team C</span>
+            <span class="nm-result-query">http_code = 500</span>
+            <span class="nm-result-badge nm-result-badge--hit">match</span>
+          </div>
+          <div class="nm-result-note">Three queries to answer one question. During an outage, this costs minutes you don't have.</div>
+        </div>
+
+        <div class="nm-frustration" id="frustration">3 queries for 1 answer. Every name is different. Every type is different.</div>
+      </div>
+    </div>
+
+    <!-- Q1: Why is this hard? -->
+    <div class="nm-question" id="q1">
+      <p>Why is querying across services so hard?</p>
+      <div class="nm-opts">
+        <button class="nm-opt" data-answer="wrong">The services are too slow</button>
+        <button class="nm-opt" data-answer="correct">Each team named the same thing differently</button>
+        <button class="nm-opt" data-answer="wrong">The data is corrupted</button>
+      </div>
+      <div class="nm-fb" id="fb1"></div>
+    </div>
+
+    <!-- Unified query reveal -->
+    <div class="nm-unified-query" id="unifiedQuery">
+      <div class="nm-query-header" style="color: var(--accent-green);">one name &mdash; one query &mdash; all services</div>
+      <div class="nm-unified-result">
+        <div class="nm-result-line">
+          <span class="nm-result-svc">Team A</span>
+          <span class="nm-result-query">http.response.status_code = 500</span>
+          <span class="nm-result-badge nm-result-badge--hit">match</span>
+        </div>
+        <div class="nm-result-line">
+          <span class="nm-result-svc">Team B</span>
+          <span class="nm-result-query">http.response.status_code = 500</span>
+          <span class="nm-result-badge nm-result-badge--hit">match</span>
+        </div>
+        <div class="nm-result-line">
+          <span class="nm-result-svc">Team C</span>
+          <span class="nm-result-query">http.response.status_code = 500</span>
+          <span class="nm-result-badge nm-result-badge--hit">match</span>
+        </div>
+        <div class="nm-result-note nm-result-note--good">One query. All three services. Same name, same type, same meaning.</div>
+      </div>
+    </div>
+
+    <!-- Q2: Application — Team D -->
+    <div class="nm-question" id="q2">
+      <p>Team D joins. They need to record the HTTP request method.<br>Following the same naming pattern (dotted namespaces), what should they call it?</p>
+      <div class="nm-opts">
+        <button class="nm-opt" data-answer="wrong">method</button>
+        <button class="nm-opt" data-answer="wrong">httpMethod</button>
+        <button class="nm-opt" data-answer="correct">http.request.method</button>
+      </div>
+      <div class="nm-fb" id="fb2"></div>
+    </div>
+
+    <!-- Insight -->
+    <div class="nm-insight" id="insight">
+      <p>These shared naming rules are called <strong>semantic conventions</strong>.</p>
+      <p>When everyone speaks the same language, one query finds everything.</p>
+      <a href="09-resources.html">Continue &rarr;</a>
+    </div>
+  </div>
+
+  <div class="koan-progress">
+    <div class="koan-progress-fill" style="width: 47%"></div>
+  </div>
+
+  <script>
+    (function () {
+      /* --- Phase 1: Stagger service panels into view --- */
+      var svcs = ['svcA', 'svcB', 'svcC'];
+      svcs.forEach(function (id, i) {
+        setTimeout(function () {
+          document.getElementById(id).classList.add('visible');
+        }, 300 + i * 350);
+      });
+
+      /* After panels visible, show the task */
+      setTimeout(function () {
+        document.getElementById('taskPrompt').classList.add('visible');
+      }, 1700);
+
+      setTimeout(function () {
+        document.getElementById('queryArea').classList.add('visible');
+      }, 2300);
+
+      /* --- Phase 2: Query frustration sequence --- */
+      var queryStep = 0;
+      var queries = [
+        { input: 'statusCode = 500', resultId: 'results1' },
+        { input: 'response_status = "500"', resultId: 'results2' },
+        { input: 'http_code = 500', resultId: 'results3' }
+      ];
+
+      var searchBox = document.getElementById('searchBox');
+      var searchBtn = document.getElementById('searchBtn');
+
+      /* Pre-fill first query text */
+      setTimeout(function () {
+        searchBox.value = queries[0].input;
+      }, 2500);
+
+      searchBtn.addEventListener('click', function () {
+        if (queryStep >= queries.length) return;
+
+        var current = queries[queryStep];
+
+        /* Type the query text into the box with a brief animation */
+        searchBox.value = current.input;
+
+        /* Show results */
+        setTimeout(function () {
+          document.getElementById(current.resultId).classList.add('visible');
+        }, 300);
+
+        queryStep++;
+
+        if (queryStep < queries.length) {
+          /* Update button and queue next query */
+          searchBtn.textContent = 'Try next query';
+          setTimeout(function () {
+            searchBox.value = queries[queryStep].input;
+          }, 800);
+        } else {
+          /* All three done — show frustration, then question */
+          searchBtn.disabled = true;
+          searchBtn.textContent = 'No more queries';
+
+          setTimeout(function () {
+            document.getElementById('frustration').classList.add('visible');
+          }, 600);
+
+          setTimeout(function () {
+            document.getElementById('q1').classList.add('visible');
+          }, 1400);
+        }
+      });
+
+      /* --- Phase 3: Q1 — Why is querying hard? --- */
+      (function () {
+        var q = document.getElementById('q1');
+        var fb = document.getElementById('fb1');
+        var opts = q.querySelectorAll('.nm-opt');
+
+        opts.forEach(function (opt) {
+          opt.addEventListener('click', function () {
+            if (this.dataset.answer === 'correct') {
+              this.classList.add('correct');
+              opts.forEach(function (o) { o.classList.add('disabled'); });
+              fb.textContent = 'Three names, two data types, zero consistency.';
+              fb.className = 'nm-fb nm-fb--correct';
+
+              /* Reveal the fix: show unified naming on each service panel */
+              setTimeout(function () {
+                ['fixA', 'fixB', 'fixC'].forEach(function (id, i) {
+                  setTimeout(function () {
+                    document.getElementById(id).classList.add('visible');
+                  }, 200 + i * 250);
+                });
+              }, 600);
+
+              /* Show the unified query */
+              setTimeout(function () {
+                document.getElementById('unifiedQuery').classList.add('visible');
+              }, 1800);
+
+              /* Show Q2 */
+              setTimeout(function () {
+                document.getElementById('q2').classList.add('visible');
+              }, 2600);
+            } else {
+              this.classList.add('wrong');
+              fb.textContent = 'Look at the query results. The data is there — the names just don\'t match.';
+              fb.className = 'nm-fb nm-fb--wrong';
+              var self = this;
+              setTimeout(function () { self.classList.remove('wrong'); }, 600);
+            }
+          });
+        });
+      })();
+
+      /* --- Phase 4: Q2 — Team D application --- */
+      (function () {
+        var q = document.getElementById('q2');
+        var fb = document.getElementById('fb2');
+        var opts = q.querySelectorAll('.nm-opt');
+
+        opts.forEach(function (opt) {
+          opt.addEventListener('click', function () {
+            if (this.dataset.answer === 'correct') {
+              this.classList.add('correct');
+              opts.forEach(function (o) { o.classList.add('disabled'); });
+              fb.textContent = 'Dotted namespaces: http.request.method. Consistent, predictable, universal.';
+              fb.className = 'nm-fb nm-fb--correct';
+
+              setTimeout(function () {
+                document.getElementById('insight').classList.add('visible');
+              }, 800);
+            } else {
+              this.classList.add('wrong');
+              fb.textContent = 'Look at the pattern: http.response.status_code. The method would follow the same structure.';
+              fb.className = 'nm-fb nm-fb--wrong';
+              var self = this;
+              setTimeout(function () { self.classList.remove('wrong'); }, 600);
+            }
+          });
+        });
+      })();
+    })();
+  </script>
+</body>
+</html>

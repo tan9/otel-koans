@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenTelemetry Koans</title>
+  <link rel="stylesheet" href="css/shared.css">
+  <style>
+    /* Koan 0: The Opening — page-specific styles */
+
+    .opening {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    .opening-title {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeIn 1.5s ease 0.5s forwards;
+    }
+
+    .opening-koan {
+      font-family: var(--font-sans);
+      font-size: 1.25rem;
+      font-style: italic;
+      color: var(--text-secondary);
+      line-height: 2;
+      max-width: 580px;
+      text-align: center;
+      margin-bottom: 4rem;
+      opacity: 0;
+      animation: fadeIn 2s ease 1.5s forwards;
+    }
+
+    /* The system diagram */
+    .system-container {
+      position: relative;
+      width: 100%;
+      max-width: 700px;
+      height: 400px;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeIn 1.5s ease 3s forwards;
+    }
+
+    .system-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Service nodes */
+    .service {
+      cursor: default;
+    }
+
+    .service-circle {
+      fill: var(--bg-tertiary);
+      stroke: var(--border);
+      stroke-width: 1.5;
+      transition: all 0.8s ease;
+    }
+
+    .service-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      fill: var(--text-muted);
+      text-anchor: middle;
+      transition: fill 0.8s ease;
+    }
+
+    /* Edges between services */
+    .edge {
+      stroke: var(--border);
+      stroke-width: 1;
+      fill: none;
+      opacity: 0.3;
+      transition: all 0.8s ease;
+    }
+
+    /* Illuminated state */
+    .illuminated .service-circle {
+      stroke: var(--accent-blue);
+      filter: drop-shadow(0 0 6px rgba(88, 166, 255, 0.3));
+    }
+
+    .illuminated .service-label {
+      fill: var(--text-primary);
+    }
+
+    .illuminated .edge {
+      stroke: var(--accent-blue);
+      opacity: 0.6;
+    }
+
+    /* Data flow particles */
+    .particle {
+      fill: var(--accent-green);
+      opacity: 0;
+      r: 2.5;
+    }
+
+    .illuminated .particle {
+      opacity: 1;
+    }
+
+    /* Telemetry indicators */
+    .telemetry-label {
+      font-family: var(--font-mono);
+      font-size: 8px;
+      fill: var(--text-muted);
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+
+    .illuminated .telemetry-label {
+      opacity: 1;
+    }
+
+    /* The prompt */
+    .opening-prompt {
+      opacity: 0;
+      animation: fadeIn 1.5s ease 4s forwards;
+      text-align: center;
+    }
+
+    .opening-prompt .koan-btn {
+      font-size: 0.9rem;
+      padding: 0.75rem 2rem;
+    }
+
+    /* After illumination */
+    .opening-insight {
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      color: var(--accent-green);
+      text-align: center;
+      margin-top: 2rem;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    .opening-insight.visible {
+      opacity: 1;
+    }
+
+    .opening-continue {
+      text-align: center;
+      margin-top: 2rem;
+      opacity: 0;
+      transition: opacity 1s ease 1s;
+    }
+
+    .opening-continue.visible {
+      opacity: 1;
+    }
+
+    .opening-continue a {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--accent-blue);
+      text-decoration: none;
+    }
+
+    .opening-continue a:hover {
+      text-decoration: underline;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Particle animation along edges */
+    @keyframes flowParticle {
+      0% { offset-distance: 0%; opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { offset-distance: 100%; opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Mobile gate -->
+  <div class="mobile-gate">
+    <div class="mobile-gate-icon">&#9776;</div>
+    <div class="mobile-gate-title">Desktop Only</div>
+    <div class="mobile-gate-text">
+      These koans require a larger screen for the interactive exercises. Please visit on a desktop browser.
+    </div>
+  </div>
+
+  <div class="opening">
+    <div class="opening-title">OpenTelemetry Koans</div>
+
+    <div class="opening-koan">
+      A system ran for a thousand days without error.<br>
+      On the thousand-and-first day, it failed.<br><br>
+      The developer asked, "When did this begin?"<br>
+      But the system had never learned to speak.
+    </div>
+
+    <div class="system-container">
+      <svg class="system-svg" viewBox="0 0 700 400" id="systemDiagram">
+        <!-- Edges -->
+        <g class="edges">
+          <path class="edge" id="edge-gw-auth" d="M 200,80 Q 250,60 300,100" />
+          <path class="edge" id="edge-gw-api" d="M 200,80 Q 280,140 350,200" />
+          <path class="edge" id="edge-auth-api" d="M 300,100 Q 330,150 350,200" />
+          <path class="edge" id="edge-api-orders" d="M 350,200 Q 300,260 250,300" />
+          <path class="edge" id="edge-api-inventory" d="M 350,200 Q 400,260 450,300" />
+          <path class="edge" id="edge-orders-db" d="M 250,300 Q 350,350 500,200" />
+          <path class="edge" id="edge-inventory-db" d="M 450,300 Q 480,260 500,200" />
+          <path class="edge" id="edge-api-cache" d="M 350,200 Q 450,160 550,120" />
+        </g>
+
+        <!-- Particles (animated along edges after illumination) -->
+        <g class="particles" id="particles"></g>
+
+        <!-- Service nodes -->
+        <g class="services">
+          <g class="service" data-name="gateway" transform="translate(200, 80)">
+            <circle class="service-circle" r="28" />
+            <text class="service-label" dy="4">gateway</text>
+          </g>
+          <g class="service" data-name="auth" transform="translate(300, 100)">
+            <circle class="service-circle" r="22" />
+            <text class="service-label" dy="4">auth</text>
+          </g>
+          <g class="service" data-name="api" transform="translate(350, 200)">
+            <circle class="service-circle" r="30" />
+            <text class="service-label" dy="4">api</text>
+          </g>
+          <g class="service" data-name="orders" transform="translate(250, 300)">
+            <circle class="service-circle" r="24" />
+            <text class="service-label" dy="4">orders</text>
+          </g>
+          <g class="service" data-name="inventory" transform="translate(450, 300)">
+            <circle class="service-circle" r="24" />
+            <text class="service-label" dy="4">inventory</text>
+          </g>
+          <g class="service" data-name="db" transform="translate(500, 200)">
+            <circle class="service-circle" r="26" />
+            <text class="service-label" dy="4">database</text>
+          </g>
+          <g class="service" data-name="cache" transform="translate(550, 120)">
+            <circle class="service-circle" r="20" />
+            <text class="service-label" dy="4">cache</text>
+          </g>
+        </g>
+
+        <!-- Telemetry labels (appear after illumination) -->
+        <g class="telemetry-labels">
+          <text class="telemetry-label" x="140" y="55" fill="var(--accent-green)">traces</text>
+          <text class="telemetry-label" x="560" y="95" fill="var(--accent-orange)">metrics</text>
+          <text class="telemetry-label" x="510" y="340" fill="var(--accent-purple)">logs</text>
+        </g>
+      </svg>
+    </div>
+
+    <div class="opening-prompt" id="prompt">
+      <button class="koan-btn koan-btn--primary" id="illuminateBtn">
+        Observe
+      </button>
+      <div class="koan-hint">What changes when you can see?</div>
+    </div>
+
+    <div class="opening-insight" id="insight">
+      Now the system speaks. Now you can listen.
+    </div>
+
+    <div class="opening-continue" id="continueLink">
+      <a href="koans/01-telemetry.html">Begin the path &rarr;</a>
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="koan-progress">
+    <div class="koan-progress-fill" id="progress" style="width: 0%"></div>
+  </div>
+
+  <script>
+    (function () {
+      const btn = document.getElementById('illuminateBtn');
+      const diagram = document.getElementById('systemDiagram');
+      const insight = document.getElementById('insight');
+      const continueLink = document.getElementById('continueLink');
+      const progress = document.getElementById('progress');
+      const particlesGroup = document.getElementById('particles');
+
+      const edges = [
+        'edge-gw-auth', 'edge-gw-api', 'edge-auth-api',
+        'edge-api-orders', 'edge-api-inventory',
+        'edge-orders-db', 'edge-inventory-db', 'edge-api-cache'
+      ];
+
+      function createParticle(edgeId, delay) {
+        const path = document.getElementById(edgeId);
+        const length = path.getTotalLength();
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('r', '2.5');
+        circle.setAttribute('fill', 'var(--accent-green)');
+        particlesGroup.appendChild(circle);
+
+        function animate() {
+          const duration = 1500 + Math.random() * 1000;
+          const start = performance.now() + delay;
+
+          function step(now) {
+            const elapsed = now - start;
+            if (elapsed < 0) {
+              requestAnimationFrame(step);
+              return;
+            }
+            const t = (elapsed % duration) / duration;
+            const point = path.getPointAtLength(t * length);
+            circle.setAttribute('cx', point.x);
+            circle.setAttribute('cy', point.y);
+            circle.setAttribute('opacity', t < 0.1 ? t / 0.1 : t > 0.9 ? (1 - t) / 0.1 : 1);
+            requestAnimationFrame(step);
+          }
+          requestAnimationFrame(step);
+        }
+
+        animate();
+      }
+
+      let illuminated = false;
+
+      btn.addEventListener('click', function () {
+        if (illuminated) return;
+        illuminated = true;
+
+        // Illuminate services one by one
+        const services = diagram.querySelectorAll('.service');
+        const serviceOrder = [0, 1, 2, 5, 6, 3, 4]; // gateway, auth, api, db, cache, orders, inventory
+
+        serviceOrder.forEach(function (idx, i) {
+          setTimeout(function () {
+            services[idx].classList.add('illuminated');
+            services[idx].querySelector('.service-circle').style.stroke = 'var(--accent-blue)';
+            services[idx].querySelector('.service-circle').style.filter = 'drop-shadow(0 0 6px rgba(88, 166, 255, 0.3))';
+            services[idx].querySelector('.service-label').style.fill = 'var(--text-primary)';
+          }, i * 300);
+        });
+
+        // Illuminate edges
+        const edgeEls = diagram.querySelectorAll('.edge');
+        edgeEls.forEach(function (edge, i) {
+          setTimeout(function () {
+            edge.style.stroke = 'var(--accent-blue)';
+            edge.style.opacity = '0.5';
+          }, 500 + i * 200);
+        });
+
+        // Show telemetry labels
+        const labels = diagram.querySelectorAll('.telemetry-label');
+        labels.forEach(function (label, i) {
+          setTimeout(function () {
+            label.style.opacity = '1';
+          }, 1500 + i * 400);
+        });
+
+        // Start particles
+        setTimeout(function () {
+          edges.forEach(function (edgeId, i) {
+            createParticle(edgeId, i * 200);
+            createParticle(edgeId, i * 200 + 800); // second particle per edge
+          });
+        }, 2000);
+
+        // Hide button, show insight
+        setTimeout(function () {
+          btn.style.opacity = '0';
+          btn.style.pointerEvents = 'none';
+          btn.parentElement.querySelector('.koan-hint').style.opacity = '0';
+        }, 1000);
+
+        setTimeout(function () {
+          insight.classList.add('visible');
+        }, 3000);
+
+        setTimeout(function () {
+          continueLink.classList.add('visible');
+          progress.style.width = '5%';
+        }, 4000);
+      });
+    })();
+  </script>
+</body>
+</html>

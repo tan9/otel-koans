@@ -27,4 +27,4 @@ Desktop only. Headphones recommended.
 
 ---
 
-<sub>Music: ["All the Light"](https://futurezen.bandcamp.com/track/all-the-light) by Future Zen — [CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Favicon: yoga pose by [unknown] — public domain.</sub>
+Music: [All the Light](https://futurezen.bandcamp.com/track/all-the-light) by Future Zen (CC-BY-SA 4.0)

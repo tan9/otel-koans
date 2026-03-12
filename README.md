@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="screenshot.png" alt="OpenTelemetry Koans" width="500">
+  <img src="flow.gif" alt="OpenTelemetry Koans" width="500">
 </p>
 
 <h1 align="center">OpenTelemetry Koans</h1>

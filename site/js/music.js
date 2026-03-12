@@ -1,26 +1,24 @@
-/* Background music — "Celestial" by Scott Buckley (CC-BY 4.0) */
+/* Background music */
 (function () {
   var VOLUME = 0.12;
   var KEY_ENABLED = 'otel-koans-music';
   var KEY_TIME = 'otel-koans-music-time';
 
-  // Determine audio path based on page depth
   var isRoot = !location.pathname.match(/\/koans\//);
-  var audioSrc = isRoot ? 'audio/celestial.mp3' : '../audio/celestial.mp3';
+  var audioSrc = isRoot ? 'audio/bg-music.mp3' : '../audio/bg-music.mp3';
 
   var audio = new Audio(audioSrc);
   audio.loop = true;
   audio.volume = VOLUME;
   audio.preload = 'auto';
 
-  // Save position periodically so next page can resume
+  // Save position periodically so next page can resume near same spot
   setInterval(function () {
     if (!audio.paused) {
       localStorage.setItem(KEY_TIME, String(audio.currentTime));
     }
   }, 1000);
 
-  // Also save on page unload
   window.addEventListener('beforeunload', function () {
     if (!audio.paused) {
       localStorage.setItem(KEY_TIME, String(audio.currentTime));
@@ -33,48 +31,49 @@
   btn.setAttribute('aria-label', 'Toggle music');
   btn.title = 'Toggle music';
 
-  var enabled = localStorage.getItem(KEY_ENABLED) === '1';
-  btn.textContent = enabled ? '\u266B' : '\u266A';
-  btn.classList.toggle('music-on', enabled);
+  function updateBtn() {
+    var on = !audio.paused;
+    btn.textContent = on ? '\u266B' : '\u266A';
+    btn.classList.toggle('music-on', on);
+  }
 
-  function play() {
+  function startPlayback() {
     var savedTime = parseFloat(localStorage.getItem(KEY_TIME) || '0');
-    if (savedTime && isFinite(savedTime)) {
+    if (savedTime && isFinite(savedTime) && savedTime < audio.duration) {
       audio.currentTime = savedTime;
     }
-    audio.play().catch(function () {});
+    audio.play().then(updateBtn).catch(function () {});
   }
 
-  // If previously enabled, try to resume on first interaction
-  if (enabled) {
-    // Try immediate play (may work if user has interacted with domain before)
-    play();
-    // Fallback: play on first click/key anywhere
-    var resumeOnce = function () {
-      if (audio.paused && localStorage.getItem(KEY_ENABLED) === '1') {
-        play();
-      }
-      document.removeEventListener('click', resumeOnce);
-      document.removeEventListener('keydown', resumeOnce);
-    };
-    document.addEventListener('click', resumeOnce);
-    document.addEventListener('keydown', resumeOnce);
-  }
-
-  btn.addEventListener('click', function (e) {
-    e.stopPropagation();
+  // Toggle on click
+  btn.addEventListener('click', function () {
     if (audio.paused) {
       localStorage.setItem(KEY_ENABLED, '1');
-      btn.textContent = '\u266B';
-      btn.classList.add('music-on');
-      play();
+      startPlayback();
     } else {
       localStorage.setItem(KEY_ENABLED, '0');
-      btn.textContent = '\u266A';
-      btn.classList.remove('music-on');
       audio.pause();
     }
+    updateBtn();
   });
 
+  // If music was enabled on a previous page, auto-resume on first user gesture
+  var enabled = localStorage.getItem(KEY_ENABLED) === '1';
+  if (enabled) {
+    // Try playing immediately (works if browser has media engagement for this origin)
+    startPlayback();
+    // Fallback: resume on any user interaction
+    var resumeHandler = function () {
+      if (audio.paused && localStorage.getItem(KEY_ENABLED) === '1') {
+        startPlayback();
+      }
+      document.removeEventListener('click', resumeHandler, true);
+      document.removeEventListener('keydown', resumeHandler, true);
+    };
+    document.addEventListener('click', resumeHandler, true);
+    document.addEventListener('keydown', resumeHandler, true);
+  }
+
+  updateBtn();
   document.body.appendChild(btn);
 })();

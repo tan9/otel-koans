@@ -150,9 +150,9 @@
       }
       if (resumeIdx >= KOAN_ORDER.length) resumeIdx = KOAN_ORDER.length - 1;
 
-      // Hide the default "Begin the path" link since we're showing a resume link instead
+      // Remove the default "Begin the path" link since we're showing a resume link instead
       var beginLink = document.querySelector('.opening-continue');
-      if (beginLink) beginLink.style.display = 'none';
+      if (beginLink) beginLink.remove();
 
       var cont = document.createElement('div');
       cont.className = 'resume-prompt';

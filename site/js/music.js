@@ -37,6 +37,8 @@
       '<span class="music-float">\u266A</span>' +
       '<span class="music-float">\u266B</span>' +
       '<span class="music-float">\u266A</span>' +
+      '<span class="music-float">\u266B</span>' +
+      '<span class="music-float">\u266A</span>' +
       '</span>';
     btn.classList.toggle('music-on', on);
   }

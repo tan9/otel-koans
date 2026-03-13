@@ -302,6 +302,8 @@ body {
 /* Music toggle inside the unified bar */
 .progress-nav .music-toggle {
   position: relative;
+  bottom: auto;
+  right: auto;
   width: auto;
   height: auto;
   background: none;

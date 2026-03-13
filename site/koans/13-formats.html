@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Koan 13: Data Formats - OpenTelemetry Koans</title>
+  <title data-i18n="koan13.pageTitle">Koan 13: Data Formats - OpenTelemetry Koans</title>
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon-16x16.png">
@@ -11,6 +11,7 @@
   <link rel="manifest" href="../site.webmanifest">
   <meta name="theme-color" content="#0a0e14">
   <link rel="stylesheet" href="../css/shared.css">
+  <script src="../js/i18n.js"></script>
   <style>
     .fmt-intro {
       font-family: var(--font-mono);
@@ -424,15 +425,15 @@
 <body>
   <div class="mobile-gate">
     <div class="mobile-gate-icon">&#9776;</div>
-    <div class="mobile-gate-title">Desktop Only</div>
-    <div class="mobile-gate-text">These koans require a larger screen. Please visit on a desktop browser.</div>
+    <div class="mobile-gate-title" data-i18n="common.desktopOnly">Desktop Only</div>
+    <div class="mobile-gate-text" data-i18n="common.desktopOnlyText">These koans require a larger screen. Please visit on a desktop browser.</div>
   </div>
 
   <div class="koan-page">
 
-    <h1 class="koan-title">Data Formats</h1>
+    <h1 class="koan-title" data-i18n="koan13.title">Data Formats</h1>
 
-    <div class="koan-text">
+    <div class="koan-text" data-i18n-html="koan13.zen">
       The message is the same. Only the language changes.<br>
       A system that speaks one language reaches one listener.<br>
       A system that speaks many reaches all.
@@ -440,35 +441,35 @@
 
     <!-- Scenario: the error that creates the need -->
     <div class="fmt-scenario">
-      <div class="fmt-scenario-label">Exporter Log</div>
+      <div class="fmt-scenario-label" data-i18n="koan13.scenarioLabel">Exporter Log</div>
       <div class="fmt-scenario-log">
-<span class="log-ts">14:23:01</span>  <span class="log-svc">otel-exporter</span>  Sending span <span style="color:var(--text-primary)">checkout</span> to metrics backend...<br>
-<span class="log-ts">14:23:01</span>  <span class="log-err">ERROR</span>  Export failed: <span class="log-err">unsupported format. Cannot parse binary encoding.</span><br>
-<span class="log-ts">14:23:01</span>  <span class="log-err">ERROR</span>  <span class="log-err">Expected: plain text exposition format</span>
+<span class="log-ts">14:23:01</span>  <span class="log-svc">otel-exporter</span>  <span data-i18n="koan13.logLine1">Sending span checkout to metrics backend...</span><br>
+<span class="log-ts">14:23:01</span>  <span class="log-err">ERROR</span>  <span class="log-err" data-i18n="koan13.logError1">Export failed: unsupported format. Cannot parse binary encoding.</span><br>
+<span class="log-ts">14:23:01</span>  <span class="log-err">ERROR</span>  <span class="log-err" data-i18n="koan13.logError2">Expected: plain text exposition format</span>
       </div>
     </div>
 
     <!-- Question 1: Why did the export fail? -->
     <div class="fmt-question start" id="q1">
-      <p>The exporter sent valid telemetry, but the backend rejected it. Why?</p>
+      <p data-i18n="koan13.q1">The exporter sent valid telemetry, but the backend rejected it. Why?</p>
       <div class="fmt-opts">
-        <button class="fmt-opt" data-answer="wrong" data-hint="1">The span data was corrupted</button>
-        <button class="fmt-opt" data-answer="correct">The data was in a format the backend doesn't understand</button>
-        <button class="fmt-opt" data-answer="wrong" data-hint="2">The backend can't receive spans at all</button>
+        <button class="fmt-opt" data-answer="wrong" data-hint="1" data-i18n="koan13.q1OptCorrupt">The span data was corrupted</button>
+        <button class="fmt-opt" data-answer="correct" data-i18n="koan13.q1OptCorrect">The data was in a format the backend doesn't understand</button>
+        <button class="fmt-opt" data-answer="wrong" data-hint="2" data-i18n="koan13.q1OptNoSpans">The backend can't receive spans at all</button>
       </div>
       <div class="fmt-fb" id="fb1"></div>
       <div class="fmt-hint" id="hint1"></div>
     </div>
 
-    <div class="fmt-intro" id="formatIntro" style="opacity:0; transition: opacity 0.6s;">the same span, three representations</div>
+    <div class="fmt-intro" id="formatIntro" style="opacity:0; transition: opacity 0.6s;" data-i18n="koan13.formatIntro">the same span, three representations</div>
 
     <!-- Format cards -->
     <div class="fmt-grid" id="formatGrid">
       <!-- Format A: Structured JSON -->
       <div class="fmt-card" id="cardA">
         <div class="fmt-card-header" id="labelA">
-          <span>Format A</span>
-          <span class="fmt-label-text" id="labelTextA">&nbsp;- Structured JSON</span>
+          <span data-i18n="koan13.formatA">Format A</span>
+          <span class="fmt-label-text" id="labelTextA" data-i18n="koan13.formatASub">&nbsp;- Structured JSON</span>
         </div>
         <div class="fmt-card-body">
           <div class="fmt-code"><span class="jb">{</span>
@@ -488,11 +489,11 @@
       <!-- Format B: Compact Binary -->
       <div class="fmt-card" id="cardB">
         <div class="fmt-card-header" id="labelB">
-          <span>Format B</span>
-          <span class="fmt-label-text" id="labelTextB">&nbsp;- Compact Binary</span>
+          <span data-i18n="koan13.formatB">Format B</span>
+          <span class="fmt-label-text" id="labelTextB" data-i18n="koan13.formatBSub">&nbsp;- Compact Binary</span>
         </div>
         <div class="fmt-card-body">
-          <div class="fmt-code"><span class="hl">Binary encoding (not human-readable)</span>
+          <div class="fmt-code"><span class="hl" data-i18n="koan13.formatBDesc1">Binary encoding (not human-readable)</span>
 
 <span class="hx">&#x2588;&#x2593;&#x2591;&#x2592;&#x2588;&#x2591;&#x2593;&#x2588;</span>  traceId  <span class="hl">[binary encoded]</span>
 <span class="hx">&#x2592;&#x2588;&#x2591;&#x2593;&#x2592;&#x2591;</span>      spanId   <span class="hl">[binary encoded]</span>
@@ -501,16 +502,16 @@
 <span class="hx">&#x2592;&#x2591;&#x2593;&#x2588;&#x2592;&#x2591;</span>      end      <span class="hl">[binary encoded]</span>
 <span class="hx">&#x2588;&#x2591;&#x2592;&#x2593;&#x2588;&#x2592;&#x2591;</span>  attr     <span class="hl">order.id = "8842"</span>
 
-<span class="hl">Same data as Format A, packed into</span>
-<span class="hl">a compact binary format.</span></div>
+<span class="hl" data-i18n="koan13.formatBDesc2">Same data as Format A, packed into</span>
+<span class="hl" data-i18n="koan13.formatBDesc3">a compact binary format.</span></div>
         </div>
       </div>
 
       <!-- Format C: Plain Text -->
       <div class="fmt-card" id="cardC">
         <div class="fmt-card-header" id="labelC">
-          <span>Format C</span>
-          <span class="fmt-label-text" id="labelTextC">&nbsp;- Plain Text</span>
+          <span data-i18n="koan13.formatC">Format C</span>
+          <span class="fmt-label-text" id="labelTextC" data-i18n="koan13.formatCSub">&nbsp;- Plain Text</span>
         </div>
         <div class="fmt-card-body">
           <div class="fmt-code"><span class="pk">trace_id</span><span class="pd">=</span><span class="pv">a1b2c3d4e5f6...</span>
@@ -527,40 +528,40 @@
     <div class="fmt-match-area" id="matchArea">
       <div class="fmt-match-grid">
         <div class="fmt-backend" id="backendBinary">
-          <div class="fmt-backend-name">Backend 1</div>
-          <div class="fmt-backend-desc">Accepts compact binary-encoded data</div>
+          <div class="fmt-backend-name" data-i18n="koan13.backend1Name">Backend 1</div>
+          <div class="fmt-backend-desc" data-i18n="koan13.backend1Desc">Accepts compact binary-encoded data</div>
           <div class="fmt-backend-hint" id="hintBinary"></div>
           <select id="selectBinary">
-            <option value="">-- pick a format --</option>
-            <option value="json">Format A</option>
-            <option value="proto">Format B</option>
-            <option value="text">Format C</option>
+            <option value="" data-i18n="koan13.backendSelectDefault">-- pick a format --</option>
+            <option value="json" data-i18n="koan13.backendSelectA">Format A</option>
+            <option value="proto" data-i18n="koan13.backendSelectB">Format B</option>
+            <option value="text" data-i18n="koan13.backendSelectC">Format C</option>
           </select>
           <div class="fmt-backend-fb" id="fbBinary"></div>
         </div>
 
         <div class="fmt-backend" id="backendText">
-          <div class="fmt-backend-name">Backend 2</div>
-          <div class="fmt-backend-desc">Reads plain text, one key=value pair per line</div>
+          <div class="fmt-backend-name" data-i18n="koan13.backend2Name">Backend 2</div>
+          <div class="fmt-backend-desc" data-i18n="koan13.backend2Desc">Reads plain text, one key=value pair per line</div>
           <div class="fmt-backend-hint" id="hintText"></div>
           <select id="selectText">
-            <option value="">-- pick a format --</option>
-            <option value="json">Format A</option>
-            <option value="proto">Format B</option>
-            <option value="text">Format C</option>
+            <option value="" data-i18n="koan13.backendSelectDefault">-- pick a format --</option>
+            <option value="json" data-i18n="koan13.backendSelectA">Format A</option>
+            <option value="proto" data-i18n="koan13.backendSelectB">Format B</option>
+            <option value="text" data-i18n="koan13.backendSelectC">Format C</option>
           </select>
           <div class="fmt-backend-fb" id="fbText"></div>
         </div>
 
         <div class="fmt-backend" id="backendJson">
-          <div class="fmt-backend-name">Backend 3</div>
-          <div class="fmt-backend-desc">Accepts structured JSON with named fields</div>
+          <div class="fmt-backend-name" data-i18n="koan13.backend3Name">Backend 3</div>
+          <div class="fmt-backend-desc" data-i18n="koan13.backend3Desc">Accepts structured JSON with named fields</div>
           <div class="fmt-backend-hint" id="hintJson"></div>
           <select id="selectJson">
-            <option value="">-- pick a format --</option>
-            <option value="json">Format A</option>
-            <option value="proto">Format B</option>
-            <option value="text">Format C</option>
+            <option value="" data-i18n="koan13.backendSelectDefault">-- pick a format --</option>
+            <option value="json" data-i18n="koan13.backendSelectA">Format A</option>
+            <option value="proto" data-i18n="koan13.backendSelectB">Format B</option>
+            <option value="text" data-i18n="koan13.backendSelectC">Format C</option>
           </select>
           <div class="fmt-backend-fb" id="fbJson"></div>
         </div>
@@ -569,28 +570,28 @@
 
     <!-- Real tool names revealed after matching (label-last) -->
     <div class="fmt-reveal" id="nameReveal">
-      <p>In practice, these backends have names you'll encounter:</p>
+      <p data-i18n="koan13.revealIntro">In practice, these backends have names you'll encounter:</p>
       <div class="fmt-reveal-grid">
         <div class="fmt-reveal-item">
           <strong>Jaeger</strong>
-          A tracing tool that accepts binary-encoded data
+          <span data-i18n="koan13.revealJaeger">A tracing tool that accepts binary-encoded data</span>
         </div>
         <div class="fmt-reveal-item">
           <strong>Prometheus</strong>
-          A metrics system that scrapes key=value text
+          <span data-i18n="koan13.revealPrometheus">A metrics system that scrapes key=value text</span>
         </div>
         <div class="fmt-reveal-item">
           <strong>Elasticsearch / Loki</strong>
-          Logging tools that ingest structured JSON
+          <span data-i18n="koan13.revealElastic">Logging tools that ingest structured JSON</span>
         </div>
       </div>
     </div>
 
     <!-- Insight -->
     <div class="fmt-insight" id="insight">
-      <p>The data is the same. The format is the envelope.</p>
-      <p>Different destinations need different envelopes.</p>
-      <a href="14-collector.html">Continue &rarr;</a>
+      <p data-i18n="koan13.insightLine1">The data is the same. The format is the envelope.</p>
+      <p data-i18n="koan13.insightLine2">Different destinations need different envelopes.</p>
+      <a href="14-collector.html" data-i18n="common.continue">Continue &rarr;</a>
     </div>
   </div>
 
@@ -600,6 +601,7 @@
 
   <script>
     (function () {
+      function run() {
       /* ---- Phase 1: Why did the export fail? ---- */
       var q1 = document.getElementById('q1');
       var fb1 = document.getElementById('fb1');
@@ -612,7 +614,7 @@
           if (this.dataset.answer === 'correct') {
             this.classList.add('correct');
             opts1.forEach(function (o) { o.classList.add('disabled'); });
-            fb1.textContent = 'Right. The data was valid, but the backend couldn\'t read its format.';
+            fb1.textContent = i18n.t('koan13.q1Correct');
             fb1.className = 'fmt-fb fmt-fb--correct';
             hint1El.classList.remove('visible');
 
@@ -649,15 +651,13 @@
             var self = this;
             setTimeout(function () { self.classList.remove('wrong'); }, 600);
 
+            fb1.textContent = i18n.t('koan13.q1Wrong');
+            fb1.className = 'fmt-fb fmt-fb--wrong';
             if (q1Wrongs === 1) {
-              fb1.textContent = 'Not quite.';
-              fb1.className = 'fmt-fb fmt-fb--wrong';
-              hint1El.textContent = 'Re-read the error. It says "unsupported format." What does that tell you about the data itself?';
+              hint1El.textContent = i18n.t('koan13.q1Hint1');
               hint1El.classList.add('visible');
             } else {
-              fb1.textContent = 'Not quite.';
-              fb1.className = 'fmt-fb fmt-fb--wrong';
-              hint1El.textContent = 'The data wasn\'t broken or invalid. The backend just doesn\'t speak that language.';
+              hint1El.textContent = i18n.t('koan13.q1Hint2');
               hint1El.classList.add('visible');
             }
           }
@@ -669,19 +669,10 @@
       var wrongCounts = { Binary: 0, Text: 0, Json: 0 };
       var solved = { Binary: false, Text: false, Json: false };
 
-      var hints = {
-        Binary: [
-          'Look at the format cards. Which one shows data as non-human-readable blocks?',
-          'Format B shows binary-encoded hex blocks. That matches "compact binary-encoded data."'
-        ],
-        Text: [
-          'Look at the format cards. Which one shows key=value pairs, one per line?',
-          'Format C uses key=value pairs, one field per line.'
-        ],
-        Json: [
-          'Look at the format cards. Which one uses curly braces and named fields?',
-          'Format A is JSON with curly braces, keys in quotes, and nested values.'
-        ]
+      var hintKeys = {
+        Binary: ['koan13.hintBinary1', 'koan13.hintBinary2'],
+        Text: ['koan13.hintText1', 'koan13.hintText2'],
+        Json: ['koan13.hintJson1', 'koan13.hintJson2']
       };
 
       function checkBackend(name) {
@@ -697,7 +688,7 @@
 
           if (val === answers[name]) {
             solved[name] = true;
-            fb.textContent = 'Correct.';
+            fb.textContent = i18n.t('koan13.backendCorrect');
             fb.style.color = 'var(--accent-green)';
             hintEl.textContent = '';
             backend.classList.add('solved');
@@ -709,12 +700,12 @@
             checkAllSolved();
           } else {
             wrongCounts[name]++;
-            fb.textContent = 'Not this one.';
+            fb.textContent = i18n.t('koan13.backendWrong');
             fb.style.color = 'var(--accent-red)';
             select.value = '';
 
-            var hintIndex = Math.min(wrongCounts[name] - 1, hints[name].length - 1);
-            hintEl.textContent = hints[name][hintIndex];
+            var hintIndex = Math.min(wrongCounts[name] - 1, hintKeys[name].length - 1);
+            hintEl.textContent = i18n.t(hintKeys[name][hintIndex]);
 
             setTimeout(function () {
               if (!solved[name]) {
@@ -740,6 +731,9 @@
           }, 1800);
         }
       }
+      }
+      if (window.i18n && window.i18n.t('common.desktopOnly') !== 'common.desktopOnly') { run(); }
+      else { window.addEventListener('i18n:ready', run, { once: true }); }
     })();
   </script>
   <script src="../js/scroll.js"></script>

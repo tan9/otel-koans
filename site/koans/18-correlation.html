@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Koan 18: Correlation - OpenTelemetry Koans</title>
+  <title data-i18n="koan18.pageTitle">Koan 18: Correlation - OpenTelemetry Koans</title>
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon-16x16.png">
@@ -11,6 +11,7 @@
   <link rel="manifest" href="../site.webmanifest">
   <meta name="theme-color" content="#0a0e14">
   <link rel="stylesheet" href="../css/shared.css">
+  <script src="../js/i18n.js"></script>
   <style>
     /* ── Signal panels - glass panels per signal with subtle colored tinting ── */
     .corr-panel {
@@ -536,15 +537,15 @@
 <body>
   <div class="mobile-gate">
     <div class="mobile-gate-icon">&#9776;</div>
-    <div class="mobile-gate-title">Desktop Only</div>
-    <div class="mobile-gate-text">These koans require a larger screen. Please visit on a desktop browser.</div>
+    <div class="mobile-gate-title" data-i18n="common.desktopOnly">Desktop Only</div>
+    <div class="mobile-gate-text" data-i18n="common.desktopOnlyText">These koans require a larger screen. Please visit on a desktop browser.</div>
   </div>
 
   <div class="koan-page">
 
-    <h1 class="koan-title">Correlation</h1>
+    <h1 class="koan-title" data-i18n="koan18.title">Correlation</h1>
 
-    <div class="koan-text">
+    <div class="koan-text" data-i18n-html="koan18.zen">
       One signal sees the shadow. Another finds the shape. A third reveals the cause.<br>
       Apart, they are clues. Together, they are the answer.
     </div>
@@ -552,42 +553,42 @@
     <!-- ═══ Step 1: Metric alert ═══ -->
     <div class="corr-panel visible" id="metricPanel" style="opacity:1;max-height:600px;">
       <div class="corr-panel-header">
-        <span>alert triggered</span>
-        <span class="signal-badge signal-badge--metric">metric</span>
+        <span data-i18n="koan18.metricAlertHeader">alert triggered</span>
+        <span class="signal-badge signal-badge--metric" data-i18n="koan18.metricBadge">metric</span>
       </div>
       <div class="corr-panel-body">
         <div class="metric-card">
           <div class="metric-value-block">
-            <div class="metric-name">request_duration p99</div>
-            <div class="metric-value">2.1s</div>
-            <div class="metric-unit">seconds</div>
+            <div class="metric-name" data-i18n="koan18.metricName">request_duration p99</div>
+            <div class="metric-value" data-i18n="koan18.metricValue">2.1s</div>
+            <div class="metric-unit" data-i18n="koan18.metricUnit">seconds</div>
             <div class="metric-warning">
               <span class="metric-warning-dot"></span>
-              threshold exceeded
+              <span data-i18n="koan18.metricWarning">threshold exceeded</span>
             </div>
           </div>
           <div class="metric-context">
-            <span class="label">service:</span> orders<br>
-            <span class="label">window:</span> 10:40 &ndash; 10:45 UTC<br>
-            <span class="label">threshold:</span> 500ms<br>
-            <span class="label">current:</span> 2100ms, <span style="color: var(--accent-red);">4.2x over limit</span>
+            <span class="label" data-i18n="koan18.ctxServiceLabel">service:</span> <span data-i18n="koan18.ctxService">orders</span><br>
+            <span class="label" data-i18n="koan18.ctxWindowLabel">window:</span> <span data-i18n="koan18.ctxWindow">10:40 &ndash; 10:45 UTC</span><br>
+            <span class="label" data-i18n="koan18.ctxThresholdLabel">threshold:</span> <span data-i18n="koan18.ctxThreshold">500ms</span><br>
+            <span class="label" data-i18n="koan18.ctxCurrentLabel">current:</span> <span data-i18n="koan18.ctxCurrent" style="color: var(--accent-red);">2100ms, 4.2x over limit</span>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Narrative 1 -->
-    <div class="corr-narrative visible" id="narrative1" style="opacity:1;">
-      Something is slow. The metric tells you <strong>THAT</strong> something is wrong, but not <strong>WHY</strong>.
+    <div class="corr-narrative visible" id="narrative1" style="opacity:1;" data-i18n="koan18.narrative1">
+      Something is slow. The metric tells you THAT something is wrong, but not WHY.
     </div>
 
     <!-- ═══ Question 1 ═══ -->
     <div class="corr-question visible" id="q1" style="opacity:1;max-height:20rem;">
-      <p>Which signal would help you find the specific slow request?</p>
+      <p data-i18n="koan18.q1">Which signal would help you find the specific slow request?</p>
       <div class="corr-opts">
-        <button class="corr-opt" data-answer="wrong" data-fb="Metrics show aggregates: averages, percentiles, counts. They can't show you an individual request.">Another metric</button>
-        <button class="corr-opt" data-answer="correct" data-fb="Traces follow individual requests through the system. They can show you exactly which request was slow and where.">A trace</button>
-        <button class="corr-opt" data-answer="wrong" data-fb="Resources identify where telemetry comes from, but they don't follow individual requests.">A resource</button>
+        <button class="corr-opt" data-answer="wrong" data-fb-key="koan18.q1FbMetric" data-i18n="koan18.q1OptMetric">Another metric</button>
+        <button class="corr-opt" data-answer="correct" data-fb-key="koan18.q1FbTrace" data-i18n="koan18.q1OptTrace">A trace</button>
+        <button class="corr-opt" data-answer="wrong" data-fb-key="koan18.q1FbResource" data-i18n="koan18.q1OptResource">A resource</button>
       </div>
       <div class="corr-fb" id="fb1"></div>
     </div>
@@ -596,14 +597,14 @@
     <div class="corr-connector" id="conn1">
       <div class="corr-connector-line"></div>
       <div class="corr-connector-arrow">&darr;</div>
-      <div class="corr-connector-label">same time window, same service</div>
+      <div class="corr-connector-label" data-i18n="koan18.connector1">same time window, same service</div>
     </div>
 
     <!-- ═══ Step 2: Trace panel ═══ -->
     <div class="corr-panel" id="tracePanel">
       <div class="corr-panel-header">
-        <span>correlated trace - orders - 10:42:01</span>
-        <span class="signal-badge signal-badge--trace">trace</span>
+        <span data-i18n="koan18.traceHeader">correlated trace - orders - 10:42:01</span>
+        <span class="signal-badge signal-badge--trace" data-i18n="koan18.traceBadge">trace</span>
       </div>
       <div class="corr-panel-body">
         <div class="trace-waterfall">
@@ -636,24 +637,24 @@
             <div class="trace-span-time slow">1980ms</div>
           </div>
         </div>
-        <div class="trace-id-line">
-          trace_id: <span class="highlight">a3f8b2c1d4e5</span> &nbsp;&middot;&nbsp; service: orders &nbsp;&middot;&nbsp; 10:42:01 UTC
+        <div class="trace-id-line" data-i18n="koan18.traceIdLine">
+          trace_id: a3f8b2c1d4e5 &middot; service: orders &middot; 10:42:01 UTC
         </div>
       </div>
     </div>
 
     <!-- Narrative 2 -->
-    <div class="corr-narrative" id="narrative2">
-      The trace shows <strong>WHERE</strong> the time was spent, almost all of it in the database call. But <strong>WHY</strong> is the database slow?
+    <div class="corr-narrative" id="narrative2" data-i18n="koan18.narrative2">
+      The trace shows WHERE the time was spent, almost all of it in the database call. But WHY is the database slow?
     </div>
 
     <!-- ═══ Question 2 ═══ -->
     <div class="corr-question" id="q2">
-      <p>Which signal would tell you what happened inside the database?</p>
+      <p data-i18n="koan18.q2">Which signal would tell you what happened inside the database?</p>
       <div class="corr-opts">
-        <button class="corr-opt" data-answer="wrong" data-fb="Metrics show trends over time, not what happened in a specific request.">A metric</button>
-        <button class="corr-opt" data-answer="correct" data-fb="Logs capture discrete events with detail: the specific error, the specific cause.">A log</button>
-        <button class="corr-opt" data-answer="wrong" data-fb="Span attributes add context, but a log record captures the full event with its own detail.">A span attribute</button>
+        <button class="corr-opt" data-answer="wrong" data-fb-key="koan18.q2FbMetric" data-i18n="koan18.q2OptMetric">A metric</button>
+        <button class="corr-opt" data-answer="correct" data-fb-key="koan18.q2FbLog" data-i18n="koan18.q2OptLog">A log</button>
+        <button class="corr-opt" data-answer="wrong" data-fb-key="koan18.q2FbSpanAttr" data-i18n="koan18.q2OptSpanAttr">A span attribute</button>
       </div>
       <div class="corr-fb" id="fb2"></div>
     </div>
@@ -662,29 +663,29 @@
     <div class="corr-connector" id="conn2">
       <div class="corr-connector-line"></div>
       <div class="corr-connector-arrow">&darr;</div>
-      <div class="corr-connector-label">same trace_id</div>
+      <div class="corr-connector-label" data-i18n="koan18.connector2">same trace_id</div>
     </div>
 
     <!-- ═══ Step 3: Log panel ═══ -->
     <div class="corr-panel" id="logPanel">
       <div class="corr-panel-header">
-        <span>correlated log - database - 10:42:01.980</span>
-        <span class="signal-badge signal-badge--log">log</span>
+        <span data-i18n="koan18.logHeader">correlated log - database - 10:42:01.980</span>
+        <span class="signal-badge signal-badge--log" data-i18n="koan18.logBadge">log</span>
       </div>
       <div class="corr-panel-body">
         <div class="log-record">
           <div class="log-record-line">
             <span class="log-ts">10:42:01.980</span>
             <span class="log-sev">ERROR</span>
-            <span class="log-body">lock timeout waiting for table 'orders'</span>
+            <span class="log-body" data-i18n="koan18.logBody">lock timeout waiting for table 'orders'</span>
           </div>
           <div class="log-record-line" style="margin-top: 0.25rem;">
             <span class="log-ts" style="visibility:hidden;">10:42:01.980</span>
-            <span class="log-ctx">concurrent_locks=47 &nbsp; wait_time=1980ms &nbsp; table=orders</span>
+            <span class="log-ctx" data-i18n="koan18.logContext">concurrent_locks=47   wait_time=1980ms   table=orders</span>
           </div>
         </div>
-        <div class="log-id-line">
-          trace_id: <span class="highlight">a3f8b2c1d4e5</span> &nbsp;&middot;&nbsp; severity: ERROR
+        <div class="log-id-line" data-i18n="koan18.logIdLine">
+          trace_id: a3f8b2c1d4e5 &middot; severity: ERROR
         </div>
       </div>
     </div>
@@ -693,41 +694,41 @@
     <div class="corr-summary" id="summary">
       <div class="corr-chain">
         <div class="corr-chain-node corr-chain-node--metric">
-          <div class="corr-chain-signal corr-chain-signal--metric">Metric</div>
-          <div class="corr-chain-role">Tells you THAT</div>
-          <div class="corr-chain-detail">p99 = 2.1s</div>
-          <div style="margin-top:0.5rem;"><span class="id-highlight">10:40 &ndash; 10:45</span></div>
+          <div class="corr-chain-signal corr-chain-signal--metric" data-i18n="koan18.summaryMetricSignal">Metric</div>
+          <div class="corr-chain-role" data-i18n="koan18.summaryMetricRole">Tells you THAT</div>
+          <div class="corr-chain-detail" data-i18n="koan18.summaryMetricDetail">p99 = 2.1s</div>
+          <div style="margin-top:0.5rem;"><span class="id-highlight" data-i18n="koan18.summaryMetricId">10:40 &ndash; 10:45</span></div>
         </div>
         <div class="corr-chain-arrow">
           <div class="corr-chain-arrow-line"></div>
           <div class="corr-chain-arrow-head">&rarr;</div>
-          <div class="corr-chain-arrow-label">time window</div>
+          <div class="corr-chain-arrow-label" data-i18n="koan18.summaryArrowTime">time window</div>
         </div>
         <div class="corr-chain-node corr-chain-node--trace">
-          <div class="corr-chain-signal corr-chain-signal--trace">Trace</div>
-          <div class="corr-chain-role">Shows you WHERE</div>
-          <div class="corr-chain-detail">database: 1980ms</div>
-          <div style="margin-top:0.5rem;"><span class="id-highlight">trace_id: a3f8b2</span></div>
+          <div class="corr-chain-signal corr-chain-signal--trace" data-i18n="koan18.summaryTraceSignal">Trace</div>
+          <div class="corr-chain-role" data-i18n="koan18.summaryTraceRole">Shows you WHERE</div>
+          <div class="corr-chain-detail" data-i18n="koan18.summaryTraceDetail">database: 1980ms</div>
+          <div style="margin-top:0.5rem;"><span class="id-highlight" data-i18n="koan18.summaryTraceId">trace_id: a3f8b2</span></div>
         </div>
         <div class="corr-chain-arrow">
           <div class="corr-chain-arrow-line"></div>
           <div class="corr-chain-arrow-head">&rarr;</div>
-          <div class="corr-chain-arrow-label">trace_id</div>
+          <div class="corr-chain-arrow-label" data-i18n="koan18.summaryArrowTrace">trace_id</div>
         </div>
         <div class="corr-chain-node corr-chain-node--log">
-          <div class="corr-chain-signal corr-chain-signal--log">Log</div>
-          <div class="corr-chain-role">Tells you WHY</div>
-          <div class="corr-chain-detail">lock timeout, 47 locks</div>
-          <div style="margin-top:0.5rem;"><span class="id-highlight">trace_id: a3f8b2</span></div>
+          <div class="corr-chain-signal corr-chain-signal--log" data-i18n="koan18.summaryLogSignal">Log</div>
+          <div class="corr-chain-role" data-i18n="koan18.summaryLogRole">Tells you WHY</div>
+          <div class="corr-chain-detail" data-i18n="koan18.summaryLogDetail">lock timeout, 47 locks</div>
+          <div style="margin-top:0.5rem;"><span class="id-highlight" data-i18n="koan18.summaryLogId">trace_id: a3f8b2</span></div>
         </div>
       </div>
     </div>
 
     <!-- ═══ Insight ═══ -->
     <div class="corr-insight" id="insight">
-      <p>Metrics tell you something is wrong. Traces show you where. Logs tell you why.</p>
-      <p>Correlation is the thread that connects them.</p>
-      <a href="19-full-picture.html">Continue &rarr;</a>
+      <p data-i18n="koan18.insightLine1">Metrics tell you something is wrong. Traces show you where. Logs tell you why.</p>
+      <p data-i18n="koan18.insightLine2">Correlation is the thread that connects them.</p>
+      <a href="19-full-picture.html" data-i18n="common.continue">Continue &rarr;</a>
     </div>
   </div>
 
@@ -737,6 +738,7 @@
 
   <script>
     (function () {
+      function run() {
       /* ── Quiz engine ── */
       function setupQuiz(qId, fbId, onCorrect) {
         var q = document.getElementById(qId);
@@ -745,7 +747,8 @@
 
         opts.forEach(function (opt) {
           opt.addEventListener('click', function () {
-            var feedbackText = this.dataset.fb;
+            var fbKey = this.dataset.fbKey;
+            var feedbackText = fbKey ? i18n.t(fbKey) : '';
 
             if (this.dataset.answer === 'correct') {
               this.classList.add('correct');
@@ -790,6 +793,9 @@
         reveal('summary', 1200);
         reveal('insight', 2000);
       });
+      }
+      if (window.i18n && window.i18n.t('common.desktopOnly') !== 'common.desktopOnly') { run(); }
+      else { window.addEventListener('i18n:ready', run, { once: true }); }
     })();
   </script>
   <script src="../js/scroll.js"></script>

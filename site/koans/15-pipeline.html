@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Koan 15: The Pipeline - OpenTelemetry Koans</title>
+  <title data-i18n="koan15.pageTitle">Koan 15: The Pipeline - OpenTelemetry Koans</title>
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon-16x16.png">
@@ -11,6 +11,7 @@
   <link rel="manifest" href="../site.webmanifest">
   <meta name="theme-color" content="#0a0e14">
   <link rel="stylesheet" href="../css/shared.css">
+  <script src="../js/i18n.js"></script>
   <style>
     /* Pipeline diagram */
     .pipeline-diagram {
@@ -398,15 +399,15 @@
 <body>
   <div class="mobile-gate">
     <div class="mobile-gate-icon">&#9776;</div>
-    <div class="mobile-gate-title">Desktop Only</div>
-    <div class="mobile-gate-text">These koans require a larger screen. Please visit on a desktop browser.</div>
+    <div class="mobile-gate-title" data-i18n="common.desktopOnly">Desktop Only</div>
+    <div class="mobile-gate-text" data-i18n="common.desktopOnlyText">These koans require a larger screen. Please visit on a desktop browser.</div>
   </div>
 
   <div class="koan-page">
 
-    <h1 class="koan-title">The Pipeline</h1>
+    <h1 class="koan-title" data-i18n="koan15.title">The Pipeline</h1>
 
-    <div class="koan-text">
+    <div class="koan-text" data-i18n-html="koan15.zen">
       A river without banks is a flood.<br>
       The pipeline gives telemetry its path:<br>
       where to enter, how to flow, where to arrive.
@@ -415,17 +416,17 @@
     <!-- Pipeline diagram -->
     <div class="pipeline-diagram" id="pipelineDiagram">
       <div class="pipeline-box" id="boxReceivers">
-        <div class="pipeline-box-label">receivers</div>
+        <div class="pipeline-box-label" data-i18n="koan15.boxReceivers">receivers</div>
         otlp
       </div>
       <div class="pipeline-arrow"></div>
       <div class="pipeline-box" id="boxProcessors">
-        <div class="pipeline-box-label">processors</div>
+        <div class="pipeline-box-label" data-i18n="koan15.boxProcessors">processors</div>
         batch
       </div>
       <div class="pipeline-arrow"></div>
       <div class="pipeline-box" id="boxExporters">
-        <div class="pipeline-box-label">exporters</div>
+        <div class="pipeline-box-label" data-i18n="koan15.boxExporters">exporters</div>
         otlp
       </div>
     </div>
@@ -438,7 +439,7 @@
           <span class="yaml-editor-header-dot"></span>
           <span class="yaml-editor-header-dot"></span>
         </div>
-        <span>otel-collector-config.yaml</span>
+        <span data-i18n="koan15.yamlHeader">otel-collector-config.yaml</span>
       </div>
       <div class="yaml-editor-body">
         <div class="yaml-line" id="yaml-def-receivers-1"><span class="yaml-line-num">1</span><span class="yaml-key">receivers:</span></div>
@@ -462,7 +463,7 @@
           <span class="yaml-key">receivers:</span>&nbsp;
           <span class="yaml-bracket">[</span>
           <select class="yaml-select" id="selReceivers" data-correct="otlp">
-            <option value="" disabled selected>choose...</option>
+            <option value="" disabled selected data-i18n="koan15.selectDefault">choose...</option>
             <option value="otlp">otlp</option>
             <option value="batch">batch</option>
             <option value="jaeger">jaeger</option>
@@ -476,7 +477,7 @@
           <span class="yaml-key">processors:</span>&nbsp;
           <span class="yaml-bracket">[</span>
           <select class="yaml-select" id="selProcessors" data-correct="batch">
-            <option value="" disabled selected>choose...</option>
+            <option value="" disabled selected data-i18n="koan15.selectDefault">choose...</option>
             <option value="otlp">otlp</option>
             <option value="batch">batch</option>
             <option value="jaeger">jaeger</option>
@@ -490,7 +491,7 @@
           <span class="yaml-key">exporters:</span>&nbsp;
           <span class="yaml-bracket">[</span>
           <select class="yaml-select" id="selExporters" data-correct="otlp">
-            <option value="" disabled selected>choose...</option>
+            <option value="" disabled selected data-i18n="koan15.selectDefault">choose...</option>
             <option value="otlp">otlp</option>
             <option value="batch">batch</option>
             <option value="grpc">grpc</option>
@@ -502,27 +503,27 @@
     </div>
 
     <div class="pipeline-controls">
-      <button class="koan-btn koan-btn--primary" id="applyBtn">Apply config</button>
+      <button class="koan-btn koan-btn--primary" id="applyBtn" data-i18n="koan15.applyBtn">Apply config</button>
       <div class="pipeline-status" id="status"></div>
       <div class="pipeline-blank-hint" id="pipelineHint"></div>
     </div>
 
     <!-- Follow-up question -->
     <div class="pipeline-question" id="q1">
-      <p>The pipeline connects receivers to processors to exporters. What does this mean?</p>
+      <p data-i18n="koan15.q1">The pipeline connects receivers to processors to exporters. What does this mean?</p>
       <div class="pipeline-opts">
-        <button class="pipeline-opt" data-answer="correct">Data flows in a fixed order: receive, process, export</button>
-        <button class="pipeline-opt" data-answer="wrong">All three run at the same time randomly</button>
-        <button class="pipeline-opt" data-answer="wrong">You only need one of the three</button>
+        <button class="pipeline-opt" data-answer="correct" data-i18n="koan15.q1OptA">Data flows in a fixed order: receive, process, export</button>
+        <button class="pipeline-opt" data-answer="wrong" data-i18n="koan15.q1OptB">All three run at the same time randomly</button>
+        <button class="pipeline-opt" data-answer="wrong" data-i18n="koan15.q1OptC">You only need one of the three</button>
       </div>
       <div class="pipeline-fb" id="fb1"></div>
     </div>
 
     <!-- Insight -->
     <div class="pipeline-insight" id="insight">
-      <p>The pipeline is the Collector's blueprint.</p>
-      <p>YAML tells it: where to listen, how to process, where to send.</p>
-      <a href="16-sampling.html">Continue &rarr;</a>
+      <p data-i18n="koan15.insightLine1">The pipeline is the Collector's blueprint.</p>
+      <p data-i18n="koan15.insightLine2">YAML tells it: where to listen, how to process, where to send.</p>
+      <a href="16-sampling.html" data-i18n="common.continue">Continue &rarr;</a>
     </div>
   </div>
 
@@ -532,6 +533,7 @@
 
   <script>
     (function () {
+      function run() {
       var selReceivers = document.getElementById('selReceivers');
       var selProcessors = document.getElementById('selProcessors');
       var selExporters = document.getElementById('selExporters');
@@ -670,25 +672,28 @@
           wrongCount: 0,
           yamlLines: ['yaml-def-receivers-1', 'yaml-def-receivers-2', 'yaml-def-receivers-3', 'yaml-def-receivers-4'],
           sectionName: 'receivers',
-          hint1: 'Look at lines 1-4. What receiver is defined under "receivers:"?',
-          hint2: 'The receivers section defines "otlp:". The pipeline must use a receiver that exists above.',
-          hint3: 'The only receiver defined is otlp (lines 1-4). Choose otlp.'
+          inlineHint: i18n.t('koan15.hintRecInline'),
+          hint1: i18n.t('koan15.hintRec1'),
+          hint2: i18n.t('koan15.hintRec2'),
+          hint3: i18n.t('koan15.hintRec3')
         },
         selProcessors: {
           wrongCount: 0,
           yamlLines: ['yaml-def-processors-1', 'yaml-def-processors-2'],
           sectionName: 'processors',
-          hint1: 'Look at lines 6-7. What processor is defined under "processors:"?',
-          hint2: 'The processors section defines "batch:". The pipeline must reference it by name.',
-          hint3: 'The only processor defined is batch (lines 6-7). Choose batch.'
+          inlineHint: i18n.t('koan15.hintProcInline'),
+          hint1: i18n.t('koan15.hintProc1'),
+          hint2: i18n.t('koan15.hintProc2'),
+          hint3: i18n.t('koan15.hintProc3')
         },
         selExporters: {
           wrongCount: 0,
           yamlLines: ['yaml-def-exporters-1', 'yaml-def-exporters-2', 'yaml-def-exporters-3'],
           sectionName: 'exporters',
-          hint1: 'Look at lines 9-11. What exporter is defined under "exporters:"?',
-          hint2: 'The exporters section defines "otlp:" with endpoint "jaeger:4317". Pick the matching name.',
-          hint3: 'The only exporter defined is otlp (lines 9-11). Choose otlp.'
+          inlineHint: i18n.t('koan15.hintExpInline'),
+          hint1: i18n.t('koan15.hintExp1'),
+          hint2: i18n.t('koan15.hintExp2'),
+          hint3: i18n.t('koan15.hintExp3')
         }
       };
 
@@ -741,7 +746,7 @@
         });
 
         if (unanswered > 0) {
-          status.textContent = 'Fill in all three pipeline fields first.';
+          status.textContent = i18n.t('koan15.statusFillAll');
           status.className = 'pipeline-status pipeline-status--error';
           return;
         }
@@ -767,7 +772,7 @@
 
             /* Show progressive inline hint */
             if (meta.wrongCount === 1) {
-              item.hint.textContent = 'Look at the ' + meta.sectionName + ': section above.';
+              item.hint.textContent = meta.inlineHint;
               item.hint.classList.add('visible');
               hints.push(meta.hint1);
             } else if (meta.wrongCount === 2) {
@@ -783,7 +788,7 @@
         });
 
         if (wrongCount > 0) {
-          status.textContent = wrongCount + ' field' + (wrongCount > 1 ? 's' : '') + ' incorrect. See the highlighted YAML sections.';
+          status.textContent = i18n.t('koan15.statusWrongFields').replace('{count}', wrongCount);
           status.className = 'pipeline-status pipeline-status--error';
 
           /* Show the first wrong field's hint below the button */
@@ -799,7 +804,7 @@
         clearYamlHighlights();
         pipelineHint.textContent = '';
         pipelineHint.classList.remove('visible');
-        status.textContent = 'Config applied. Pipeline is active.';
+        status.textContent = i18n.t('koan15.statusApplied');
         status.className = 'pipeline-status pipeline-status--success';
         applyBtn.style.opacity = '0.4';
         applyBtn.style.pointerEvents = 'none';
@@ -841,20 +846,23 @@
           if (this.dataset.answer === 'correct') {
             this.classList.add('correct');
             opts.forEach(function (o) { o.classList.add('disabled'); });
-            fb1.textContent = 'Exactly. The pipeline enforces a clear sequence: data enters, gets processed, then leaves.';
+            fb1.textContent = i18n.t('koan15.q1Correct');
             fb1.className = 'pipeline-fb pipeline-fb--correct';
             setTimeout(function () {
               document.getElementById('insight').classList.add('visible');
             }, 800);
           } else {
             this.classList.add('wrong');
-            fb1.textContent = 'Not quite. Think about the arrows in the diagram: they go in one direction.';
+            fb1.textContent = i18n.t('koan15.q1Wrong');
             fb1.className = 'pipeline-fb pipeline-fb--wrong';
             var self = this;
             setTimeout(function () { self.classList.remove('wrong'); }, 500);
           }
         });
       });
+      }
+      if (window.i18n && window.i18n.t('common.desktopOnly') !== 'common.desktopOnly') { run(); }
+      else { window.addEventListener('i18n:ready', run, { once: true }); }
     })();
   </script>
   <script src="../js/scroll.js"></script>

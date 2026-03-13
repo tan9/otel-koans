@@ -27,6 +27,10 @@ Desktop only. Headphones recommended.
 
 ---
 
+**Translations** — The site supports multiple languages. Want to help translate? See [CONTRIBUTING-TRANSLATIONS.md](CONTRIBUTING-TRANSLATIONS.md).
+
+---
+
 Inspired by [Ruby Koans](https://www.rubykoans.com/) by Jim Weirich and Joe O'Brien.
 
 Music: [All the Light](https://futurezen.bandcamp.com/track/all-the-light) by Future Zen (CC-BY-SA 4.0)

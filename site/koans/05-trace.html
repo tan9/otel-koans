@@ -11,6 +11,7 @@
   <link rel="manifest" href="../site.webmanifest">
   <meta name="theme-color" content="#0a0e14">
   <link rel="stylesheet" href="../css/shared.css">
+  <script src="../js/i18n.js"></script>
   <style>
     /* Scenario panel */
     .scenario-panel {
@@ -474,15 +475,15 @@
 <body>
   <div class="mobile-gate">
     <div class="mobile-gate-icon">&#9776;</div>
-    <div class="mobile-gate-title">Desktop Only</div>
-    <div class="mobile-gate-text">These koans require a larger screen. Please visit on a desktop browser.</div>
+    <div class="mobile-gate-title" data-i18n="common.desktopOnly">Desktop Only</div>
+    <div class="mobile-gate-text" data-i18n="common.desktopOnlyText">These koans require a larger screen. Please visit on a desktop browser.</div>
   </div>
 
   <div class="koan-page">
 
-    <h1 class="koan-title">What is a Trace?</h1>
+    <h1 class="koan-title" data-i18n="koan05.title">What is a Trace?</h1>
 
-    <div class="koan-text">
+    <div class="koan-text" data-i18n-html="koan05.zen">
       The metric said something was slow.<br>
       The logs said something went wrong.<br>
       But neither could say where, or in what order.
@@ -490,26 +491,26 @@
 
     <!-- Scenario: the problem -->
     <div class="scenario-panel" id="scenario">
-      <div class="scenario-header">incident report</div>
+      <div class="scenario-header" data-i18n="koan05.scenarioHeader">incident report</div>
       <div class="scenario-body">
-        <div class="scenario-alert">Users report that checkout is slow.</div>
-        <div class="scenario-detail">You have metrics and logs from four services: gateway, api, orders, and database. Can you find the bottleneck?</div>
+        <div class="scenario-alert" data-i18n="koan05.scenarioAlert">Users report that checkout is slow.</div>
+        <div class="scenario-detail" data-i18n="koan05.scenarioDetail">You have metrics and logs from four services: gateway, api, orders, and database. Can you find the bottleneck?</div>
       </div>
     </div>
 
     <!-- Metric panel -->
     <div class="metric-panel" id="metricPanel">
-      <div class="metric-panel-header">metrics dashboard</div>
+      <div class="metric-panel-header" data-i18n="koan05.metricHeader">metrics dashboard</div>
       <div class="metric-panel-body">
         <div class="metric-stat metric-stat-ok">
-          <div class="metric-stat-value">842</div>
-          <div class="metric-stat-label">requests / min</div>
+          <div class="metric-stat-value" data-i18n="koan05.metricValue1">842</div>
+          <div class="metric-stat-label" data-i18n="koan05.metricLabel1">requests / min</div>
         </div>
         <div class="metric-stat">
-          <div class="metric-stat-value">1.2s</div>
-          <div class="metric-stat-label">latency p99</div>
+          <div class="metric-stat-value" data-i18n="koan05.metricValue2">1.2s</div>
+          <div class="metric-stat-label" data-i18n="koan05.metricLabel2">latency p99</div>
         </div>
-        <div class="metric-verdict">
+        <div class="metric-verdict" data-i18n-html="koan05.metricVerdict">
           Request count looks normal. But latency is high.<br>
           The metric tells you <em>something</em> is slow, but not <em>which service</em>.
         </div>
@@ -518,33 +519,33 @@
 
     <!-- Log panel -->
     <div class="log-panel" id="logPanel">
-      <div class="log-panel-header">log viewer - last 5 seconds</div>
+      <div class="log-panel-header" data-i18n="koan05.logHeader">log viewer - last 5 seconds</div>
       <div class="log-panel-body">
-        <div class="log-line" id="log0"><span class="log-ts">14:32:01.204</span> <span class="log-svc-gateway">[gateway]</span> <span class="log-msg">incoming POST /checkout</span></div>
-        <div class="log-line" id="log1"><span class="log-ts">14:32:01.218</span> <span class="log-svc-api">[api]</span> <span class="log-msg">validating cart items</span></div>
-        <div class="log-line" id="log2"><span class="log-ts">14:32:01.307</span> <span class="log-svc-db">[database]</span> <span class="log-msg">query inventory_check: OK</span></div>
-        <div class="log-line" id="log3"><span class="log-ts">14:32:01.412</span> <span class="log-svc-orders">[orders]</span> <span class="log-msg">reserve_stock called</span></div>
-        <div class="log-line" id="log4"><span class="log-ts">14:32:01.884</span> <span class="log-svc-db">[database]</span> <span class="log-msg">write order_record: OK</span></div>
-        <div class="log-line" id="log5"><span class="log-ts">14:32:02.003</span> <span class="log-svc-orders">[orders]</span> <span class="log-msg">confirmation generated</span></div>
-        <div class="log-line" id="log6"><span class="log-ts">14:32:02.117</span> <span class="log-svc-api">[api]</span> <span class="log-msg">response sent: 200 OK</span></div>
-        <div class="log-line" id="log7"><span class="log-ts">14:32:02.130</span> <span class="log-svc-gateway">[gateway]</span> <span class="log-msg">POST /checkout completed</span></div>
+        <div class="log-line" id="log0"><span class="log-ts">14:32:01.204</span> <span class="log-svc-gateway">[gateway]</span> <span class="log-msg" data-i18n="koan05.logMsg0">incoming POST /checkout</span></div>
+        <div class="log-line" id="log1"><span class="log-ts">14:32:01.218</span> <span class="log-svc-api">[api]</span> <span class="log-msg" data-i18n="koan05.logMsg1">validating cart items</span></div>
+        <div class="log-line" id="log2"><span class="log-ts">14:32:01.307</span> <span class="log-svc-db">[database]</span> <span class="log-msg" data-i18n="koan05.logMsg2">query inventory_check: OK</span></div>
+        <div class="log-line" id="log3"><span class="log-ts">14:32:01.412</span> <span class="log-svc-orders">[orders]</span> <span class="log-msg" data-i18n="koan05.logMsg3">reserve_stock called</span></div>
+        <div class="log-line" id="log4"><span class="log-ts">14:32:01.884</span> <span class="log-svc-db">[database]</span> <span class="log-msg" data-i18n="koan05.logMsg4">write order_record: OK</span></div>
+        <div class="log-line" id="log5"><span class="log-ts">14:32:02.003</span> <span class="log-svc-orders">[orders]</span> <span class="log-msg" data-i18n="koan05.logMsg5">confirmation generated</span></div>
+        <div class="log-line" id="log6"><span class="log-ts">14:32:02.117</span> <span class="log-svc-api">[api]</span> <span class="log-msg" data-i18n="koan05.logMsg6">response sent: 200 OK</span></div>
+        <div class="log-line" id="log7"><span class="log-ts">14:32:02.130</span> <span class="log-svc-gateway">[gateway]</span> <span class="log-msg" data-i18n="koan05.logMsg7">POST /checkout completed</span></div>
       </div>
     </div>
 
     <!-- Q1: Can you find the bottleneck? -->
     <div class="trace-question" id="q1">
-      <p>From the metrics and logs alone, can you tell which service is causing the slowness?</p>
+      <p data-i18n="koan05.q1">From the metrics and logs alone, can you tell which service is causing the slowness?</p>
       <div class="trace-opts">
-        <button class="trace-opt" data-answer="wrong" data-fb="wrong-db">Yes - the database</button>
-        <button class="trace-opt" data-answer="wrong" data-fb="wrong-gw">Yes - the gateway</button>
-        <button class="trace-opt" data-answer="correct" data-fb="correct">No - I can&rsquo;t see how the request flowed through the services</button>
+        <button class="trace-opt" data-answer="wrong" data-fb="wrong-db" data-i18n="koan05.q1OptA">Yes - the database</button>
+        <button class="trace-opt" data-answer="wrong" data-fb="wrong-gw" data-i18n="koan05.q1OptB">Yes - the gateway</button>
+        <button class="trace-opt" data-answer="correct" data-fb="correct" data-i18n="koan05.q1OptC">No - I can&rsquo;t see how the request flowed through the services</button>
       </div>
       <div class="trace-fb" id="fb1"></div>
     </div>
 
     <!-- Follow-request scene (hidden until Q1 correct) -->
     <div class="trace-scene" id="traceScene">
-      <div class="trace-scene-header">following one request</div>
+      <div class="trace-scene-header" data-i18n="koan05.traceHeader">following one request</div>
       <div class="trace-scene-body">
         <div class="svc-chain" id="svcChain">
           <div class="svc-node" id="svc-gateway">gateway</div>
@@ -557,7 +558,7 @@
         </div>
 
         <div class="waterfall" id="waterfall">
-          <div class="waterfall-title" id="wfTitle">timing breakdown:</div>
+          <div class="waterfall-title" id="wfTitle" data-i18n="koan05.waterfallTitle">timing breakdown:</div>
 
           <div class="wf-row" id="wf-0">
             <div class="wf-dot"></div>
@@ -594,17 +595,17 @@
     </div>
 
     <div class="trace-controls" id="followControls">
-      <button class="koan-btn koan-btn--primary" id="followBtn">Follow a request</button>
+      <button class="koan-btn koan-btn--primary" id="followBtn" data-i18n="koan05.followBtn">Follow a request</button>
       <div class="trace-status" id="status"></div>
     </div>
 
     <!-- Q2: What is this called? -->
     <div class="trace-question" id="q2">
-      <p>What you just did, following one request through multiple services, is called a...</p>
+      <p data-i18n="koan05.q2">What you just did, following one request through multiple services, is called a...</p>
       <div class="trace-opts">
-        <button class="trace-opt" data-answer="wrong" data-fb="wrong-metric">A metric</button>
-        <button class="trace-opt" data-answer="wrong" data-fb="wrong-log">A log</button>
-        <button class="trace-opt" data-answer="correct" data-fb="correct-trace">A trace</button>
+        <button class="trace-opt" data-answer="wrong" data-fb="wrong-metric" data-i18n="koan05.q2OptA">A metric</button>
+        <button class="trace-opt" data-answer="wrong" data-fb="wrong-log" data-i18n="koan05.q2OptB">A log</button>
+        <button class="trace-opt" data-answer="correct" data-fb="correct-trace" data-i18n="koan05.q2OptC">A trace</button>
       </div>
       <div class="trace-fb" id="fb2"></div>
     </div>
@@ -615,9 +616,9 @@
     </div>
 
     <div class="trace-insight" id="insight">
-      <p>A trace follows a single request from beginning to end.</p>
-      <p>What metrics and logs could not reveal alone, the trace shows.</p>
-      <a href="06-spans.html">Continue &rarr;</a>
+      <p data-i18n="koan05.insightLine1">A trace follows a single request from beginning to end.</p>
+      <p data-i18n="koan05.insightLine2">What metrics and logs could not reveal alone, the trace shows.</p>
+      <a href="06-spans.html" data-i18n="common.continue">Continue &rarr;</a>
     </div>
   </div>
 
@@ -627,156 +628,164 @@
 
   <script>
     (function () {
-      // Phase 1: Reveal metric and log panels with staggered entrance
-      var metricPanel = document.getElementById('metricPanel');
-      var logPanel = document.getElementById('logPanel');
-      var q1 = document.getElementById('q1');
-      var traceScene = document.getElementById('traceScene');
-      var followControls = document.getElementById('followControls');
-      var followBtn = document.getElementById('followBtn');
-      var status = document.getElementById('status');
-      var q2 = document.getElementById('q2');
+      function run() {
+        // Phase 1: Reveal metric and log panels with staggered entrance
+        var metricPanel = document.getElementById('metricPanel');
+        var logPanel = document.getElementById('logPanel');
+        var q1 = document.getElementById('q1');
+        var traceScene = document.getElementById('traceScene');
+        var followControls = document.getElementById('followControls');
+        var followBtn = document.getElementById('followBtn');
+        var status = document.getElementById('status');
+        var q2 = document.getElementById('q2');
 
-      // Show metric panel after brief pause
-      setTimeout(function () {
-        metricPanel.classList.add('visible');
-      }, 600);
-
-      // Show log lines one by one
-      setTimeout(function () {
-        logPanel.classList.add('visible');
-        var logLines = logPanel.querySelectorAll('.log-line');
-        logLines.forEach(function (line, i) {
-          setTimeout(function () {
-            line.classList.add('visible');
-          }, 200 + i * 180);
-        });
-
-        // Show Q1 after all logs appear
-        var totalLogTime = 200 + logLines.length * 180 + 400;
+        // Show metric panel after brief pause
         setTimeout(function () {
-          q1.classList.add('visible');
-        }, totalLogTime);
-      }, 1400);
+          metricPanel.classList.add('visible');
+        }, 600);
 
-      // Q1 logic
-      var fb1 = document.getElementById('fb1');
-      var q1Opts = q1.querySelectorAll('.trace-opt');
-
-      q1Opts.forEach(function (opt) {
-        opt.addEventListener('click', function () {
-          var fbType = this.dataset.fb;
-
-          if (this.dataset.answer === 'correct') {
-            this.classList.add('correct');
-            q1Opts.forEach(function (o) { o.classList.add('disabled'); });
-            fb1.textContent = 'Right. The logs show activity from multiple services, but not how one request flowed through them.';
-            fb1.className = 'trace-fb trace-fb--correct';
-
-            // Reveal the trace scene and follow button
+        // Show log lines one by one
+        setTimeout(function () {
+          logPanel.classList.add('visible');
+          var logLines = logPanel.querySelectorAll('.log-line');
+          logLines.forEach(function (line, i) {
             setTimeout(function () {
-              status.textContent = 'You need to follow a single request through all four services.';
-              traceScene.classList.add('visible');
-              followControls.classList.add('visible');
-            }, 1000);
-          } else {
-            this.classList.add('wrong');
-            if (fbType === 'wrong-db') {
-              fb1.textContent = 'The database appears in the logs, but so do three other services. Can you be sure it is the cause?';
+              line.classList.add('visible');
+            }, 200 + i * 180);
+          });
+
+          // Show Q1 after all logs appear
+          var totalLogTime = 200 + logLines.length * 180 + 400;
+          setTimeout(function () {
+            q1.classList.add('visible');
+          }, totalLogTime);
+        }, 1400);
+
+        // Q1 logic
+        var fb1 = document.getElementById('fb1');
+        var q1Opts = q1.querySelectorAll('.trace-opt');
+
+        q1Opts.forEach(function (opt) {
+          opt.addEventListener('click', function () {
+            var fbType = this.dataset.fb;
+
+            if (this.dataset.answer === 'correct') {
+              this.classList.add('correct');
+              q1Opts.forEach(function (o) { o.classList.add('disabled'); });
+              fb1.textContent = i18n.t('koan05.q1Correct');
+              fb1.className = 'trace-fb trace-fb--correct';
+
+              // Reveal the trace scene and follow button
+              setTimeout(function () {
+                status.textContent = i18n.t('koan05.statusNeedFollow');
+                traceScene.classList.add('visible');
+                followControls.classList.add('visible');
+              }, 1000);
             } else {
-              fb1.textContent = 'The gateway appears in the logs, but so do three other services. Can you be sure it is the cause?';
+              this.classList.add('wrong');
+              if (fbType === 'wrong-db') {
+                fb1.textContent = i18n.t('koan05.q1WrongDb');
+              } else {
+                fb1.textContent = i18n.t('koan05.q1WrongGw');
+              }
+              fb1.className = 'trace-fb trace-fb--wrong';
+              var self = this;
+              setTimeout(function () { self.classList.remove('wrong'); }, 600);
             }
-            fb1.className = 'trace-fb trace-fb--wrong';
-            var self = this;
-            setTimeout(function () { self.classList.remove('wrong'); }, 600);
-          }
-        });
-      });
-
-      // Phase 2: Follow-request animation
-      var traceStarted = false;
-
-      function runRequestAnimation() {
-        var steps = [
-          { delay: 0,    svc: 'svc-gateway', wf: 'wf-0' },
-          { delay: 700,  arrow: 'arrow-1', svc: 'svc-api',     wf: 'wf-1', conn: 'wfc-0' },
-          { delay: 1400, arrow: 'arrow-2', svc: 'svc-orders',  wf: 'wf-2', conn: 'wfc-1' },
-          { delay: 2100, arrow: 'arrow-3', svc: 'svc-db',      wf: 'wf-3', conn: 'wfc-2' }
-        ];
-
-        status.textContent = 'Request enters the system...';
-
-        steps.forEach(function (s) {
-          setTimeout(function () {
-            document.getElementById(s.svc).classList.add('visited');
-
-            if (s.arrow) {
-              document.getElementById(s.arrow).classList.add('lit');
-            }
-
-            // Show waterfall row
-            document.getElementById(s.wf).classList.add('visible');
-
-            if (s.conn) {
-              document.getElementById(s.conn).style.opacity = '0.3';
-            }
-          }, s.delay);
+          });
         });
 
-        // After animation completes, show waterfall title and Q2
-        setTimeout(function () {
-          document.getElementById('wfTitle').classList.add('visible');
-          status.textContent = 'Now you can see where the time went.';
+        // Phase 2: Follow-request animation
+        var traceStarted = false;
 
+        function runRequestAnimation() {
+          var steps = [
+            { delay: 0,    svc: 'svc-gateway', wf: 'wf-0' },
+            { delay: 700,  arrow: 'arrow-1', svc: 'svc-api',     wf: 'wf-1', conn: 'wfc-0' },
+            { delay: 1400, arrow: 'arrow-2', svc: 'svc-orders',  wf: 'wf-2', conn: 'wfc-1' },
+            { delay: 2100, arrow: 'arrow-3', svc: 'svc-db',      wf: 'wf-3', conn: 'wfc-2' }
+          ];
+
+          status.textContent = i18n.t('koan05.statusFollowing');
+
+          steps.forEach(function (s) {
+            setTimeout(function () {
+              document.getElementById(s.svc).classList.add('visited');
+
+              if (s.arrow) {
+                document.getElementById(s.arrow).classList.add('lit');
+              }
+
+              // Show waterfall row
+              document.getElementById(s.wf).classList.add('visible');
+
+              if (s.conn) {
+                document.getElementById(s.conn).style.opacity = '0.3';
+              }
+            }, s.delay);
+          });
+
+          // After animation completes, show waterfall title and Q2
           setTimeout(function () {
-            q2.classList.add('visible');
-          }, 800);
-        }, 3000);
+            document.getElementById('wfTitle').classList.add('visible');
+            status.textContent = i18n.t('koan05.statusAfterFollow');
+
+            setTimeout(function () {
+              q2.classList.add('visible');
+            }, 800);
+          }, 3000);
+        }
+
+        followBtn.addEventListener('click', function () {
+          if (traceStarted) return;
+          traceStarted = true;
+          followBtn.style.opacity = '0';
+          followBtn.style.pointerEvents = 'none';
+          runRequestAnimation();
+        });
+
+        // Q2 logic
+        var fb2 = document.getElementById('fb2');
+        var q2Opts = q2.querySelectorAll('.trace-opt');
+
+        q2Opts.forEach(function (opt) {
+          opt.addEventListener('click', function () {
+            var fbType = this.dataset.fb;
+
+            if (this.dataset.answer === 'correct') {
+              this.classList.add('correct');
+              q2Opts.forEach(function (o) { o.classList.add('disabled'); });
+              fb2.textContent = i18n.t('koan05.q2Correct');
+              fb2.className = 'trace-fb trace-fb--correct';
+
+              // Reveal the word "trace" and the insight
+              setTimeout(function () {
+                document.getElementById('traceReveal').classList.add('visible');
+              }, 600);
+
+              setTimeout(function () {
+                document.getElementById('insight').classList.add('visible');
+              }, 1400);
+            } else {
+              this.classList.add('wrong');
+              if (fbType === 'wrong-metric') {
+                fb2.textContent = i18n.t('koan05.q2WrongMetric');
+              } else {
+                fb2.textContent = i18n.t('koan05.q2WrongLog');
+              }
+              fb2.className = 'trace-fb trace-fb--wrong';
+              var self = this;
+              setTimeout(function () { self.classList.remove('wrong'); }, 600);
+            }
+          });
+        });
       }
 
-      followBtn.addEventListener('click', function () {
-        if (traceStarted) return;
-        traceStarted = true;
-        followBtn.style.opacity = '0';
-        followBtn.style.pointerEvents = 'none';
-        runRequestAnimation();
-      });
-
-      // Q2 logic
-      var fb2 = document.getElementById('fb2');
-      var q2Opts = q2.querySelectorAll('.trace-opt');
-
-      q2Opts.forEach(function (opt) {
-        opt.addEventListener('click', function () {
-          var fbType = this.dataset.fb;
-
-          if (this.dataset.answer === 'correct') {
-            this.classList.add('correct');
-            q2Opts.forEach(function (o) { o.classList.add('disabled'); });
-            fb2.textContent = 'Correct.';
-            fb2.className = 'trace-fb trace-fb--correct';
-
-            // Reveal the word "trace" and the insight
-            setTimeout(function () {
-              document.getElementById('traceReveal').classList.add('visible');
-            }, 600);
-
-            setTimeout(function () {
-              document.getElementById('insight').classList.add('visible');
-            }, 1400);
-          } else {
-            this.classList.add('wrong');
-            if (fbType === 'wrong-metric') {
-              fb2.textContent = 'Metrics measure aggregate numbers, not individual request paths.';
-            } else {
-              fb2.textContent = 'Logs capture events at one point. You followed the request across all four services.';
-            }
-            fb2.className = 'trace-fb trace-fb--wrong';
-            var self = this;
-            setTimeout(function () { self.classList.remove('wrong'); }, 600);
-          }
-        });
-      });
+      if (window.i18n && window.i18n.t('common.desktopOnly') !== 'common.desktopOnly') {
+        run();
+      } else {
+        window.addEventListener('i18n:ready', run, { once: true });
+      }
     })();
   </script>
   <script src="../js/scroll.js"></script>

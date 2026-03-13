@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Koan 17: Service Maps - OpenTelemetry Koans</title>
+  <title data-i18n="koan17.pageTitle">Koan 17: Service Maps - OpenTelemetry Koans</title>
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon-16x16.png">
@@ -11,6 +11,7 @@
   <link rel="manifest" href="../site.webmanifest">
   <meta name="theme-color" content="#0a0e14">
   <link rel="stylesheet" href="../css/shared.css">
+  <script src="../js/i18n.js"></script>
   <style>
     /* Layout: two-column workspace */
     .workspace {
@@ -455,15 +456,15 @@
 <body>
   <div class="mobile-gate">
     <div class="mobile-gate-icon">&#9776;</div>
-    <div class="mobile-gate-title">Desktop Only</div>
-    <div class="mobile-gate-text">These koans require a larger screen. Please visit on a desktop browser.</div>
+    <div class="mobile-gate-title" data-i18n="common.desktopOnly">Desktop Only</div>
+    <div class="mobile-gate-text" data-i18n="common.desktopOnlyText">These koans require a larger screen. Please visit on a desktop browser.</div>
   </div>
 
   <div class="koan-page">
 
-    <h1 class="koan-title">Service Maps</h1>
+    <h1 class="koan-title" data-i18n="koan17.title">Service Maps</h1>
 
-    <div class="koan-text">
+    <div class="koan-text" data-i18n-html="koan17.zen">
       No one drew the map.<br>
       The requests drew it themselves.<br>
       each call a line, each service a point,<br>
@@ -472,11 +473,11 @@
 
     <!-- Q1: Prediction question BEFORE building the map -->
     <div class="map-question visible" id="q1">
-      <p>You have 6 services but no architecture diagram. You do have trace data from production. Can you figure out how the services are connected?</p>
+      <p data-i18n="koan17.q1">You have 6 services but no architecture diagram. You do have trace data from production. Can you figure out how the services are connected?</p>
       <div class="map-opts">
-        <button class="map-opt" data-answer="wrong">No, you need documentation</button>
-        <button class="map-opt" data-answer="correct">Yes, each trace shows which services called which</button>
-        <button class="map-opt" data-answer="wrong">Only if you read the source code</button>
+        <button class="map-opt" data-answer="wrong" data-i18n="koan17.q1OptWrong1">No, you need documentation</button>
+        <button class="map-opt" data-answer="correct" data-i18n="koan17.q1OptCorrect">Yes, each trace shows which services called which</button>
+        <button class="map-opt" data-answer="wrong" data-i18n="koan17.q1OptWrong2">Only if you read the source code</button>
       </div>
       <div class="map-fb" id="fb1"></div>
     </div>
@@ -485,11 +486,11 @@
     <div class="workspace" id="workspace" style="opacity: 0; pointer-events: none; transition: opacity 0.6s;">
       <!-- Left: trace data -->
       <div class="traces-panel">
-        <div class="panel-header">trace data from collector</div>
+        <div class="panel-header" data-i18n="koan17.traceDataHeader">trace data from collector</div>
         <div class="panel-body">
           <div class="trace-list">
             <div class="trace-row locked" id="trace-0" data-index="0">
-              <span class="trace-label">Trace 1</span>
+              <span class="trace-label" data-i18n="koan17.trace1">Trace 1</span>
               <div class="trace-chain">
                 <span class="trace-svc">gateway</span>
                 <span class="trace-arrow">&rarr;</span>
@@ -499,7 +500,7 @@
               </div>
             </div>
             <div class="trace-row locked" id="trace-1" data-index="1">
-              <span class="trace-label">Trace 2</span>
+              <span class="trace-label" data-i18n="koan17.trace2">Trace 2</span>
               <div class="trace-chain">
                 <span class="trace-svc">gateway</span>
                 <span class="trace-arrow">&rarr;</span>
@@ -509,7 +510,7 @@
               </div>
             </div>
             <div class="trace-row locked" id="trace-2" data-index="2">
-              <span class="trace-label">Trace 3</span>
+              <span class="trace-label" data-i18n="koan17.trace3">Trace 3</span>
               <div class="trace-chain">
                 <span class="trace-svc">gateway</span>
                 <span class="trace-arrow">&rarr;</span>
@@ -521,7 +522,7 @@
               </div>
             </div>
             <div class="trace-row locked" id="trace-3" data-index="3">
-              <span class="trace-label">Trace 4</span>
+              <span class="trace-label" data-i18n="koan17.trace4">Trace 4</span>
               <div class="trace-chain">
                 <span class="trace-svc">gateway</span>
                 <span class="trace-arrow">&rarr;</span>
@@ -531,7 +532,7 @@
               </div>
             </div>
             <div class="trace-row locked" id="trace-4" data-index="4">
-              <span class="trace-label">Trace 5</span>
+              <span class="trace-label" data-i18n="koan17.trace5">Trace 5</span>
               <div class="trace-chain">
                 <span class="trace-svc">gateway</span>
                 <span class="trace-arrow">&rarr;</span>
@@ -549,7 +550,7 @@
 
       <!-- Right: SVG service map with disconnected nodes -->
       <div class="map-panel">
-        <div class="panel-header">service map</div>
+        <div class="panel-header" data-i18n="koan17.serviceMapHeader">service map</div>
         <div class="map-canvas-body">
           <svg class="map-svg" viewBox="0 0 520 380" xmlns="http://www.w3.org/2000/svg">
             <!-- Edges (hidden initially) -->
@@ -584,11 +585,11 @@
         <div class="map-legend" id="legend">
           <div class="map-legend-item">
             <div class="map-legend-line-thin"></div>
-            <span>fewer calls</span>
+            <span data-i18n="koan17.legendFewer">fewer calls</span>
           </div>
           <div class="map-legend-item">
             <div class="map-legend-line-thick"></div>
-            <span>more calls</span>
+            <span data-i18n="koan17.legendMore">more calls</span>
           </div>
         </div>
       </div>
@@ -603,19 +604,19 @@
 
     <!-- Q2: After map is fully built -->
     <div class="map-question" id="q2">
-      <p>Look at the map you just built. Which service receives the most incoming calls?</p>
+      <p data-i18n="koan17.q2">Look at the map you just built. Which service receives the most incoming calls?</p>
       <div class="map-opts">
-        <button class="map-opt" data-answer="wrong">gateway</button>
-        <button class="map-opt" data-answer="correct">api</button>
-        <button class="map-opt" data-answer="wrong">database</button>
+        <button class="map-opt" data-answer="wrong" data-i18n="koan17.q2OptWrong1">gateway</button>
+        <button class="map-opt" data-answer="correct" data-i18n="koan17.q2OptCorrect">api</button>
+        <button class="map-opt" data-answer="wrong" data-i18n="koan17.q2OptWrong2">database</button>
       </div>
       <div class="map-fb" id="fb2"></div>
     </div>
 
     <!-- Insight -->
     <div class="map-insight" id="insight">
-      <p>No one drew the map. The traces drew it. Every span is a connection between services.</p>
-      <a href="18-correlation.html">Continue &rarr;</a>
+      <p data-i18n="koan17.insightText">No one drew the map. The traces drew it. Every span is a connection between services.</p>
+      <a href="18-correlation.html" data-i18n="common.continue">Continue &rarr;</a>
     </div>
   </div>
 
@@ -625,6 +626,7 @@
 
   <script>
     (function () {
+      function run() {
       /* ----- Data ----- */
       var traces = [
         ['gateway', 'api', 'orders'],
@@ -686,21 +688,21 @@
             if (this.dataset.answer === 'correct') {
               this.classList.add('correct');
               opts.forEach(function (o) { o.classList.add('disabled'); });
-              fb1.textContent = 'Exactly. Every trace is a record of which service called which. Let\u2019s prove it.';
+              fb1.textContent = i18n.t('koan17.q1Correct');
               fb1.className = 'map-fb map-fb--correct';
               /* Reveal workspace and scroll to it */
               setTimeout(function () {
                 workspace.style.opacity = '1';
                 workspace.style.pointerEvents = 'auto';
                 unlockTrace(0, false);
-                traceHint.textContent = 'Click Trace 1 to begin building the map.';
+                traceHint.textContent = i18n.t('koan17.hintClickTrace1');
                 setTimeout(function () {
                   workspace.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }, 300);
               }, 800);
             } else {
               this.classList.add('wrong');
-              fb1.textContent = 'Think about what a trace records: it captures the path a request takes through services.';
+              fb1.textContent = i18n.t('koan17.q1Wrong');
               fb1.className = 'map-fb map-fb--wrong';
               var self = this;
               setTimeout(function () { self.classList.remove('wrong'); }, 600);
@@ -775,28 +777,28 @@
 
         if (actual.length === 0) {
           /* All edges already on map - different question */
-          predQuestion.innerHTML = 'Trace ' + (traceIndex + 1) + ' shows: <span class="mono">' + traceDesc + '</span><br>All these connections are already on the map. What will change?';
+          predQuestion.innerHTML = i18n.t('koan17.predictionNoNewEdge').replace('{n}', traceIndex + 1).replace('{desc}', '<span class="mono">' + traceDesc + '</span>').replace(/\n/g, '<br>');
 
           predOpts.innerHTML = '';
           var correctOpt = document.createElement('button');
           correctOpt.className = 'pred-opt';
-          correctOpt.textContent = 'Existing edges get thicker';
+          correctOpt.textContent = i18n.t('koan17.predOptThicker');
           correctOpt.dataset.answer = 'correct';
           predOpts.appendChild(correctOpt);
 
           var wrongOpt = document.createElement('button');
           wrongOpt.className = 'pred-opt';
-          wrongOpt.textContent = 'Nothing changes';
+          wrongOpt.textContent = i18n.t('koan17.predOptNothing');
           wrongOpt.dataset.answer = 'wrong';
           predOpts.appendChild(wrongOpt);
 
           var wrongOpt2 = document.createElement('button');
           wrongOpt2.className = 'pred-opt';
-          wrongOpt2.textContent = 'New edges appear';
+          wrongOpt2.textContent = i18n.t('koan17.predOptNew');
           wrongOpt2.dataset.answer = 'wrong';
           predOpts.appendChild(wrongOpt2);
         } else {
-          predQuestion.innerHTML = 'Trace ' + (traceIndex + 1) + ' shows: <span class="mono">' + traceDesc + '</span><br>Which new connection will appear on the map?';
+          predQuestion.innerHTML = i18n.t('koan17.predictionNewEdge').replace('{n}', traceIndex + 1).replace('{desc}', '<span class="mono">' + traceDesc + '</span>').replace(/\n/g, '<br>');
 
           predOpts.innerHTML = '';
           /* Correct: the first new edge */
@@ -840,9 +842,9 @@
               opt.classList.add('correct');
               opts.forEach(function (o) { o.classList.add('disabled'); });
               if (actual.length === 0) {
-                predFb.textContent = 'Right. Repeated traces thicken existing edges, showing call frequency.';
+                predFb.textContent = i18n.t('koan17.predCorrectNoNew');
               } else {
-                predFb.textContent = 'Correct! You predicted the new connection.';
+                predFb.textContent = i18n.t('koan17.predCorrectNew');
               }
               predFb.className = 'pred-fb pred-fb--correct';
               setTimeout(function () {
@@ -852,7 +854,7 @@
               }, 1200);
             } else {
               opt.classList.add('wrong');
-              predFb.textContent = 'Look at the trace chain carefully. Which pair of services isn\u2019t on the map yet?';
+              predFb.textContent = i18n.t('koan17.predWrong');
               predFb.className = 'pred-fb pred-fb--wrong';
               setTimeout(function () { opt.classList.remove('wrong'); }, 500);
             }
@@ -888,10 +890,10 @@
           if (next < traces.length) {
             /* Unlock next trace with prediction gate */
             unlockTrace(next, true);
-            traceHint.textContent = 'Click Trace ' + (next + 1) + ' to process it.';
+            traceHint.textContent = i18n.t('koan17.hintClickTraceN').replace('{n}', next + 1);
           } else {
             /* All traces processed — pan to the completed map, then show Q2 */
-            traceHint.textContent = 'All 5 traces processed. Map complete.';
+            traceHint.textContent = i18n.t('koan17.hintAllProcessed');
             legend.classList.add('visible');
             setTimeout(function () {
               document.querySelector('.map-panel').scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -967,14 +969,14 @@
             if (this.dataset.answer === 'correct') {
               this.classList.add('correct');
               opts.forEach(function (o) { o.classList.add('disabled'); });
-              fb2.textContent = 'Every trace passes through api. It receives 5 incoming calls. You can see it in the map you built.';
+              fb2.textContent = i18n.t('koan17.q2Correct');
               fb2.className = 'map-fb map-fb--correct';
               setTimeout(function () {
                 document.getElementById('insight').classList.add('visible');
               }, 800);
             } else {
               this.classList.add('wrong');
-              fb2.textContent = 'Count the arrows pointing into each service on the map you built.';
+              fb2.textContent = i18n.t('koan17.q2Wrong');
               fb2.className = 'map-fb map-fb--wrong';
               var self = this;
               setTimeout(function () { self.classList.remove('wrong'); }, 500);
@@ -982,6 +984,9 @@
           });
         });
       })();
+      }
+      if (window.i18n && window.i18n.t('common.desktopOnly') !== 'common.desktopOnly') { run(); }
+      else { window.addEventListener('i18n:ready', run, { once: true }); }
     })();
   </script>
   <script src="../js/scroll.js"></script>

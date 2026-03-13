@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Koan 6: Steps in a Trace - OpenTelemetry Koans</title>
+  <title data-i18n="koan06.pageTitle">Koan 6: Steps in a Trace - OpenTelemetry Koans</title>
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon-16x16.png">
@@ -11,6 +11,7 @@
   <link rel="manifest" href="../site.webmanifest">
   <meta name="theme-color" content="#0a0e14">
   <link rel="stylesheet" href="../css/shared.css">
+  <script src="../js/i18n.js"></script>
   <style>
     .wf-scene {
       background: var(--bg-glass);
@@ -334,15 +335,15 @@
 <body>
   <div class="mobile-gate">
     <div class="mobile-gate-icon">&#9776;</div>
-    <div class="mobile-gate-title">Desktop Only</div>
-    <div class="mobile-gate-text">These koans require a larger screen. Please visit on a desktop browser.</div>
+    <div class="mobile-gate-title" data-i18n="common.desktopOnly">Desktop Only</div>
+    <div class="mobile-gate-text" data-i18n="common.desktopOnlyText">These koans require a larger screen. Please visit on a desktop browser.</div>
   </div>
 
   <div class="koan-page">
 
-    <h1 class="koan-title">The Steps Within</h1>
+    <h1 class="koan-title" data-i18n="koan06.title">The Steps Within</h1>
 
-    <div class="koan-text">
+    <div class="koan-text" data-i18n-html="koan06.zen">
       The trace showed the path. But the path has steps.<br>
       Each step has a story.
     </div>
@@ -350,15 +351,15 @@
     <!-- Waterfall visualization - no mention of "span" anywhere -->
     <div class="wf-scene">
       <div class="wf-scene-header">
-        <span>trace: order #8842</span>
-        <span>trace_id: a1b2c3d4e5f6</span>
+        <span data-i18n="koan06.sceneHeader">trace: order #8842</span>
+        <span data-i18n="koan06.sceneTraceId">trace_id: a1b2c3d4e5f6</span>
       </div>
       <div class="wf-scene-body">
         <div class="waterfall">
           <div class="waterfall-header">
-            <span>Operation</span>
-            <span>Timeline</span>
-            <span>Duration</span>
+            <span data-i18n="koan06.colOperation">Operation</span>
+            <span data-i18n="koan06.colTimeline">Timeline</span>
+            <span data-i18n="koan06.colDuration">Duration</span>
           </div>
 
           <!-- Row 0: gateway (root) - full width, 0-210ms -->
@@ -432,62 +433,62 @@
           </div>
         </div>
 
-        <div class="wf-total" id="totalLine">Total trace duration: <strong>210ms</strong></div>
+        <div class="wf-total" id="totalLine"><span data-i18n="koan06.totalLine">Total trace duration: </span><strong data-i18n="koan06.totalValue">210ms</strong></div>
       </div>
     </div>
 
     <div class="wf-controls">
-      <button class="koan-btn koan-btn--primary" id="revealBtn">Examine this trace</button>
+      <button class="koan-btn koan-btn--primary" id="revealBtn" data-i18n="koan06.revealBtn">Examine this trace</button>
       <div class="wf-status" id="status"></div>
     </div>
 
     <!-- Q1: Count the operations - requires looking at the visual -->
     <div class="wf-question" id="q1">
-      <p>This trace crossed four services. Look at the bars above. How many individual operations can you count?</p>
+      <p data-i18n="koan06.q1">This trace crossed four services. Look at the bars above. How many individual operations can you count?</p>
       <div class="wf-opts">
-        <button class="wf-opt" data-answer="wrong">3</button>
-        <button class="wf-opt" data-answer="correct">4</button>
-        <button class="wf-opt" data-answer="wrong">1</button>
+        <button class="wf-opt" data-answer="wrong" data-i18n="koan06.q1OptA">3</button>
+        <button class="wf-opt" data-answer="correct" data-i18n="koan06.q1OptB">4</button>
+        <button class="wf-opt" data-answer="wrong" data-i18n="koan06.q1OptC">1</button>
       </div>
       <div class="wf-fb" id="fb1"></div>
     </div>
 
     <!-- Mid-insight after Q1 -->
-    <div class="wf-mid-insight" id="mid1">
+    <div class="wf-mid-insight" id="mid1" data-i18n="koan06.mid1">
       Each of those bars represents one step: one unit of work within the trace.
     </div>
 
     <!-- Q2: Reason about what individual bars mean - diagnostic value -->
     <div class="wf-question" id="q2">
-      <p>The database bar took 180ms out of the total 210ms. What does this tell you?</p>
+      <p data-i18n="koan06.q2">The database bar took 180ms out of the total 210ms. What does this tell you?</p>
       <div class="wf-opts">
-        <button class="wf-opt" data-answer="correct">The database is the bottleneck</button>
-        <button class="wf-opt" data-answer="wrong">All services are equally slow</button>
-        <button class="wf-opt" data-answer="wrong">The trace is broken</button>
+        <button class="wf-opt" data-answer="correct" data-i18n="koan06.q2OptA">The database is the bottleneck</button>
+        <button class="wf-opt" data-answer="wrong" data-i18n="koan06.q2OptB">All services are equally slow</button>
+        <button class="wf-opt" data-answer="wrong" data-i18n="koan06.q2OptC">The trace is broken</button>
       </div>
       <div class="wf-fb" id="fb2"></div>
     </div>
 
     <!-- Mid-insight after Q2 -->
-    <div class="wf-mid-insight" id="mid2">
+    <div class="wf-mid-insight" id="mid2" data-i18n="koan06.mid2">
       By breaking a trace into its individual steps, you can see exactly where time is spent.
     </div>
 
     <!-- Q3: Vocabulary - comes AFTER conceptual understanding -->
     <div class="wf-question" id="q3">
-      <p>Each of these individual steps in a trace has a name in OpenTelemetry. What is it called?</p>
+      <p data-i18n="koan06.q3">Each of these individual steps in a trace has a name in OpenTelemetry. What is it called?</p>
       <div class="wf-opts">
-        <button class="wf-opt" data-answer="wrong">A segment</button>
-        <button class="wf-opt" data-answer="correct">A span</button>
-        <button class="wf-opt" data-answer="wrong">A frame</button>
+        <button class="wf-opt" data-answer="wrong" data-i18n="koan06.q3OptA">A segment</button>
+        <button class="wf-opt" data-answer="correct" data-i18n="koan06.q3OptB">A span</button>
+        <button class="wf-opt" data-answer="wrong" data-i18n="koan06.q3OptC">A frame</button>
       </div>
       <div class="wf-fb" id="fb3"></div>
     </div>
 
     <div class="wf-insight" id="insight">
-      <p>A span is one step in a trace. Each span has a start, an end, and tells you what happened during that step.</p>
-      <p>The waterfall shows how spans nest inside each other, revealing where time is spent.</p>
-      <a href="07-log.html">Continue &rarr;</a>
+      <p data-i18n="koan06.insightP1">A span is one step in a trace. Each span has a start, an end, and tells you what happened during that step.</p>
+      <p data-i18n="koan06.insightP2">The waterfall shows how spans nest inside each other, revealing where time is spent.</p>
+      <a href="07-log.html" data-i18n="common.continue">Continue &rarr;</a>
     </div>
   </div>
 
@@ -497,98 +498,106 @@
 
   <script>
     (function () {
-      var revealBtn = document.getElementById('revealBtn');
-      var status = document.getElementById('status');
-      var started = false;
+      function run() {
+        var revealBtn = document.getElementById('revealBtn');
+        var status = document.getElementById('status');
+        var started = false;
 
-      var rows = [
-        document.getElementById('row-0'),
-        document.getElementById('row-1'),
-        document.getElementById('row-2'),
-        document.getElementById('row-3')
-      ];
+        var rows = [
+          document.getElementById('row-0'),
+          document.getElementById('row-1'),
+          document.getElementById('row-2'),
+          document.getElementById('row-3')
+        ];
 
-      revealBtn.addEventListener('click', function () {
-        if (started) return;
-        started = true;
-        revealBtn.style.opacity = '0';
-        revealBtn.style.pointerEvents = 'none';
-        status.textContent = 'Loading trace data...';
+        revealBtn.addEventListener('click', function () {
+          if (started) return;
+          started = true;
+          revealBtn.style.opacity = '0';
+          revealBtn.style.pointerEvents = 'none';
+          status.textContent = i18n.t('koan06.statusLoading');
 
-        // Reveal rows one at a time with a cascade
-        rows.forEach(function (row, i) {
-          setTimeout(function () {
-            row.classList.add('visible');
-          }, i * 450);
-        });
-
-        // Show total line
-        setTimeout(function () {
-          document.getElementById('totalLine').classList.add('visible');
-          status.textContent = 'Trace loaded. Study the bars above.';
-        }, 2000);
-
-        // Highlight the database row to draw attention to it
-        setTimeout(function () {
-          rows[3].classList.add('highlighted');
-        }, 2600);
-
-        // Show Q1
-        setTimeout(function () {
-          document.getElementById('q1').classList.add('visible');
-          status.textContent = '';
-        }, 3200);
-      });
-
-      // Quiz engine
-      function setupQuiz(qId, fbId, nextIds, correctMsg, wrongMsg) {
-        var q = document.getElementById(qId);
-        var fb = document.getElementById(fbId);
-        var opts = q.querySelectorAll('.wf-opt');
-
-        opts.forEach(function (opt) {
-          opt.addEventListener('click', function () {
-            if (this.dataset.answer === 'correct') {
-              this.classList.add('correct');
-              opts.forEach(function (o) { o.classList.add('disabled'); });
-              fb.textContent = correctMsg;
-              fb.className = 'wf-fb wf-fb--correct';
-              // Reveal next elements in sequence
-              var delay = 800;
-              nextIds.forEach(function (id) {
-                setTimeout(function () {
-                  document.getElementById(id).classList.add('visible');
-                }, delay);
-                delay += 600;
-              });
-            } else {
-              this.classList.add('wrong');
-              fb.textContent = wrongMsg;
-              fb.className = 'wf-fb wf-fb--wrong';
-              var self = this;
-              setTimeout(function () { self.classList.remove('wrong'); }, 500);
-            }
+          // Reveal rows one at a time with a cascade
+          rows.forEach(function (row, i) {
+            setTimeout(function () {
+              row.classList.add('visible');
+            }, i * 450);
           });
+
+          // Show total line
+          setTimeout(function () {
+            document.getElementById('totalLine').classList.add('visible');
+            status.textContent = i18n.t('koan06.statusLoaded');
+          }, 2000);
+
+          // Highlight the database row to draw attention to it
+          setTimeout(function () {
+            rows[3].classList.add('highlighted');
+          }, 2600);
+
+          // Show Q1
+          setTimeout(function () {
+            document.getElementById('q1').classList.add('visible');
+            status.textContent = '';
+          }, 3200);
         });
+
+        // Quiz engine
+        function setupQuiz(qId, fbId, nextIds, correctMsg, wrongMsg) {
+          var q = document.getElementById(qId);
+          var fb = document.getElementById(fbId);
+          var opts = q.querySelectorAll('.wf-opt');
+
+          opts.forEach(function (opt) {
+            opt.addEventListener('click', function () {
+              if (this.dataset.answer === 'correct') {
+                this.classList.add('correct');
+                opts.forEach(function (o) { o.classList.add('disabled'); });
+                fb.textContent = correctMsg;
+                fb.className = 'wf-fb wf-fb--correct';
+                // Reveal next elements in sequence
+                var delay = 800;
+                nextIds.forEach(function (id) {
+                  setTimeout(function () {
+                    document.getElementById(id).classList.add('visible');
+                  }, delay);
+                  delay += 600;
+                });
+              } else {
+                this.classList.add('wrong');
+                fb.textContent = wrongMsg;
+                fb.className = 'wf-fb wf-fb--wrong';
+                var self = this;
+                setTimeout(function () { self.classList.remove('wrong'); }, 500);
+              }
+            });
+          });
+        }
+
+        setupQuiz(
+          'q1', 'fb1', ['mid1', 'q2'],
+          i18n.t('koan06.q1Correct'),
+          i18n.t('koan06.q1Wrong')
+        );
+
+        setupQuiz(
+          'q2', 'fb2', ['mid2', 'q3'],
+          i18n.t('koan06.q2Correct'),
+          i18n.t('koan06.q2Wrong')
+        );
+
+        setupQuiz(
+          'q3', 'fb3', ['insight'],
+          i18n.t('koan06.q3Correct'),
+          i18n.t('koan06.q3Wrong')
+        );
       }
 
-      setupQuiz(
-        'q1', 'fb1', ['mid1', 'q2'],
-        'Four bars, four operations: gateway, api, orders, database.',
-        'Count each colored bar in the waterfall. Each bar is one operation.'
-      );
-
-      setupQuiz(
-        'q2', 'fb2', ['mid2', 'q3'],
-        'The database operation consumed 86% of the total time. That is where you would investigate.',
-        'Look at the durations. The database bar is 180ms and the entire trace is 210ms.'
-      );
-
-      setupQuiz(
-        'q3', 'fb3', ['insight'],
-        'In OpenTelemetry, each step in a trace is called a span.',
-        'Close, but OpenTelemetry uses a specific term for each step in a trace.'
-      );
+      if (window.i18n && window.i18n.t('common.desktopOnly') !== 'common.desktopOnly') {
+        run();
+      } else {
+        window.addEventListener('i18n:ready', run, { once: true });
+      }
     })();
   </script>
   <script src="../js/scroll.js"></script>

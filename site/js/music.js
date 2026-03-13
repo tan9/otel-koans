@@ -28,8 +28,10 @@
   // Create toggle button
   var btn = document.createElement('button');
   btn.className = 'music-toggle';
-  btn.setAttribute('aria-label', 'Toggle music');
-  btn.title = 'Toggle music';
+  var musicLabel = (window.i18n && window.i18n.t) ? window.i18n.t('common.toggleMusic') : 'Toggle music';
+  if (musicLabel === 'common.toggleMusic') musicLabel = 'Toggle music';
+  btn.setAttribute('aria-label', musicLabel);
+  btn.title = musicLabel;
 
   function updateBtn() {
     var on = !audio.paused;

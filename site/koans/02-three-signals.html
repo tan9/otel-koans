@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Koan 2: Three Signals - OpenTelemetry Koans</title>
+  <title data-i18n="koan02.pageTitle">Koan 2: Three Signals - OpenTelemetry Koans</title>
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon-16x16.png">
@@ -11,6 +11,7 @@
   <link rel="manifest" href="../site.webmanifest">
   <meta name="theme-color" content="#0a0e14">
   <link rel="stylesheet" href="../css/shared.css">
+  <script src="../js/i18n.js"></script>
   <style>
     /* ── Phase 1: Sorting exercise ── */
     .sort-section {
@@ -390,15 +391,15 @@
 <body>
   <div class="mobile-gate">
     <div class="mobile-gate-icon">&#9776;</div>
-    <div class="mobile-gate-title">Desktop Only</div>
-    <div class="mobile-gate-text">These koans require a larger screen. Please visit on a desktop browser.</div>
+    <div class="mobile-gate-title" data-i18n="common.desktopOnly">Desktop Only</div>
+    <div class="mobile-gate-text" data-i18n="common.desktopOnlyText">These koans require a larger screen. Please visit on a desktop browser.</div>
   </div>
 
   <div class="koan-page">
 
-    <h1 class="koan-title">Three Signals</h1>
+    <h1 class="koan-title" data-i18n="koan02.title">Three Signals</h1>
 
-    <div class="koan-text">
+    <div class="koan-text" data-i18n-html="koan02.zen">
       A system speaks, but not with one voice.<br>
       It measures. It narrates. It records.<br>
       Three ways of seeing. Each reveals what the others cannot.
@@ -406,7 +407,7 @@
 
     <!-- ═══ Phase 1: Sorting exercise ═══ -->
     <div class="sort-section" id="sortSection">
-      <div class="koan-instruction">
+      <div class="koan-instruction" data-i18n="koan02.sortInstruction">
         A stream of telemetry arrives. Sort these items into three groups.
       </div>
 
@@ -417,35 +418,35 @@
       <div class="buckets-row" id="bucketsRow">
         <div class="bucket" id="bucketA" data-bucket="A">
           <div class="bucket-header">
-            <span class="bucket-label" id="labelA">Bucket A</span>
+            <span class="bucket-label" id="labelA" data-i18n="koan02.bucketA">Bucket A</span>
             <span class="bucket-count" id="countA"></span>
           </div>
           <div class="bucket-body" id="bodyA">
-            <div class="bucket-empty-hint">click an item above, then choose A</div>
+            <div class="bucket-empty-hint" data-i18n="koan02.bucketEmptyA">click an item above, then choose A</div>
           </div>
         </div>
         <div class="bucket" id="bucketB" data-bucket="B">
           <div class="bucket-header">
-            <span class="bucket-label" id="labelB">Bucket B</span>
+            <span class="bucket-label" id="labelB" data-i18n="koan02.bucketB">Bucket B</span>
             <span class="bucket-count" id="countB"></span>
           </div>
           <div class="bucket-body" id="bodyB">
-            <div class="bucket-empty-hint">click an item above, then choose B</div>
+            <div class="bucket-empty-hint" data-i18n="koan02.bucketEmptyB">click an item above, then choose B</div>
           </div>
         </div>
         <div class="bucket" id="bucketC" data-bucket="C">
           <div class="bucket-header">
-            <span class="bucket-label" id="labelC">Bucket C</span>
+            <span class="bucket-label" id="labelC" data-i18n="koan02.bucketC">Bucket C</span>
             <span class="bucket-count" id="countC"></span>
           </div>
           <div class="bucket-body" id="bodyC">
-            <div class="bucket-empty-hint">click an item above, then choose C</div>
+            <div class="bucket-empty-hint" data-i18n="koan02.bucketEmptyC">click an item above, then choose C</div>
           </div>
         </div>
       </div>
 
       <div class="sort-check-row" id="sortCheckRow">
-        <button class="koan-btn" id="sortCheckBtn">Check Sorting</button>
+        <button class="koan-btn" id="sortCheckBtn" data-i18n="koan02.sortCheckBtn">Check Sorting</button>
       </div>
 
       <div class="sort-feedback" id="sortFeedback"></div>
@@ -453,44 +454,44 @@
 
     <!-- ═══ Phase 2: Matching exercise ═══ -->
     <div class="match-exercise phase-hidden" id="matchExercise">
-      <div class="koan-instruction">Apply what you discovered. Which signal would you reach for in each scenario?</div>
+      <div class="koan-instruction" data-i18n="koan02.matchInstruction">Apply what you discovered. Which signal would you reach for in each scenario?</div>
 
       <div class="match-grid">
-        <div class="match-question">Your checkout is slow and getting worse over time. You need to see the trend.</div>
+        <div class="match-question" data-i18n="koan02.matchQ1">Your checkout is slow and getting worse over time. You need to see the trend.</div>
         <div class="match-arrow">&rarr;</div>
         <div class="match-slot">
           <select class="match-select" data-correct="metric">
-            <option value="">choose&hellip;</option>
-            <option value="metric">Metric</option>
-            <option value="trace">Trace</option>
-            <option value="log">Log</option>
+            <option value="" data-i18n="koan02.matchSelectPlaceholder">choose&hellip;</option>
+            <option value="metric" data-i18n="koan02.matchOptMetric">Metric</option>
+            <option value="trace" data-i18n="koan02.matchOptTrace">Trace</option>
+            <option value="log" data-i18n="koan02.matchOptLog">Log</option>
           </select>
         </div>
 
-        <div class="match-question">A single request failed. You need to follow it through 4 services to find where it broke.</div>
+        <div class="match-question" data-i18n="koan02.matchQ2">A single request failed. You need to follow it through 4 services to find where it broke.</div>
         <div class="match-arrow">&rarr;</div>
         <div class="match-slot">
           <select class="match-select" data-correct="trace">
-            <option value="">choose&hellip;</option>
-            <option value="metric">Metric</option>
-            <option value="trace">Trace</option>
-            <option value="log">Log</option>
+            <option value="" data-i18n="koan02.matchSelectPlaceholder">choose&hellip;</option>
+            <option value="metric" data-i18n="koan02.matchOptMetric">Metric</option>
+            <option value="trace" data-i18n="koan02.matchOptTrace">Trace</option>
+            <option value="log" data-i18n="koan02.matchOptLog">Log</option>
           </select>
         </div>
 
-        <div class="match-question">The database returned an error. You need the exact error message and timestamp.</div>
+        <div class="match-question" data-i18n="koan02.matchQ3">The database returned an error. You need the exact error message and timestamp.</div>
         <div class="match-arrow">&rarr;</div>
         <div class="match-slot">
           <select class="match-select" data-correct="log">
-            <option value="">choose&hellip;</option>
-            <option value="metric">Metric</option>
-            <option value="trace">Trace</option>
-            <option value="log">Log</option>
+            <option value="" data-i18n="koan02.matchSelectPlaceholder">choose&hellip;</option>
+            <option value="metric" data-i18n="koan02.matchOptMetric">Metric</option>
+            <option value="trace" data-i18n="koan02.matchOptTrace">Trace</option>
+            <option value="log" data-i18n="koan02.matchOptLog">Log</option>
           </select>
         </div>
 
         <div class="match-check">
-          <button class="koan-btn" id="matchCheckBtn">Check</button>
+          <button class="koan-btn" id="matchCheckBtn" data-i18n="koan02.matchCheckBtn">Check</button>
         </div>
       </div>
 
@@ -498,9 +499,9 @@
     </div>
 
     <div class="signals-insight" id="insight">
-      <p>Metrics measure. Traces narrate. Logs record.</p>
-      <p>Together, they are the three signals of observability.</p>
-      <a href="03-metric.html">Continue &rarr;</a>
+      <p data-i18n="koan02.insightLine1">Metrics measure. Traces narrate. Logs record.</p>
+      <p data-i18n="koan02.insightLine2">Together, they are the three signals of observability.</p>
+      <a href="03-metric.html" data-i18n="common.continue">Continue &rarr;</a>
     </div>
   </div>
 
@@ -510,379 +511,381 @@
 
   <script>
     (function () {
-      // ── Telemetry items with their true signal type ──
-      var ITEMS = [
-        { id: 0, text: '142ms avg response time',       type: 'metric' },
-        { id: 1, text: 'gateway \u2192 api \u2192 orders \u2192 db', type: 'trace'  },
-        { id: 2, text: '10:42:01 INFO order received',  type: 'log'    },
-        { id: 3, text: '31 requests/sec',                type: 'metric' },
-        { id: 4, text: 'api \u2192 payment \u2192 gateway',       type: 'trace'  },
-        { id: 5, text: '10:42:02 ERROR pool exhausted',  type: 'log'    }
-      ];
+      function run() {
+        // ── Telemetry items with their true signal type ──
+        var ITEMS = [
+          { id: 0, text: i18n.t('koan02.item0'), type: 'metric' },
+          { id: 1, text: i18n.t('koan02.item1'), type: 'trace'  },
+          { id: 2, text: i18n.t('koan02.item2'), type: 'log'    },
+          { id: 3, text: i18n.t('koan02.item3'), type: 'metric' },
+          { id: 4, text: i18n.t('koan02.item4'), type: 'trace'  },
+          { id: 5, text: i18n.t('koan02.item5'), type: 'log'    }
+        ];
 
-      // Shuffle the items for display
-      var shuffled = ITEMS.slice();
-      for (var i = shuffled.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var tmp = shuffled[i];
-        shuffled[i] = shuffled[j];
-        shuffled[j] = tmp;
-      }
-
-      // State: which bucket each item is in (null = pool)
-      var assignments = {};   // itemId -> 'A' | 'B' | 'C' | null
-      var activePicker = null; // currently open picker element
-
-      var pool = document.getElementById('itemPool');
-      var sortCheckBtn = document.getElementById('sortCheckBtn');
-      var sortFeedback = document.getElementById('sortFeedback');
-      var sortSection = document.getElementById('sortSection');
-      var matchExercise = document.getElementById('matchExercise');
-
-      // Close any open picker
-      function closePicker() {
-        if (activePicker) {
-          activePicker.classList.remove('open');
-          activePicker = null;
+        // Shuffle the items for display
+        var shuffled = ITEMS.slice();
+        for (var i = shuffled.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var tmp = shuffled[i];
+          shuffled[i] = shuffled[j];
+          shuffled[j] = tmp;
         }
-      }
 
-      // Close picker when clicking outside
-      document.addEventListener('click', function (e) {
-        if (activePicker && !e.target.closest('.telem-item') && !e.target.closest('.bucket-picker')) {
-          closePicker();
-        }
-      });
+        // State: which bucket each item is in (null = pool)
+        var assignments = {};   // itemId -> 'A' | 'B' | 'C' | null
+        var activePicker = null; // currently open picker element
 
-      // Build pool items
-      shuffled.forEach(function (item) {
-        var el = document.createElement('div');
-        el.className = 'telem-item';
-        el.setAttribute('data-id', item.id);
-        el.textContent = item.text;
+        var pool = document.getElementById('itemPool');
+        var sortCheckBtn = document.getElementById('sortCheckBtn');
+        var sortFeedback = document.getElementById('sortFeedback');
+        var sortSection = document.getElementById('sortSection');
+        var matchExercise = document.getElementById('matchExercise');
 
-        // Build picker
-        var picker = document.createElement('div');
-        picker.className = 'bucket-picker';
-        ['A', 'B', 'C'].forEach(function (letter) {
-          var btn = document.createElement('button');
-          btn.className = 'picker-btn';
-          btn.textContent = letter;
-          btn.addEventListener('click', function (e) {
-            e.stopPropagation();
-            assignItem(item.id, letter);
-            closePicker();
-          });
-          picker.appendChild(btn);
-        });
-        el.appendChild(picker);
-
-        el.addEventListener('click', function (e) {
-          if (e.target.closest('.picker-btn')) return;
-          e.stopPropagation();
-          if (activePicker === picker) {
-            closePicker();
-            return;
+        // Close any open picker
+        function closePicker() {
+          if (activePicker) {
+            activePicker.classList.remove('open');
+            activePicker = null;
           }
-          closePicker();
-          picker.classList.add('open');
-          activePicker = picker;
-        });
+        }
 
-        pool.appendChild(el);
-        assignments[item.id] = null;
-      });
-
-      // Assign item to a bucket
-      function assignItem(itemId, bucket) {
-        assignments[itemId] = bucket;
-        sortFeedback.textContent = '';
-        sortFeedback.className = 'sort-feedback';
-        renderBuckets();
-      }
-
-      // Remove item from a bucket back to pool
-      function unassignItem(itemId) {
-        assignments[itemId] = null;
-        sortFeedback.textContent = '';
-        sortFeedback.className = 'sort-feedback';
-        renderBuckets();
-      }
-
-      // Render buckets and pool based on current assignments
-      function renderBuckets() {
-        // Pool: show/hide items
-        var poolItems = pool.querySelectorAll('.telem-item');
-        poolItems.forEach(function (el) {
-          var id = parseInt(el.getAttribute('data-id'));
-          if (assignments[id] !== null) {
-            el.classList.add('assigned');
-          } else {
-            el.classList.remove('assigned');
+        // Close picker when clicking outside
+        document.addEventListener('click', function (e) {
+          if (activePicker && !e.target.closest('.telem-item') && !e.target.closest('.bucket-picker')) {
+            closePicker();
           }
         });
 
-        // Buckets
-        ['A', 'B', 'C'].forEach(function (letter) {
-          var body = document.getElementById('body' + letter);
-          var bucket = document.getElementById('bucket' + letter);
-          var countEl = document.getElementById('count' + letter);
+        // Build pool items
+        shuffled.forEach(function (item) {
+          var el = document.createElement('div');
+          el.className = 'telem-item';
+          el.setAttribute('data-id', item.id);
+          el.textContent = item.text;
 
-          // Gather items for this bucket
-          var bucketItems = [];
-          ITEMS.forEach(function (item) {
-            if (assignments[item.id] === letter) {
-              bucketItems.push(item);
-            }
-          });
-
-          // Clear body
-          body.innerHTML = '';
-
-          if (bucketItems.length === 0) {
-            var hint = document.createElement('div');
-            hint.className = 'bucket-empty-hint';
-            hint.textContent = 'click an item above, then choose ' + letter;
-            body.appendChild(hint);
-            bucket.classList.remove('has-items');
-            countEl.textContent = '';
-          } else {
-            bucket.classList.add('has-items');
-            countEl.textContent = bucketItems.length + '/2';
-            bucketItems.forEach(function (item) {
-              var el = document.createElement('div');
-              el.className = 'bucket-item';
-
-              var textSpan = document.createElement('span');
-              textSpan.textContent = item.text;
-              el.appendChild(textSpan);
-
-              var removeBtn = document.createElement('span');
-              removeBtn.className = 'bucket-item-remove';
-              removeBtn.textContent = '\u2715';
-              removeBtn.title = 'Remove';
-              removeBtn.addEventListener('click', function () {
-                unassignItem(item.id);
-              });
-              el.appendChild(removeBtn);
-
-              body.appendChild(el);
+          // Build picker
+          var picker = document.createElement('div');
+          picker.className = 'bucket-picker';
+          ['A', 'B', 'C'].forEach(function (letter) {
+            var btn = document.createElement('button');
+            btn.className = 'picker-btn';
+            btn.textContent = letter;
+            btn.addEventListener('click', function (e) {
+              e.stopPropagation();
+              assignItem(item.id, letter);
+              closePicker();
             });
-          }
-        });
-      }
+            picker.appendChild(btn);
+          });
+          el.appendChild(picker);
 
-      // Progressive hints for wrong sorting attempts
-      var sortWrongCount = 0;
-
-      // Map each item to a distinguishing characteristic for the 3rd-level hint
-      var itemCharacteristics = {};
-      ITEMS.forEach(function (item) {
-        if (item.type === 'metric') {
-          itemCharacteristics[item.id] = 'This item is a numeric measurement';
-        } else if (item.type === 'trace') {
-          itemCharacteristics[item.id] = 'This item shows a path between services';
-        } else {
-          itemCharacteristics[item.id] = 'This item is a timestamped event record';
-        }
-      });
-
-      // Find a misplaced item to highlight on 3rd wrong attempt
-      function findMisplacedItem(bucketCounts) {
-        var letters = ['A', 'B', 'C'];
-        for (var li = 0; li < letters.length; li++) {
-          var letter = letters[li];
-          var types = bucketCounts[letter];
-          if (types.length === 2 && types[0].type !== types[1].type) {
-            // Return the first item in this mixed bucket
-            return types[0];
-          }
-        }
-        return null;
-      }
-
-      // Check sorting
-      sortCheckBtn.addEventListener('click', function () {
-        // Check that all items are assigned
-        var allAssigned = true;
-        ITEMS.forEach(function (item) {
-          if (assignments[item.id] === null) allAssigned = false;
-        });
-
-        if (!allAssigned) {
-          sortFeedback.textContent = 'Sort all six items into the three buckets first.';
-          sortFeedback.className = 'sort-feedback sort-feedback--wrong';
-          return;
-        }
-
-        // Check that each bucket has exactly 2 items
-        var bucketCounts = { A: [], B: [], C: [] };
-        ITEMS.forEach(function (item) {
-          bucketCounts[assignments[item.id]].push({ id: item.id, type: item.type, text: item.text });
-        });
-
-        var validSizes = true;
-        ['A', 'B', 'C'].forEach(function (letter) {
-          if (bucketCounts[letter].length !== 2) validSizes = false;
-        });
-
-        if (!validSizes) {
-          sortFeedback.textContent = 'Each bucket should have exactly two items.';
-          sortFeedback.className = 'sort-feedback sort-feedback--wrong';
-          return;
-        }
-
-        // Check that all items in each bucket are the same type
-        var allHomogeneous = true;
-        var bucketTypeMap = {};
-        var typesUsed = {};
-
-        ['A', 'B', 'C'].forEach(function (letter) {
-          var types = bucketCounts[letter];
-          if (types[0].type !== types[1].type) {
-            allHomogeneous = false;
-          } else {
-            var t = types[0].type;
-            if (typesUsed[t]) {
-              // Two buckets have the same type - shouldn't happen if homogeneous and all types present
-              allHomogeneous = false;
+          el.addEventListener('click', function (e) {
+            if (e.target.closest('.picker-btn')) return;
+            e.stopPropagation();
+            if (activePicker === picker) {
+              closePicker();
+              return;
             }
-            typesUsed[t] = true;
-            bucketTypeMap[letter] = t;
-          }
+            closePicker();
+            picker.classList.add('open');
+            activePicker = picker;
+          });
+
+          pool.appendChild(el);
+          assignments[item.id] = null;
         });
 
-        if (!allHomogeneous || Object.keys(typesUsed).length !== 3) {
-          sortWrongCount++;
-
-          if (sortWrongCount === 1) {
-            sortFeedback.textContent = 'Not quite. Look at the format of each item.';
-            sortFeedback.className = 'sort-feedback sort-feedback--hint';
-          } else if (sortWrongCount === 2) {
-            sortFeedback.textContent = 'Hint: some items are numbers, some are paths between services, some are timestamped events.';
-            sortFeedback.className = 'sort-feedback sort-feedback--hint';
-          } else {
-            // 3rd+ wrong: highlight a specific misplaced item's characteristic
-            var misplaced = findMisplacedItem(bucketCounts);
-            if (misplaced) {
-              sortFeedback.textContent = '\u201c' + misplaced.text + '\u201d: ' + itemCharacteristics[misplaced.id] + '. Is it with its kind?';
-            } else {
-              sortFeedback.textContent = 'Each bucket should contain items of the same kind. Numbers together, paths together, events together.';
-            }
-            sortFeedback.className = 'sort-feedback sort-feedback--hint';
-          }
-          return;
-        }
-
-        // Correct! Reveal the bucket names
-        revealBuckets(bucketTypeMap);
-      });
-
-      // Reveal bucket names with animation
-      function revealBuckets(bucketTypeMap) {
-        sortFeedback.textContent = '';
-        sortCheckBtn.style.display = 'none';
-
-        // Remove pool
-        pool.style.display = 'none';
-
-        // Remove X buttons from bucket items
-        var removes = document.querySelectorAll('.bucket-item-remove');
-        removes.forEach(function (el) { el.style.display = 'none'; });
-
-        // Map of type -> display name and color class
-        var typeInfo = {
-          metric: { name: 'Metric',  cssClass: 'bucket-metric' },
-          trace:  { name: 'Trace',   cssClass: 'bucket-trace'  },
-          log:    { name: 'Log',     cssClass: 'bucket-log'    }
-        };
-
-        // Animate each bucket reveal with a stagger
-        var letters = ['A', 'B', 'C'];
-        letters.forEach(function (letter, i) {
-          setTimeout(function () {
-            var bucket = document.getElementById('bucket' + letter);
-            var label = document.getElementById('label' + letter);
-            var countEl = document.getElementById('count' + letter);
-            var type = bucketTypeMap[letter];
-            var info = typeInfo[type];
-
-            bucket.classList.add('revealed', info.cssClass);
-            label.textContent = info.name;
-            countEl.textContent = '';
-          }, i * 400);
-        });
-
-        // After reveal, show the context line, then the match exercise
-        setTimeout(function () {
-          sortFeedback.textContent = 'Three kinds of data. Three ways to understand a system.';
+        // Assign item to a bucket
+        function assignItem(itemId, bucket) {
+          assignments[itemId] = bucket;
+          sortFeedback.textContent = '';
           sortFeedback.className = 'sort-feedback';
-          sortFeedback.style.color = 'var(--accent-green)';
-        }, letters.length * 400);
-
-        setTimeout(function () {
-          matchExercise.classList.remove('phase-hidden');
-          // Force reflow before adding visible class for transition
-          matchExercise.offsetHeight;
-          matchExercise.classList.add('visible');
-        }, letters.length * 400 + 800);
-      }
-
-      // ── Phase 2: Matching exercise ──
-      var selects = document.querySelectorAll('.match-select');
-      var matchCheckBtn = document.getElementById('matchCheckBtn');
-      var matchFeedback = document.getElementById('matchFeedback');
-      var matchSolved = false;
-
-      matchCheckBtn.addEventListener('click', function () {
-        if (matchSolved) return;
-
-        var allFilled = true;
-        var allCorrect = true;
-
-        selects.forEach(function (sel) {
-          sel.classList.remove('correct', 'wrong');
-          if (!sel.value) {
-            allFilled = false;
-          } else if (sel.value === sel.dataset.correct) {
-            sel.classList.add('correct');
-          } else {
-            sel.classList.add('wrong');
-            allCorrect = false;
-          }
-        });
-
-        if (!allFilled) {
-          matchFeedback.textContent = 'Choose an answer for each question.';
-          matchFeedback.className = 'match-feedback match-feedback--wrong';
-          return;
+          renderBuckets();
         }
 
-        if (allCorrect) {
-          matchSolved = true;
-          matchFeedback.textContent = 'Three signals. Three questions only they can answer.';
-          matchFeedback.className = 'match-feedback match-feedback--correct';
-          selects.forEach(function (sel) { sel.disabled = true; });
-          matchCheckBtn.classList.add('disabled');
-          matchCheckBtn.style.pointerEvents = 'none';
-          matchCheckBtn.style.opacity = '0.4';
+        // Remove item from a bucket back to pool
+        function unassignItem(itemId) {
+          assignments[itemId] = null;
+          sortFeedback.textContent = '';
+          sortFeedback.className = 'sort-feedback';
+          renderBuckets();
+        }
 
-          setTimeout(function () {
-            document.getElementById('insight').classList.add('visible');
-          }, 800);
-        } else {
-          matchFeedback.textContent = 'Not quite. Think about what kind of data each scenario needs: a number over time, a path through services, or a discrete event.';
-          matchFeedback.className = 'match-feedback match-feedback--wrong';
-          setTimeout(function () {
-            selects.forEach(function (sel) {
-              if (sel.classList.contains('wrong')) {
-                sel.classList.remove('wrong');
-                sel.value = '';
+        // Render buckets and pool based on current assignments
+        function renderBuckets() {
+          // Pool: show/hide items
+          var poolItems = pool.querySelectorAll('.telem-item');
+          poolItems.forEach(function (el) {
+            var id = parseInt(el.getAttribute('data-id'));
+            if (assignments[id] !== null) {
+              el.classList.add('assigned');
+            } else {
+              el.classList.remove('assigned');
+            }
+          });
+
+          // Buckets
+          ['A', 'B', 'C'].forEach(function (letter) {
+            var body = document.getElementById('body' + letter);
+            var bucket = document.getElementById('bucket' + letter);
+            var countEl = document.getElementById('count' + letter);
+
+            // Gather items for this bucket
+            var bucketItems = [];
+            ITEMS.forEach(function (item) {
+              if (assignments[item.id] === letter) {
+                bucketItems.push(item);
               }
             });
-          }, 800);
+
+            // Clear body
+            body.innerHTML = '';
+
+            if (bucketItems.length === 0) {
+              var hint = document.createElement('div');
+              hint.className = 'bucket-empty-hint';
+              hint.textContent = i18n.t('koan02.bucketEmpty' + letter);
+              body.appendChild(hint);
+              bucket.classList.remove('has-items');
+              countEl.textContent = '';
+            } else {
+              bucket.classList.add('has-items');
+              countEl.textContent = bucketItems.length + '/2';
+              bucketItems.forEach(function (item) {
+                var el = document.createElement('div');
+                el.className = 'bucket-item';
+
+                var textSpan = document.createElement('span');
+                textSpan.textContent = item.text;
+                el.appendChild(textSpan);
+
+                var removeBtn = document.createElement('span');
+                removeBtn.className = 'bucket-item-remove';
+                removeBtn.textContent = '\u2715';
+                removeBtn.title = i18n.t('koan02.removeTitle');
+                removeBtn.addEventListener('click', function () {
+                  unassignItem(item.id);
+                });
+                el.appendChild(removeBtn);
+
+                body.appendChild(el);
+              });
+            }
+          });
         }
-      });
+
+        // Progressive hints for wrong sorting attempts
+        var sortWrongCount = 0;
+
+        // Map each item to a distinguishing characteristic for the 3rd-level hint
+        var itemCharacteristics = {};
+        ITEMS.forEach(function (item) {
+          itemCharacteristics[item.id] = i18n.t('koan02.itemChar' + item.id);
+        });
+
+        // Find a misplaced item to highlight on 3rd wrong attempt
+        function findMisplacedItem(bucketCounts) {
+          var letters = ['A', 'B', 'C'];
+          for (var li = 0; li < letters.length; li++) {
+            var letter = letters[li];
+            var types = bucketCounts[letter];
+            if (types.length === 2 && types[0].type !== types[1].type) {
+              // Return the first item in this mixed bucket
+              return types[0];
+            }
+          }
+          return null;
+        }
+
+        // Check sorting
+        sortCheckBtn.addEventListener('click', function () {
+          // Check that all items are assigned
+          var allAssigned = true;
+          ITEMS.forEach(function (item) {
+            if (assignments[item.id] === null) allAssigned = false;
+          });
+
+          if (!allAssigned) {
+            sortFeedback.textContent = i18n.t('koan02.sortFeedbackAllAssigned');
+            sortFeedback.className = 'sort-feedback sort-feedback--wrong';
+            return;
+          }
+
+          // Check that each bucket has exactly 2 items
+          var bucketCounts = { A: [], B: [], C: [] };
+          ITEMS.forEach(function (item) {
+            bucketCounts[assignments[item.id]].push({ id: item.id, type: item.type, text: item.text });
+          });
+
+          var validSizes = true;
+          ['A', 'B', 'C'].forEach(function (letter) {
+            if (bucketCounts[letter].length !== 2) validSizes = false;
+          });
+
+          if (!validSizes) {
+            sortFeedback.textContent = i18n.t('koan02.sortFeedbackEqualSize');
+            sortFeedback.className = 'sort-feedback sort-feedback--wrong';
+            return;
+          }
+
+          // Check that all items in each bucket are the same type
+          var allHomogeneous = true;
+          var bucketTypeMap = {};
+          var typesUsed = {};
+
+          ['A', 'B', 'C'].forEach(function (letter) {
+            var types = bucketCounts[letter];
+            if (types[0].type !== types[1].type) {
+              allHomogeneous = false;
+            } else {
+              var t = types[0].type;
+              if (typesUsed[t]) {
+                // Two buckets have the same type - shouldn't happen if homogeneous and all types present
+                allHomogeneous = false;
+              }
+              typesUsed[t] = true;
+              bucketTypeMap[letter] = t;
+            }
+          });
+
+          if (!allHomogeneous || Object.keys(typesUsed).length !== 3) {
+            sortWrongCount++;
+
+            if (sortWrongCount === 1) {
+              sortFeedback.textContent = i18n.t('koan02.sortHint1');
+              sortFeedback.className = 'sort-feedback sort-feedback--hint';
+            } else if (sortWrongCount === 2) {
+              sortFeedback.textContent = i18n.t('koan02.sortHint2');
+              sortFeedback.className = 'sort-feedback sort-feedback--hint';
+            } else {
+              // 3rd+ wrong: highlight a specific misplaced item's characteristic
+              var misplaced = findMisplacedItem(bucketCounts);
+              if (misplaced) {
+                sortFeedback.textContent = '\u201c' + misplaced.text + '\u201d: ' + itemCharacteristics[misplaced.id] + '. ' + i18n.t('koan02.sortHint3Suffix');
+              } else {
+                sortFeedback.textContent = i18n.t('koan02.sortHint3Fallback');
+              }
+              sortFeedback.className = 'sort-feedback sort-feedback--hint';
+            }
+            return;
+          }
+
+          // Correct! Reveal the bucket names
+          revealBuckets(bucketTypeMap);
+        });
+
+        // Reveal bucket names with animation
+        function revealBuckets(bucketTypeMap) {
+          sortFeedback.textContent = '';
+          sortCheckBtn.style.display = 'none';
+
+          // Remove pool
+          pool.style.display = 'none';
+
+          // Remove X buttons from bucket items
+          var removes = document.querySelectorAll('.bucket-item-remove');
+          removes.forEach(function (el) { el.style.display = 'none'; });
+
+          // Map of type -> display name and color class
+          var typeInfo = {
+            metric: { name: i18n.t('koan02.revealMetric'), cssClass: 'bucket-metric' },
+            trace:  { name: i18n.t('koan02.revealTrace'),  cssClass: 'bucket-trace'  },
+            log:    { name: i18n.t('koan02.revealLog'),     cssClass: 'bucket-log'    }
+          };
+
+          // Animate each bucket reveal with a stagger
+          var letters = ['A', 'B', 'C'];
+          letters.forEach(function (letter, i) {
+            setTimeout(function () {
+              var bucket = document.getElementById('bucket' + letter);
+              var label = document.getElementById('label' + letter);
+              var countEl = document.getElementById('count' + letter);
+              var type = bucketTypeMap[letter];
+              var info = typeInfo[type];
+
+              bucket.classList.add('revealed', info.cssClass);
+              label.textContent = info.name;
+              countEl.textContent = '';
+            }, i * 400);
+          });
+
+          // After reveal, show the context line, then the match exercise
+          setTimeout(function () {
+            sortFeedback.textContent = i18n.t('koan02.sortCorrectFeedback');
+            sortFeedback.className = 'sort-feedback';
+            sortFeedback.style.color = 'var(--accent-green)';
+          }, letters.length * 400);
+
+          setTimeout(function () {
+            matchExercise.classList.remove('phase-hidden');
+            // Force reflow before adding visible class for transition
+            matchExercise.offsetHeight;
+            matchExercise.classList.add('visible');
+          }, letters.length * 400 + 800);
+        }
+
+        // ── Phase 2: Matching exercise ──
+        var selects = document.querySelectorAll('.match-select');
+        var matchCheckBtn = document.getElementById('matchCheckBtn');
+        var matchFeedback = document.getElementById('matchFeedback');
+        var matchSolved = false;
+
+        matchCheckBtn.addEventListener('click', function () {
+          if (matchSolved) return;
+
+          var allFilled = true;
+          var allCorrect = true;
+
+          selects.forEach(function (sel) {
+            sel.classList.remove('correct', 'wrong');
+            if (!sel.value) {
+              allFilled = false;
+            } else if (sel.value === sel.dataset.correct) {
+              sel.classList.add('correct');
+            } else {
+              sel.classList.add('wrong');
+              allCorrect = false;
+            }
+          });
+
+          if (!allFilled) {
+            matchFeedback.textContent = i18n.t('koan02.matchFeedbackEmpty');
+            matchFeedback.className = 'match-feedback match-feedback--wrong';
+            return;
+          }
+
+          if (allCorrect) {
+            matchSolved = true;
+            matchFeedback.textContent = i18n.t('koan02.matchCorrect');
+            matchFeedback.className = 'match-feedback match-feedback--correct';
+            selects.forEach(function (sel) { sel.disabled = true; });
+            matchCheckBtn.classList.add('disabled');
+            matchCheckBtn.style.pointerEvents = 'none';
+            matchCheckBtn.style.opacity = '0.4';
+
+            setTimeout(function () {
+              document.getElementById('insight').classList.add('visible');
+            }, 800);
+          } else {
+            matchFeedback.textContent = i18n.t('koan02.matchWrong');
+            matchFeedback.className = 'match-feedback match-feedback--wrong';
+            setTimeout(function () {
+              selects.forEach(function (sel) {
+                if (sel.classList.contains('wrong')) {
+                  sel.classList.remove('wrong');
+                  sel.value = '';
+                }
+              });
+            }, 800);
+          }
+        });
+      }
+
+      if (window.i18n && window.i18n.t('common.desktopOnly') !== 'common.desktopOnly') {
+        run();
+      } else {
+        window.addEventListener('i18n:ready', run, { once: true });
+      }
     })();
   </script>
   <script src="../js/scroll.js"></script>

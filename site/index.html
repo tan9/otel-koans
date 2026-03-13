@@ -20,6 +20,7 @@
   <link rel="manifest" href="site.webmanifest">
   <meta name="theme-color" content="#0a0e14">
   <link rel="stylesheet" href="css/shared.css">
+  <script src="js/i18n.js"></script>
   <style>
     .opening {
       display: flex;
@@ -182,16 +183,16 @@
   <!-- Mobile gate -->
   <div class="mobile-gate">
     <div class="mobile-gate-icon">&#9776;</div>
-    <div class="mobile-gate-title">Desktop Only</div>
-    <div class="mobile-gate-text">
+    <div class="mobile-gate-title" data-i18n="common.desktopOnly">Desktop Only</div>
+    <div class="mobile-gate-text" data-i18n="common.desktopOnlyTextIndex">
       These koans require a larger screen for the interactive exercises. Please visit on a desktop browser.
     </div>
   </div>
 
   <div class="opening">
-    <div class="opening-title">OpenTelemetry Koans</div>
+    <div class="opening-title" data-i18n="index.openingTitle">OpenTelemetry Koans</div>
 
-    <div class="opening-koan">
+    <div class="opening-koan" data-i18n-html="index.zen">
       A system ran for a thousand days without error.<br>
       On the thousand-and-first day, it failed.<br><br>
       The developer asked, "When did this begin?"<br>
@@ -249,26 +250,26 @@
 
         <!-- Telemetry labels (appear after illumination) -->
         <g class="telemetry-labels">
-          <text class="telemetry-label" x="140" y="55" fill="var(--accent-green)">traces</text>
-          <text class="telemetry-label" x="560" y="95" fill="var(--accent-orange)">metrics</text>
-          <text class="telemetry-label" x="510" y="340" fill="var(--accent-purple)">logs</text>
+          <text class="telemetry-label" x="140" y="55" fill="var(--accent-green)" data-i18n="index.svgTraces">traces</text>
+          <text class="telemetry-label" x="560" y="95" fill="var(--accent-orange)" data-i18n="index.svgMetrics">metrics</text>
+          <text class="telemetry-label" x="510" y="340" fill="var(--accent-purple)" data-i18n="index.svgLogs">logs</text>
         </g>
       </svg>
     </div>
 
     <div class="opening-prompt" id="prompt">
-      <button class="koan-btn koan-btn--primary" id="illuminateBtn">
+      <button class="koan-btn koan-btn--primary" id="illuminateBtn" data-i18n="index.observeBtn">
         Observe
       </button>
-      <div class="koan-hint">What changes when you can see?</div>
+      <div class="koan-hint" data-i18n="index.observeHint">What changes when you can see?</div>
     </div>
 
-    <div class="opening-insight" id="insight">
+    <div class="opening-insight" id="insight" data-i18n="index.insight">
       Now the system speaks. Now you can listen.
     </div>
 
     <div class="opening-continue" id="continueLink">
-      <a href="koans/01-telemetry.html">Begin the path &rarr;</a>
+      <a href="koans/01-telemetry.html" data-i18n="index.beginLink">Begin the path &rarr;</a>
     </div>
   </div>
 
@@ -279,111 +280,119 @@
 
   <script>
     (function () {
-      const btn = document.getElementById('illuminateBtn');
-      const diagram = document.getElementById('systemDiagram');
-      const insight = document.getElementById('insight');
-      const continueLink = document.getElementById('continueLink');
-      const progress = document.getElementById('progress');
-      const particlesGroup = document.getElementById('particles');
+      function run() {
+        const btn = document.getElementById('illuminateBtn');
+        const diagram = document.getElementById('systemDiagram');
+        const insight = document.getElementById('insight');
+        const continueLink = document.getElementById('continueLink');
+        const progress = document.getElementById('progress');
+        const particlesGroup = document.getElementById('particles');
 
-      const edges = [
-        'edge-gw-auth', 'edge-gw-api', 'edge-auth-api',
-        'edge-api-orders', 'edge-api-inventory',
-        'edge-orders-db', 'edge-inventory-db', 'edge-api-cache'
-      ];
+        const edges = [
+          'edge-gw-auth', 'edge-gw-api', 'edge-auth-api',
+          'edge-api-orders', 'edge-api-inventory',
+          'edge-orders-db', 'edge-inventory-db', 'edge-api-cache'
+        ];
 
-      function createParticle(edgeId, delay) {
-        const path = document.getElementById(edgeId);
-        const length = path.getTotalLength();
-        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        circle.setAttribute('r', '2.5');
-        circle.setAttribute('fill', 'var(--accent-green)');
-        circle.setAttribute('opacity', '0');
-        particlesGroup.appendChild(circle);
+        function createParticle(edgeId, delay) {
+          const path = document.getElementById(edgeId);
+          const length = path.getTotalLength();
+          const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          circle.setAttribute('r', '2.5');
+          circle.setAttribute('fill', 'var(--accent-green)');
+          circle.setAttribute('opacity', '0');
+          particlesGroup.appendChild(circle);
 
-        function animate() {
-          const duration = 1500 + Math.random() * 1000;
-          const start = performance.now() + delay;
+          function animate() {
+            const duration = 1500 + Math.random() * 1000;
+            const start = performance.now() + delay;
 
-          function step(now) {
-            const elapsed = now - start;
-            if (elapsed < 0) {
+            function step(now) {
+              const elapsed = now - start;
+              if (elapsed < 0) {
+                requestAnimationFrame(step);
+                return;
+              }
+              const t = (elapsed % duration) / duration;
+              const point = path.getPointAtLength(t * length);
+              circle.setAttribute('cx', point.x);
+              circle.setAttribute('cy', point.y);
+              circle.setAttribute('opacity', t < 0.1 ? t / 0.1 : t > 0.9 ? (1 - t) / 0.1 : 1);
               requestAnimationFrame(step);
-              return;
             }
-            const t = (elapsed % duration) / duration;
-            const point = path.getPointAtLength(t * length);
-            circle.setAttribute('cx', point.x);
-            circle.setAttribute('cy', point.y);
-            circle.setAttribute('opacity', t < 0.1 ? t / 0.1 : t > 0.9 ? (1 - t) / 0.1 : 1);
             requestAnimationFrame(step);
           }
-          requestAnimationFrame(step);
+
+          animate();
         }
 
-        animate();
+        let illuminated = false;
+
+        btn.addEventListener('click', function () {
+          if (illuminated) return;
+          illuminated = true;
+
+          // Illuminate services one by one
+          const services = diagram.querySelectorAll('.service');
+          const serviceOrder = [0, 1, 2, 5, 6, 3, 4]; // gateway, auth, api, db, cache, orders, inventory
+
+          serviceOrder.forEach(function (idx, i) {
+            setTimeout(function () {
+              services[idx].classList.add('illuminated');
+              services[idx].querySelector('.service-circle').style.stroke = 'var(--accent-blue)';
+              services[idx].querySelector('.service-circle').style.filter = 'drop-shadow(0 0 6px rgba(88, 166, 255, 0.3))';
+              services[idx].querySelector('.service-label').style.fill = 'var(--text-primary)';
+            }, i * 300);
+          });
+
+          // Illuminate edges
+          const edgeEls = diagram.querySelectorAll('.edge');
+          edgeEls.forEach(function (edge, i) {
+            setTimeout(function () {
+              edge.style.stroke = 'var(--accent-blue)';
+              edge.style.opacity = '0.5';
+            }, 500 + i * 200);
+          });
+
+          // Show telemetry labels
+          const labels = diagram.querySelectorAll('.telemetry-label');
+          labels.forEach(function (label, i) {
+            setTimeout(function () {
+              label.style.opacity = '1';
+            }, 1500 + i * 400);
+          });
+
+          // Start particles
+          setTimeout(function () {
+            edges.forEach(function (edgeId, i) {
+              createParticle(edgeId, i * 200);
+              createParticle(edgeId, i * 200 + 800); // second particle per edge
+            });
+          }, 2000);
+
+          // Hide button, show insight
+          setTimeout(function () {
+            btn.style.opacity = '0';
+            btn.style.pointerEvents = 'none';
+            btn.parentElement.querySelector('.koan-hint').style.opacity = '0';
+          }, 1000);
+
+          setTimeout(function () {
+            insight.classList.add('visible');
+          }, 3000);
+
+          setTimeout(function () {
+            continueLink.classList.add('visible');
+            progress.style.width = '5%';
+          }, 4000);
+        });
       }
 
-      let illuminated = false;
-
-      btn.addEventListener('click', function () {
-        if (illuminated) return;
-        illuminated = true;
-
-        // Illuminate services one by one
-        const services = diagram.querySelectorAll('.service');
-        const serviceOrder = [0, 1, 2, 5, 6, 3, 4]; // gateway, auth, api, db, cache, orders, inventory
-
-        serviceOrder.forEach(function (idx, i) {
-          setTimeout(function () {
-            services[idx].classList.add('illuminated');
-            services[idx].querySelector('.service-circle').style.stroke = 'var(--accent-blue)';
-            services[idx].querySelector('.service-circle').style.filter = 'drop-shadow(0 0 6px rgba(88, 166, 255, 0.3))';
-            services[idx].querySelector('.service-label').style.fill = 'var(--text-primary)';
-          }, i * 300);
-        });
-
-        // Illuminate edges
-        const edgeEls = diagram.querySelectorAll('.edge');
-        edgeEls.forEach(function (edge, i) {
-          setTimeout(function () {
-            edge.style.stroke = 'var(--accent-blue)';
-            edge.style.opacity = '0.5';
-          }, 500 + i * 200);
-        });
-
-        // Show telemetry labels
-        const labels = diagram.querySelectorAll('.telemetry-label');
-        labels.forEach(function (label, i) {
-          setTimeout(function () {
-            label.style.opacity = '1';
-          }, 1500 + i * 400);
-        });
-
-        // Start particles
-        setTimeout(function () {
-          edges.forEach(function (edgeId, i) {
-            createParticle(edgeId, i * 200);
-            createParticle(edgeId, i * 200 + 800); // second particle per edge
-          });
-        }, 2000);
-
-        // Hide button, show insight
-        setTimeout(function () {
-          btn.style.opacity = '0';
-          btn.style.pointerEvents = 'none';
-          btn.parentElement.querySelector('.koan-hint').style.opacity = '0';
-        }, 1000);
-
-        setTimeout(function () {
-          insight.classList.add('visible');
-        }, 3000);
-
-        setTimeout(function () {
-          continueLink.classList.add('visible');
-          progress.style.width = '5%';
-        }, 4000);
-      });
+      if (window.i18n && window.i18n.t('common.desktopOnly') !== 'common.desktopOnly') {
+        run();
+      } else {
+        window.addEventListener('i18n:ready', run, { once: true });
+      }
     })();
   </script>
   <script src="js/scroll.js"></script>

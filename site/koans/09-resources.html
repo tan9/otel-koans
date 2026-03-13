@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Koan 9: Resources - OpenTelemetry Koans</title>
+  <title data-i18n="koan09.pageTitle">Koan 9: Resources - OpenTelemetry Koans</title>
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon-16x16.png">
@@ -11,6 +11,7 @@
   <link rel="manifest" href="../site.webmanifest">
   <meta name="theme-color" content="#0a0e14">
   <link rel="stylesheet" href="../css/shared.css">
+  <script src="../js/i18n.js"></script>
   <style>
     /* Metric cards */
     .res-metrics {
@@ -417,15 +418,15 @@
 <body>
   <div class="mobile-gate">
     <div class="mobile-gate-icon">&#9776;</div>
-    <div class="mobile-gate-title">Desktop Only</div>
-    <div class="mobile-gate-text">These koans require a larger screen. Please visit on a desktop browser.</div>
+    <div class="mobile-gate-title" data-i18n="common.desktopOnly">Desktop Only</div>
+    <div class="mobile-gate-text" data-i18n="common.desktopOnlyText">These koans require a larger screen. Please visit on a desktop browser.</div>
   </div>
 
   <div class="koan-page">
 
-    <h1 class="koan-title">Resources</h1>
+    <h1 class="koan-title" data-i18n="koan09.title">Resources</h1>
 
-    <div class="koan-text">
+    <div class="koan-text" data-i18n-html="koan09.zen">
       Three alarms fire at once.<br>
       Three identical errors.<br>
       But where did they come from?
@@ -434,13 +435,13 @@
     <!-- Three identical metric cards -->
     <div class="res-metrics">
       <div class="res-card" id="card0">
-        <div class="res-card-header"><span class="res-card-dot"></span> error metric</div>
+        <div class="res-card-header"><span class="res-card-dot"></span> <span data-i18n="koan09.cardHeader">error metric</span></div>
         <div class="res-card-body">
           <div class="res-metric-name">request_duration: 920ms</div>
           <div class="res-metric-attr"><span class="res-attr-key">http.route</span> = <span class="res-attr-val">"/checkout"</span></div>
           <div class="res-metric-attr"><span class="res-attr-key">http.response.status_code</span> = <span class="res-attr-val">500</span></div>
           <div class="res-resource-block" id="res0">
-            <div class="res-resource-label">resource</div>
+            <div class="res-resource-label" data-i18n="koan09.resourceLabel">resource</div>
             <div class="res-resource-pair"><span class="rk">service.name</span><span class="re"> = </span><span class="rv">"orders"</span></div>
             <div class="res-resource-pair"><span class="rk">deployment.environment</span><span class="re"> = </span><span class="rv">"production"</span></div>
             <div class="res-resource-pair"><span class="rk">host.name</span><span class="re"> = </span><span class="rv">"pod-7f8b9"</span></div>
@@ -449,13 +450,13 @@
       </div>
 
       <div class="res-card" id="card1">
-        <div class="res-card-header"><span class="res-card-dot"></span> error metric</div>
+        <div class="res-card-header"><span class="res-card-dot"></span> <span data-i18n="koan09.cardHeader">error metric</span></div>
         <div class="res-card-body">
           <div class="res-metric-name">request_duration: 920ms</div>
           <div class="res-metric-attr"><span class="res-attr-key">http.route</span> = <span class="res-attr-val">"/checkout"</span></div>
           <div class="res-metric-attr"><span class="res-attr-key">http.response.status_code</span> = <span class="res-attr-val">500</span></div>
           <div class="res-resource-block" id="res1">
-            <div class="res-resource-label">resource</div>
+            <div class="res-resource-label" data-i18n="koan09.resourceLabel">resource</div>
             <div class="res-resource-pair"><span class="rk">service.name</span><span class="re"> = </span><span class="rv">"orders"</span></div>
             <div class="res-resource-pair"><span class="rk">deployment.environment</span><span class="re"> = </span><span class="rv">"staging"</span></div>
             <div class="res-resource-pair"><span class="rk">host.name</span><span class="re"> = </span><span class="rv">"pod-2a3b4"</span></div>
@@ -464,13 +465,13 @@
       </div>
 
       <div class="res-card" id="card2">
-        <div class="res-card-header"><span class="res-card-dot"></span> error metric</div>
+        <div class="res-card-header"><span class="res-card-dot"></span> <span data-i18n="koan09.cardHeader">error metric</span></div>
         <div class="res-card-body">
           <div class="res-metric-name">request_duration: 920ms</div>
           <div class="res-metric-attr"><span class="res-attr-key">http.route</span> = <span class="res-attr-val">"/checkout"</span></div>
           <div class="res-metric-attr"><span class="res-attr-key">http.response.status_code</span> = <span class="res-attr-val">500</span></div>
           <div class="res-resource-block" id="res2">
-            <div class="res-resource-label">resource</div>
+            <div class="res-resource-label" data-i18n="koan09.resourceLabel">resource</div>
             <div class="res-resource-pair"><span class="rk">service.name</span><span class="re"> = </span><span class="rv">"payment"</span></div>
             <div class="res-resource-pair"><span class="rk">deployment.environment</span><span class="re"> = </span><span class="rv">"production"</span></div>
             <div class="res-resource-pair"><span class="rk">host.name</span><span class="re"> = </span><span class="rv">"pod-9c8d7"</span></div>
@@ -480,55 +481,55 @@
     </div>
 
     <!-- Ambiguity prompt -->
-    <div class="res-prompt" id="ambiguityPrompt">
+    <div class="res-prompt" id="ambiguityPrompt" data-i18n-html="koan09.ambiguityPrompt">
       Three identical errors. But are they from the same service? Different services?<br>
       Different environments? You can't tell.
     </div>
 
     <!-- Step 1: Prediction question -->
     <div class="res-question" id="q1">
-      <p>What information is missing?</p>
+      <p data-i18n="koan09.q1">What information is missing?</p>
       <div class="res-opts">
-        <button class="res-opt" data-answer="wrong">The HTTP method</button>
-        <button class="res-opt" data-answer="correct">Which service, version, and environment produced each one</button>
-        <button class="res-opt" data-answer="wrong">The exact error message</button>
+        <button class="res-opt" data-answer="wrong" data-i18n="koan09.q1OptA">The HTTP method</button>
+        <button class="res-opt" data-answer="correct" data-i18n="koan09.q1OptB">Which service, version, and environment produced each one</button>
+        <button class="res-opt" data-answer="wrong" data-i18n="koan09.q1OptC">The exact error message</button>
       </div>
       <div class="res-fb" id="fb1"></div>
     </div>
 
     <!-- Step 2: Follow-up question - how many services? -->
     <div class="res-followup" id="q2">
-      <div class="res-followup-text">Now you can see the resources. How many <strong>services</strong> are affected?</div>
+      <div class="res-followup-text" data-i18n-html="koan09.q2">Now you can see the resources. How many <strong>services</strong> are affected?</div>
       <div class="res-followup-opts">
-        <button class="res-followup-opt" data-answer="wrong">1</button>
-        <button class="res-followup-opt" data-answer="correct">2</button>
-        <button class="res-followup-opt" data-answer="wrong">3</button>
+        <button class="res-followup-opt" data-answer="wrong" data-i18n="koan09.q2OptA">1</button>
+        <button class="res-followup-opt" data-answer="correct" data-i18n="koan09.q2OptB">2</button>
+        <button class="res-followup-opt" data-answer="wrong" data-i18n="koan09.q2OptC">3</button>
       </div>
       <div class="res-followup-hint" id="hint2"></div>
     </div>
 
     <!-- Step 3: Follow-up question - production only? -->
     <div class="res-followup" id="q3">
-      <div class="res-followup-text">Is this happening in production only?</div>
+      <div class="res-followup-text" data-i18n="koan09.q3">Is this happening in production only?</div>
       <div class="res-followup-opts">
-        <button class="res-followup-opt" data-answer="wrong">Yes</button>
-        <button class="res-followup-opt" data-answer="correct">No, also in staging</button>
+        <button class="res-followup-opt" data-answer="wrong" data-i18n="koan09.q3OptA">Yes</button>
+        <button class="res-followup-opt" data-answer="correct" data-i18n="koan09.q3OptB">No, also in staging</button>
       </div>
       <div class="res-followup-hint" id="hint3"></div>
     </div>
 
     <!-- Cross-signal: resources attach to all three signals -->
     <div class="res-cross-signal" id="crossSignal">
-      <div class="res-cross-signal-label">Resources attach to all signals, not just metrics</div>
+      <div class="res-cross-signal-label" data-i18n="koan09.crossSignalLabel">Resources attach to all signals, not just metrics</div>
       <div class="res-cross-signal-grid">
         <!-- A span with the same resource -->
         <div class="res-cross-card">
-          <div class="res-cross-card-header">span</div>
+          <div class="res-cross-card-header" data-i18n="koan09.crossSpanHeader">span</div>
           <div class="res-cross-card-body">
-            <div class="res-metric-name">checkout</div>
+            <div class="res-metric-name" data-i18n="koan09.crossSpanName">checkout</div>
             <div class="res-metric-attr"><span class="res-attr-key">duration</span> = <span class="res-attr-val">142ms</span></div>
             <div class="res-resource-block visible">
-              <div class="res-resource-label">resource</div>
+              <div class="res-resource-label" data-i18n="koan09.resourceLabel">resource</div>
               <div class="res-resource-pair"><span class="rk">service.name</span><span class="re"> = </span><span class="rv">"orders"</span></div>
               <div class="res-resource-pair"><span class="rk">deployment.environment</span><span class="re"> = </span><span class="rv">"production"</span></div>
               <div class="res-resource-pair"><span class="rk">host.name</span><span class="re"> = </span><span class="rv">"pod-7f8b9"</span></div>
@@ -537,12 +538,12 @@
         </div>
         <!-- A log with the same resource -->
         <div class="res-cross-card">
-          <div class="res-cross-card-header">log</div>
+          <div class="res-cross-card-header" data-i18n="koan09.crossLogHeader">log</div>
           <div class="res-cross-card-body">
-            <div class="res-metric-name">Payment timeout after 5000ms</div>
+            <div class="res-metric-name" data-i18n="koan09.crossLogName">Payment timeout after 5000ms</div>
             <div class="res-metric-attr"><span class="res-attr-key">severity</span> = <span class="res-attr-val">ERROR</span></div>
             <div class="res-resource-block visible">
-              <div class="res-resource-label">resource</div>
+              <div class="res-resource-label" data-i18n="koan09.resourceLabel">resource</div>
               <div class="res-resource-pair"><span class="rk">service.name</span><span class="re"> = </span><span class="rv">"orders"</span></div>
               <div class="res-resource-pair"><span class="rk">deployment.environment</span><span class="re"> = </span><span class="rv">"production"</span></div>
               <div class="res-resource-pair"><span class="rk">host.name</span><span class="re"> = </span><span class="rv">"pod-7f8b9"</span></div>
@@ -554,9 +555,9 @@
 
     <!-- Insight -->
     <div class="res-insight" id="insight">
-      <p>A resource is the identity card of a telemetry source.</p>
-      <p>Attributes describe what happened. Resources tell you who reported it.</p>
-      <a href="11-instrumentation.html">Continue &rarr;</a>
+      <p data-i18n="koan09.insightP1">A resource is the identity card of a telemetry source.</p>
+      <p data-i18n="koan09.insightP2">Attributes describe what happened. Resources tell you who reported it.</p>
+      <a href="11-instrumentation.html" data-i18n="common.continue">Continue &rarr;</a>
     </div>
   </div>
 
@@ -566,6 +567,7 @@
 
   <script>
     (function () {
+      function run() {
       /* --- Phase 1: Stagger the three cards into view --- */
       var cards = [
         document.getElementById('card0'),
@@ -620,7 +622,7 @@
             if (this.dataset.answer === 'correct') {
               this.classList.add('correct');
               opts.forEach(function (o) { o.classList.add('disabled'); });
-              fb.textContent = 'Exactly. You need to know the source, not just the data.';
+              fb.textContent = i18n.t('koan09.q1Correct');
               fb.className = 'res-fb res-fb--correct';
 
               /* Reveal the resources on each card */
@@ -634,7 +636,7 @@
               }, 600);
             } else {
               this.classList.add('wrong');
-              fb.textContent = 'That would be an attribute, not the identity of the source itself.';
+              fb.textContent = i18n.t('koan09.q1Wrong');
               fb.className = 'res-fb res-fb--wrong';
               var self = this;
               setTimeout(function () { self.classList.remove('wrong'); }, 600);
@@ -679,14 +681,14 @@
               q2WrongCount++;
 
               if (q2WrongCount === 1) {
-                hint2.textContent = 'Look at the service.name field on each card.';
+                hint2.textContent = i18n.t('koan09.q2Hint1');
                 hint2.classList.add('visible');
                 highlightServiceNames();
               } else if (q2WrongCount === 2) {
-                hint2.textContent = 'Two cards say "orders" and one says "payment", so how many distinct names is that?';
+                hint2.textContent = i18n.t('koan09.q2Hint2');
                 hint2.classList.add('visible');
               } else {
-                hint2.textContent = 'There are exactly 2 unique service names: orders and payment.';
+                hint2.textContent = i18n.t('koan09.q2Hint3');
                 hint2.classList.add('visible');
               }
 
@@ -736,14 +738,14 @@
               q3WrongCount++;
 
               if (q3WrongCount === 1) {
-                hint3.textContent = 'Check the deployment.environment field: is it the same on all three?';
+                hint3.textContent = i18n.t('koan09.q3Hint1');
                 hint3.classList.add('visible');
                 highlightEnvironments();
               } else if (q3WrongCount === 2) {
-                hint3.textContent = 'One card shows "staging" while two show "production", so it is not production only.';
+                hint3.textContent = i18n.t('koan09.q3Hint2');
                 hint3.classList.add('visible');
               } else {
-                hint3.textContent = 'The second card has deployment.environment = "staging", so the answer is No.';
+                hint3.textContent = i18n.t('koan09.q3Hint3');
                 hint3.classList.add('visible');
               }
 
@@ -753,6 +755,13 @@
           });
         });
       })();
+      }
+
+      if (window.i18n && window.i18n.t('common.desktopOnly') !== 'common.desktopOnly') {
+        run();
+      } else {
+        window.addEventListener('i18n:ready', run, { once: true });
+      }
     })();
   </script>
   <script src="../js/scroll.js"></script>

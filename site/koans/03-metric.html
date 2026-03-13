@@ -11,6 +11,7 @@
   <link rel="manifest" href="../site.webmanifest">
   <meta name="theme-color" content="#0a0e14">
   <link rel="stylesheet" href="../css/shared.css">
+  <script src="../js/i18n.js"></script>
   <style>
     /* Event stream console */
     .event-console {
@@ -358,15 +359,15 @@
 <body>
   <div class="mobile-gate">
     <div class="mobile-gate-icon">&#9776;</div>
-    <div class="mobile-gate-title">Desktop Only</div>
-    <div class="mobile-gate-text">These koans require a larger screen. Please visit on a desktop browser.</div>
+    <div class="mobile-gate-title" data-i18n="common.desktopOnly">Desktop Only</div>
+    <div class="mobile-gate-text" data-i18n="common.desktopOnlyText">These koans require a larger screen. Please visit on a desktop browser.</div>
   </div>
 
   <div class="koan-page">
 
-    <h1 class="koan-title">Too Many to Hold</h1>
+    <h1 class="koan-title" data-i18n="koan03.title">Too Many to Hold</h1>
 
-    <div class="koan-text">
+    <div class="koan-text" data-i18n-html="koan03.zen">
       The system speaks. But a thousand events pour out every second.<br>
       Too many to hold. But if you count them, a pattern appears.
     </div>
@@ -374,22 +375,22 @@
     <!-- Raw event stream -->
     <div class="event-console" id="eventConsole">
       <div class="event-console-header">
-        <span>checkout-svc - live event stream</span>
-        <span class="event-count" id="eventCount">0 events</span>
+        <span data-i18n="koan03.consoleHeader">checkout-svc - live event stream</span>
+        <span class="event-count" id="eventCount" data-i18n="koan03.eventCountZero">0 events</span>
       </div>
       <div class="event-console-body" id="eventStream"></div>
     </div>
 
     <!-- Challenge: the learner is asked to make sense of the chaos -->
     <div class="challenge-prompt" id="challenge">
-      <p>The system is getting slow. Is it getting worse?</p>
-      <div class="challenge-sub">Can you tell from this stream of events?</div>
-      <button class="summarize-btn" id="summarizeBtn">Count events per second</button>
+      <p data-i18n="koan03.challengeText">The system is getting slow. Is it getting worse?</p>
+      <div class="challenge-sub" data-i18n="koan03.challengeSub">Can you tell from this stream of events?</div>
+      <button class="summarize-btn" id="summarizeBtn" data-i18n="koan03.summarizeBtn">Count events per second</button>
     </div>
 
     <!-- Bar chart - hidden until the learner clicks summarize -->
     <div class="chart-container" id="chartContainer">
-      <div class="chart-container-header">what you built from the raw events</div>
+      <div class="chart-container-header" data-i18n="koan03.chartHeader">what you built from the raw events</div>
       <div class="chart-area">
         <svg class="chart-svg" id="chartSvg" viewBox="0 0 540 220" preserveAspectRatio="xMidYMid meet">
           <!-- Y axis gridlines and labels -->
@@ -404,7 +405,7 @@
           <text class="chart-axis-label" x="35" y="144" text-anchor="end">10</text>
           <text class="chart-axis-label" x="35" y="184" text-anchor="end">5</text>
           <!-- Y axis title -->
-          <text class="chart-axis-label" x="10" y="100" text-anchor="middle" transform="rotate(-90, 10, 100)" style="font-size: 10px;">events / sec</text>
+          <text class="chart-axis-label" id="chartYAxis" x="10" y="100" text-anchor="middle" transform="rotate(-90, 10, 100)" style="font-size: 10px;" data-i18n="koan03.chartYAxis">events / sec</text>
           <g id="barsGroup"></g>
           <g id="timeLabels"></g>
         </svg>
@@ -413,34 +414,34 @@
 
     <!-- Question 1 -->
     <div class="metric-question" id="q1">
-      <p>What just happened when you clicked that button?</p>
+      <p data-i18n="koan03.q1">What just happened when you clicked that button?</p>
       <div class="metric-options">
-        <button class="metric-opt" data-answer="wrong" data-fb="The events are still there. You didn't delete anything. Look at what appeared in their place.">The events were deleted</button>
-        <button class="metric-opt" data-answer="correct" data-fb="">The events were counted and measured over time intervals</button>
-        <button class="metric-opt" data-answer="wrong" data-fb="The system didn't change. You changed how you're looking at it, from individual events to aggregated counts.">The system sped up</button>
+        <button class="metric-opt" data-answer="wrong" data-fb-key="koan03.q1WrongA" data-fb="The events are still there. You didn't delete anything. Look at what appeared in their place." data-i18n="koan03.q1OptA">The events were deleted</button>
+        <button class="metric-opt" data-answer="correct" data-fb="" data-i18n="koan03.q1OptB">The events were counted and measured over time intervals</button>
+        <button class="metric-opt" data-answer="wrong" data-fb-key="koan03.q1WrongC" data-fb="The system didn't change. You changed how you're looking at it, from individual events to aggregated counts." data-i18n="koan03.q1OptC">The system sped up</button>
       </div>
       <div class="metric-fb" id="fb1"></div>
     </div>
 
     <!-- Question 2 -->
     <div class="metric-question" id="q2">
-      <p>What you just built, a number that measures something over time, has a name. What is it called?</p>
+      <p data-i18n="koan03.q2">What you just built, a number that measures something over time, has a name. What is it called?</p>
       <div class="metric-options">
-        <button class="metric-opt" data-answer="wrong" data-fb="A log captures individual events, but you just collapsed events into a summary number.">A log</button>
-        <button class="metric-opt" data-answer="correct" data-fb="">A metric</button>
-        <button class="metric-opt" data-answer="wrong" data-fb="A trace follows a single request through a system, but you just aggregated many requests into a count.">A trace</button>
+        <button class="metric-opt" data-answer="wrong" data-fb-key="koan03.q2WrongA" data-fb="A log captures individual events, but you just collapsed events into a summary number." data-i18n="koan03.q2OptA">A log</button>
+        <button class="metric-opt" data-answer="correct" data-fb="" data-i18n="koan03.q2OptB">A metric</button>
+        <button class="metric-opt" data-answer="wrong" data-fb-key="koan03.q2WrongC" data-fb="A trace follows a single request through a system, but you just aggregated many requests into a count." data-i18n="koan03.q2OptC">A trace</button>
       </div>
       <div class="metric-fb" id="fb2"></div>
     </div>
 
     <!-- Insight - the word "metric" appears here for the first time -->
     <div class="metric-insight" id="insight">
-      <span class="insight-keyword">Metric</span>
-      <p>A metric is a measurement captured over time.</p>
-      <p>It tells you how much, how fast, how often: the vital signs of a system.</p>
-      <p>You didn't just learn what a metric is. You built one.</p>
+      <span class="insight-keyword" data-i18n="koan03.insightKeyword">Metric</span>
+      <p data-i18n="koan03.insightLine1">A metric is a measurement captured over time.</p>
+      <p data-i18n="koan03.insightLine2">It tells you how much, how fast, how often: the vital signs of a system.</p>
+      <p data-i18n="koan03.insightLine3">You didn't just learn what a metric is. You built one.</p>
       <br>
-      <a href="04-metric-types.html">Continue &rarr;</a>
+      <a href="04-metric-types.html" data-i18n="common.continue">Continue &rarr;</a>
     </div>
   </div>
 
@@ -450,276 +451,285 @@
 
   <script>
     (function () {
-      // --- Elements ---
-      var eventConsole = document.getElementById('eventConsole');
-      var eventStream = document.getElementById('eventStream');
-      var eventCountEl = document.getElementById('eventCount');
-      var challenge = document.getElementById('challenge');
-      var summarizeBtn = document.getElementById('summarizeBtn');
-      var chartContainer = document.getElementById('chartContainer');
-      var barsGroup = document.getElementById('barsGroup');
-      var timeLabelsGroup = document.getElementById('timeLabels');
+      function run() {
+        // --- Elements ---
+        var eventConsole = document.getElementById('eventConsole');
+        var eventStream = document.getElementById('eventStream');
+        var eventCountEl = document.getElementById('eventCount');
+        var challenge = document.getElementById('challenge');
+        var summarizeBtn = document.getElementById('summarizeBtn');
+        var chartContainer = document.getElementById('chartContainer');
+        var barsGroup = document.getElementById('barsGroup');
+        var timeLabelsGroup = document.getElementById('timeLabels');
 
-      // --- Event generation data ---
-      var methods = ['GET', 'GET', 'GET', 'POST', 'GET', 'POST', 'GET', 'GET', 'DELETE', 'PUT'];
-      var paths = [
-        '/checkout', '/api/cart', '/checkout', '/api/order',
-        '/checkout/confirm', '/api/payment', '/api/cart/items',
-        '/checkout', '/api/cart/item/7', '/api/order/status'
-      ];
-      var baseTime = { h: 10, m: 42, s: 0 };
-      var eventCount = 0;
-      var streamTimer = null;
-      var eventBuffer = []; // tracks events per 1-second bucket
-      var bucketCounts = []; // final counts per second for chart
+        // --- Event generation data ---
+        var methods = ['GET', 'GET', 'GET', 'POST', 'GET', 'POST', 'GET', 'GET', 'DELETE', 'PUT'];
+        var paths = [
+          '/checkout', '/api/cart', '/checkout', '/api/order',
+          '/checkout/confirm', '/api/payment', '/api/cart/items',
+          '/checkout', '/api/cart/item/7', '/api/order/status'
+        ];
+        var baseTime = { h: 10, m: 42, s: 0 };
+        var eventCount = 0;
+        var streamTimer = null;
+        var eventBuffer = []; // tracks events per 1-second bucket
+        var bucketCounts = []; // final counts per second for chart
 
-      // Rising pattern: events per second increases over 10 seconds
-      // Each entry is how many events to fire in that 1-second window
-      var eventsPerSecond = [5, 7, 8, 10, 12, 13, 16, 18, 20, 23];
-      var currentSecond = 0;
-      var eventsThisSecond = 0;
+        // Rising pattern: events per second increases over 10 seconds
+        // Each entry is how many events to fire in that 1-second window
+        var eventsPerSecond = [5, 7, 8, 10, 12, 13, 16, 18, 20, 23];
+        var currentSecond = 0;
+        var eventsThisSecond = 0;
 
-      function formatTime(sec) {
-        var totalSec = baseTime.s + sec;
-        var m = baseTime.m + Math.floor(totalSec / 60);
-        var s = totalSec % 60;
-        return String(baseTime.h).padStart(2, '0') + ':' +
-               String(m).padStart(2, '0') + ':' +
-               String(s).padStart(2, '0');
-      }
-
-      function randomDuration(sec) {
-        // Later seconds get slower responses on average
-        var base = 60 + sec * 15;
-        var jitter = Math.floor(Math.random() * 120);
-        return base + jitter;
-      }
-
-      function randomStatus(dur) {
-        if (dur > 250) return { code: dur > 350 ? 503 : 200, slow: dur > 200 };
-        return { code: 200, slow: false };
-      }
-
-      function addEventLine(sec) {
-        var method = methods[Math.floor(Math.random() * methods.length)];
-        var path = paths[Math.floor(Math.random() * paths.length)];
-        var dur = randomDuration(sec);
-        var status = randomStatus(dur);
-
-        var line = document.createElement('div');
-        line.className = 'event-line';
-
-        var ts = document.createElement('span');
-        ts.className = 'event-ts';
-        ts.textContent = formatTime(sec);
-
-        var meth = document.createElement('span');
-        meth.className = 'event-method';
-        meth.textContent = method;
-
-        var p = document.createElement('span');
-        p.className = 'event-path';
-        p.textContent = path;
-
-        var st = document.createElement('span');
-        st.className = status.code === 503 ? 'event-status-err' : (status.slow ? 'event-status-slow' : 'event-status-ok');
-        st.textContent = status.code;
-
-        var d = document.createElement('span');
-        d.className = 'event-dur';
-        d.textContent = dur + 'ms';
-
-        line.appendChild(ts);
-        line.appendChild(meth);
-        line.appendChild(p);
-        line.appendChild(st);
-        line.appendChild(d);
-
-        eventStream.appendChild(line);
-
-        // Keep scroll at bottom, but only show last ~22 lines worth
-        var lines = eventStream.querySelectorAll('.event-line');
-        if (lines.length > 40) {
-          eventStream.removeChild(lines[0]);
+        function formatTime(sec) {
+          var totalSec = baseTime.s + sec;
+          var m = baseTime.m + Math.floor(totalSec / 60);
+          var s = totalSec % 60;
+          return String(baseTime.h).padStart(2, '0') + ':' +
+                 String(m).padStart(2, '0') + ':' +
+                 String(s).padStart(2, '0');
         }
-        eventStream.scrollTop = eventStream.scrollHeight;
 
-        eventCount++;
-        eventCountEl.textContent = eventCount + ' events';
-      }
+        function randomDuration(sec) {
+          // Later seconds get slower responses on average
+          var base = 60 + sec * 15;
+          var jitter = Math.floor(Math.random() * 120);
+          return base + jitter;
+        }
 
-      // --- Stream events with rising frequency ---
-      function startStream() {
-        currentSecond = 0;
-        eventsThisSecond = 0;
-        bucketCounts = [];
+        function randomStatus(dur) {
+          if (dur > 250) return { code: dur > 350 ? 503 : 200, slow: dur > 200 };
+          return { code: 200, slow: false };
+        }
 
-        function scheduleSecond() {
-          if (currentSecond >= eventsPerSecond.length) {
-            // Done streaming - show challenge
-            setTimeout(function () {
-              challenge.classList.add('visible');
-            }, 600);
-            return;
+        function addEventLine(sec) {
+          var method = methods[Math.floor(Math.random() * methods.length)];
+          var path = paths[Math.floor(Math.random() * paths.length)];
+          var dur = randomDuration(sec);
+          var status = randomStatus(dur);
+
+          var line = document.createElement('div');
+          line.className = 'event-line';
+
+          var ts = document.createElement('span');
+          ts.className = 'event-ts';
+          ts.textContent = formatTime(sec);
+
+          var meth = document.createElement('span');
+          meth.className = 'event-method';
+          meth.textContent = method;
+
+          var p = document.createElement('span');
+          p.className = 'event-path';
+          p.textContent = path;
+
+          var st = document.createElement('span');
+          st.className = status.code === 503 ? 'event-status-err' : (status.slow ? 'event-status-slow' : 'event-status-ok');
+          st.textContent = status.code;
+
+          var d = document.createElement('span');
+          d.className = 'event-dur';
+          d.textContent = dur + 'ms';
+
+          line.appendChild(ts);
+          line.appendChild(meth);
+          line.appendChild(p);
+          line.appendChild(st);
+          line.appendChild(d);
+
+          eventStream.appendChild(line);
+
+          // Keep scroll at bottom, but only show last ~22 lines worth
+          var lines = eventStream.querySelectorAll('.event-line');
+          if (lines.length > 40) {
+            eventStream.removeChild(lines[0]);
+          }
+          eventStream.scrollTop = eventStream.scrollHeight;
+
+          eventCount++;
+          var tmpl = i18n.t('koan03.eventCountTemplate');
+          eventCountEl.textContent = tmpl.replace('{count}', eventCount);
+        }
+
+        // --- Stream events with rising frequency ---
+        function startStream() {
+          currentSecond = 0;
+          eventsThisSecond = 0;
+          bucketCounts = [];
+
+          function scheduleSecond() {
+            if (currentSecond >= eventsPerSecond.length) {
+              // Done streaming - show challenge
+              setTimeout(function () {
+                challenge.classList.add('visible');
+              }, 600);
+              return;
+            }
+
+            var count = eventsPerSecond[currentSecond];
+            var sec = currentSecond;
+            bucketCounts.push(count);
+            eventsThisSecond = 0;
+
+            // Spread events across the 1-second window
+            var interval = Math.floor(900 / count); // leave 100ms gap
+            var eventTimer = setInterval(function () {
+              addEventLine(sec);
+              eventsThisSecond++;
+              if (eventsThisSecond >= count) {
+                clearInterval(eventTimer);
+              }
+            }, interval);
+
+            currentSecond++;
+            streamTimer = setTimeout(scheduleSecond, 1000);
           }
 
-          var count = eventsPerSecond[currentSecond];
-          var sec = currentSecond;
-          bucketCounts.push(count);
-          eventsThisSecond = 0;
-
-          // Spread events across the 1-second window
-          var interval = Math.floor(900 / count); // leave 100ms gap
-          var eventTimer = setInterval(function () {
-            addEventLine(sec);
-            eventsThisSecond++;
-            if (eventsThisSecond >= count) {
-              clearInterval(eventTimer);
-            }
-          }, interval);
-
-          currentSecond++;
-          streamTimer = setTimeout(scheduleSecond, 1000);
+          scheduleSecond();
         }
 
-        scheduleSecond();
-      }
+        // --- Build the bar chart from bucketCounts ---
+        function buildChart() {
+          var chartLeft = 45;
+          var chartRight = 520;
+          var chartTop = 20;
+          var chartBottom = 180;
+          var chartHeight = chartBottom - chartTop;
+          var maxVal = 25;
+          var barCount = bucketCounts.length;
+          var gap = 6;
+          var barWidth = (chartRight - chartLeft) / barCount - gap;
 
-      // --- Build the bar chart from bucketCounts ---
-      function buildChart() {
-        var chartLeft = 45;
-        var chartRight = 520;
-        var chartTop = 20;
-        var chartBottom = 180;
-        var chartHeight = chartBottom - chartTop;
-        var maxVal = 25;
-        var barCount = bucketCounts.length;
-        var gap = 6;
-        var barWidth = (chartRight - chartLeft) / barCount - gap;
+          bucketCounts.forEach(function (val, i) {
+            var barHeight = (val / maxVal) * chartHeight;
+            var x = chartLeft + i * ((chartRight - chartLeft) / barCount) + gap / 2;
+            var y = chartBottom - barHeight;
 
-        bucketCounts.forEach(function (val, i) {
-          var barHeight = (val / maxVal) * chartHeight;
-          var x = chartLeft + i * ((chartRight - chartLeft) / barCount) + gap / 2;
-          var y = chartBottom - barHeight;
+            var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            rect.setAttribute('x', x);
+            rect.setAttribute('width', barWidth);
+            rect.setAttribute('rx', '2');
+            rect.setAttribute('fill', 'var(--accent-orange)');
 
-          var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-          rect.setAttribute('x', x);
-          rect.setAttribute('width', barWidth);
-          rect.setAttribute('rx', '2');
-          rect.setAttribute('fill', 'var(--accent-orange)');
+            // Start from bottom with zero height for animation
+            rect.setAttribute('y', chartBottom);
+            rect.setAttribute('height', 0);
+            rect.setAttribute('opacity', '0');
+            barsGroup.appendChild(rect);
 
-          // Start from bottom with zero height for animation
-          rect.setAttribute('y', chartBottom);
-          rect.setAttribute('height', 0);
-          rect.setAttribute('opacity', '0');
-          barsGroup.appendChild(rect);
+            // Stagger the animation
+            (function (rect, y, barHeight, delay) {
+              setTimeout(function () {
+                var startTime = null;
+                var duration = 400;
+                function animate(time) {
+                  if (!startTime) startTime = time;
+                  var progress = Math.min((time - startTime) / duration, 1);
+                  var eased = 1 - Math.pow(1 - progress, 3);
+                  var h = barHeight * eased;
+                  rect.setAttribute('y', chartBottom - h);
+                  rect.setAttribute('height', h);
+                  rect.setAttribute('opacity', String(0.75 * eased));
+                  if (progress < 1) requestAnimationFrame(animate);
+                }
+                requestAnimationFrame(animate);
+              }, delay);
+            })(rect, y, barHeight, i * 120);
 
-          // Stagger the animation
-          (function (rect, y, barHeight, delay) {
-            setTimeout(function () {
-              var startTime = null;
-              var duration = 400;
-              function animate(time) {
-                if (!startTime) startTime = time;
-                var progress = Math.min((time - startTime) / duration, 1);
-                var eased = 1 - Math.pow(1 - progress, 3);
-                var h = barHeight * eased;
-                rect.setAttribute('y', chartBottom - h);
-                rect.setAttribute('height', h);
-                rect.setAttribute('opacity', String(0.75 * eased));
-                if (progress < 1) requestAnimationFrame(animate);
-              }
-              requestAnimationFrame(animate);
-            }, delay);
-          })(rect, y, barHeight, i * 120);
+            // Time label
+            var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('class', 'chart-time-label');
+            text.setAttribute('x', x + barWidth / 2);
+            text.setAttribute('y', chartBottom + 14);
+            text.textContent = ':' + String(i).padStart(2, '0');
+            timeLabelsGroup.appendChild(text);
 
-          // Time label
-          var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-          text.setAttribute('class', 'chart-time-label');
-          text.setAttribute('x', x + barWidth / 2);
-          text.setAttribute('y', chartBottom + 14);
-          text.textContent = ':' + String(i).padStart(2, '0');
-          timeLabelsGroup.appendChild(text);
+            // Value label on top of bar
+            var valText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            valText.setAttribute('class', 'chart-axis-label');
+            valText.setAttribute('x', x + barWidth / 2);
+            valText.setAttribute('y', y - 4);
+            valText.setAttribute('text-anchor', 'middle');
+            valText.setAttribute('fill', 'var(--accent-orange)');
+            valText.setAttribute('opacity', '0');
+            valText.textContent = val;
+            barsGroup.appendChild(valText);
 
-          // Value label on top of bar
-          var valText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-          valText.setAttribute('class', 'chart-axis-label');
-          valText.setAttribute('x', x + barWidth / 2);
-          valText.setAttribute('y', y - 4);
-          valText.setAttribute('text-anchor', 'middle');
-          valText.setAttribute('fill', 'var(--accent-orange)');
-          valText.setAttribute('opacity', '0');
-          valText.textContent = val;
-          barsGroup.appendChild(valText);
-
-          (function (valText, delay) {
-            setTimeout(function () {
-              valText.setAttribute('opacity', '1');
-            }, delay + 400);
-          })(valText, i * 120);
-        });
-      }
-
-      // --- Summarize button: collapse events, show chart ---
-      summarizeBtn.addEventListener('click', function () {
-        // Collapse the event console
-        eventConsole.classList.add('collapsing');
-
-        // Hide the challenge prompt
-        challenge.style.transition = 'opacity 0.4s';
-        challenge.style.opacity = '0';
-        challenge.style.pointerEvents = 'none';
-
-        // Show chart after collapse animation
-        setTimeout(function () {
-          chartContainer.classList.add('visible');
-          buildChart();
-        }, 500);
-
-        // Show Q1 after chart is drawn
-        setTimeout(function () {
-          document.getElementById('q1').classList.add('visible');
-        }, 2000);
-      });
-
-      // --- Quiz logic with per-option wrong feedback ---
-      function setupQuiz(qId, fbId, nextAction) {
-        var q = document.getElementById(qId);
-        var fb = document.getElementById(fbId);
-        var opts = q.querySelectorAll('.metric-opt');
-
-        opts.forEach(function (opt) {
-          opt.addEventListener('click', function () {
-            if (this.dataset.answer === 'correct') {
-              this.classList.add('correct');
-              opts.forEach(function (o) { o.classList.add('disabled'); });
-              fb.textContent = '';
-              fb.className = 'metric-fb metric-fb--correct';
-              if (typeof nextAction === 'function') {
-                setTimeout(nextAction, 800);
-              }
-            } else {
-              this.classList.add('wrong');
-              fb.textContent = this.dataset.fb;
-              fb.className = 'metric-fb metric-fb--wrong';
-              var self = this;
-              setTimeout(function () { self.classList.remove('wrong'); }, 1200);
-            }
+            (function (valText, delay) {
+              setTimeout(function () {
+                valText.setAttribute('opacity', '1');
+              }, delay + 400);
+            })(valText, i * 120);
           });
+        }
+
+        // --- Summarize button: collapse events, show chart ---
+        summarizeBtn.addEventListener('click', function () {
+          // Collapse the event console
+          eventConsole.classList.add('collapsing');
+
+          // Hide the challenge prompt
+          challenge.style.transition = 'opacity 0.4s';
+          challenge.style.opacity = '0';
+          challenge.style.pointerEvents = 'none';
+
+          // Show chart after collapse animation
+          setTimeout(function () {
+            chartContainer.classList.add('visible');
+            buildChart();
+          }, 500);
+
+          // Show Q1 after chart is drawn
+          setTimeout(function () {
+            document.getElementById('q1').classList.add('visible');
+          }, 2000);
         });
+
+        // --- Quiz logic with per-option wrong feedback ---
+        function setupQuiz(qId, fbId, nextAction) {
+          var q = document.getElementById(qId);
+          var fb = document.getElementById(fbId);
+          var opts = q.querySelectorAll('.metric-opt');
+
+          opts.forEach(function (opt) {
+            opt.addEventListener('click', function () {
+              if (this.dataset.answer === 'correct') {
+                this.classList.add('correct');
+                opts.forEach(function (o) { o.classList.add('disabled'); });
+                fb.textContent = '';
+                fb.className = 'metric-fb metric-fb--correct';
+                if (typeof nextAction === 'function') {
+                  setTimeout(nextAction, 800);
+                }
+              } else {
+                this.classList.add('wrong');
+                var fbKey = this.dataset.fbKey;
+                fb.textContent = fbKey ? i18n.t(fbKey) : this.dataset.fb;
+                fb.className = 'metric-fb metric-fb--wrong';
+                var self = this;
+                setTimeout(function () { self.classList.remove('wrong'); }, 1200);
+              }
+            });
+          });
+        }
+
+        setupQuiz('q1', 'fb1', function () {
+          document.getElementById('q2').classList.add('visible');
+        });
+
+        setupQuiz('q2', 'fb2', function () {
+          document.getElementById('insight').classList.add('visible');
+        });
+
+        // --- Start the event stream immediately on page load ---
+        startStream();
       }
 
-      setupQuiz('q1', 'fb1', function () {
-        document.getElementById('q2').classList.add('visible');
-      });
-
-      setupQuiz('q2', 'fb2', function () {
-        document.getElementById('insight').classList.add('visible');
-      });
-
-      // --- Start the event stream immediately on page load ---
-      startStream();
-
+      if (window.i18n && window.i18n.t('common.desktopOnly') !== 'common.desktopOnly') {
+        run();
+      } else {
+        window.addEventListener('i18n:ready', run, { once: true });
+      }
     })();
   </script>
   <script src="../js/scroll.js"></script>

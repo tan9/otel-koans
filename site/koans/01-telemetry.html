@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Koan 1 - OpenTelemetry Koans</title>
+  <title data-i18n="koan01.pageTitle">Koan 1 - OpenTelemetry Koans</title>
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon-16x16.png">
@@ -11,6 +11,7 @@
   <link rel="manifest" href="../site.webmanifest">
   <meta name="theme-color" content="#0a0e14">
   <link rel="stylesheet" href="../css/shared.css">
+  <script src="../js/i18n.js"></script>
   <style>
     .scenario-banner {
       background: rgba(248, 81, 73, 0.06);
@@ -327,33 +328,33 @@
 <body>
   <div class="mobile-gate">
     <div class="mobile-gate-icon">&#9776;</div>
-    <div class="mobile-gate-title">Desktop Only</div>
-    <div class="mobile-gate-text">These koans require a larger screen. Please visit on a desktop browser.</div>
+    <div class="mobile-gate-title" data-i18n="common.desktopOnly">Desktop Only</div>
+    <div class="mobile-gate-text" data-i18n="common.desktopOnlyText">These koans require a larger screen. Please visit on a desktop browser.</div>
   </div>
 
   <div class="koan-page">
 
-    <h1 class="koan-title">The Silent Failure</h1>
+    <h1 class="koan-title" data-i18n="koan01.title">The Silent Failure</h1>
 
-    <div class="koan-text">
+    <div class="koan-text" data-i18n-html="koan01.zen">
       Two systems run the same code.<br>
       One fails in silence. The other fails and tells you why.
     </div>
 
     <!-- Failure scenario -->
     <div class="scenario-banner">
-      <p>A user reports: "Checkout is broken. I can't place an order."</p>
+      <p data-i18n="koan01.scenarioBanner">A user reports: "Checkout is broken. I can't place an order."</p>
     </div>
 
-    <div class="koan-instruction">Click each system to investigate the failure.</div>
+    <div class="koan-instruction" data-i18n="koan01.instruction">Click each system to investigate the failure.</div>
 
     <!-- Two systems side by side -->
     <div class="telem-scene">
       <!-- System A - silent -->
       <div class="telem-card" id="card-a" data-system="a">
         <div class="telem-card-header">
-          <span>System A</span>
-          <span class="click-hint">click to investigate</span>
+          <span data-i18n="koan01.systemA">System A</span>
+          <span class="click-hint" data-i18n="koan01.clickHint">click to investigate</span>
         </div>
         <div class="telem-card-body">
           <div class="service-stack">
@@ -370,8 +371,8 @@
       <!-- System B - speaking -->
       <div class="telem-card" id="card-b" data-system="b">
         <div class="telem-card-header">
-          <span>System B</span>
-          <span class="click-hint">click to investigate</span>
+          <span data-i18n="koan01.systemB">System B</span>
+          <span class="click-hint" data-i18n="koan01.clickHint">click to investigate</span>
         </div>
         <div class="telem-card-body">
           <div class="service-stack">
@@ -388,32 +389,32 @@
 
     <!-- Q1: Which system can you debug? (hidden until both investigated) -->
     <div class="telem-question" id="question1">
-      <p>Which system can you actually debug?</p>
+      <p data-i18n="koan01.q1">Which system can you actually debug?</p>
       <div class="telem-options">
-        <button class="telem-option" data-answer="wrong" data-system="a">System A</button>
-        <button class="telem-option" data-answer="correct" data-system="b">System B</button>
+        <button class="telem-option" data-answer="wrong" data-system="a" data-i18n="koan01.q1OptA">System A</button>
+        <button class="telem-option" data-answer="correct" data-system="b" data-i18n="koan01.q1OptB">System B</button>
       </div>
       <div class="telem-feedback" id="feedback1"></div>
     </div>
 
     <!-- Q2: What is this data called? (hidden until Q1 correct) -->
     <div class="telem-question" id="question2">
-      <p>System B emits data about itself. System A does not.<br>
+      <p data-i18n-html="koan01.q2">System B emits data about itself. System A does not.<br>
       What is the data that System B emits called?</p>
       <div class="telem-options">
-        <button class="telem-option" data-answer="wrong" data-label="debug">Debugging output</button>
-        <button class="telem-option" data-answer="correct" data-label="telemetry">Telemetry</button>
-        <button class="telem-option" data-answer="wrong" data-label="logs">Error logs</button>
+        <button class="telem-option" data-answer="wrong" data-label="debug" data-i18n="koan01.q2OptDebug">Debugging output</button>
+        <button class="telem-option" data-answer="correct" data-label="telemetry" data-i18n="koan01.q2OptTelemetry">Telemetry</button>
+        <button class="telem-option" data-answer="wrong" data-label="logs" data-i18n="koan01.q2OptLogs">Error logs</button>
       </div>
       <div class="telem-feedback" id="feedback2"></div>
     </div>
 
     <!-- Final insight - the label revealed LAST -->
     <div class="telem-insight" id="insight">
-      <div class="insight-label">Telemetry</div>
-      <p>Data a system emits about itself.</p>
-      <p>Without it, a system is a black box. With it, you can see inside.</p>
-      <a href="02-three-signals.html">Continue &rarr;</a>
+      <div class="insight-label" data-i18n="koan01.insightLabel">Telemetry</div>
+      <p data-i18n="koan01.insightP1">Data a system emits about itself.</p>
+      <p data-i18n="koan01.insightP2">Without it, a system is a black box. With it, you can see inside.</p>
+      <a href="02-three-signals.html" data-i18n="common.continue">Continue &rarr;</a>
     </div>
   </div>
 
@@ -423,127 +424,134 @@
 
   <script>
     (function () {
-      var investigatedA = false;
-      var investigatedB = false;
+      function run() {
+        var investigatedA = false;
+        var investigatedB = false;
 
-      var cardA = document.getElementById('card-a');
-      var cardB = document.getElementById('card-b');
-      var resultA = document.getElementById('result-a');
-      var resultB = document.getElementById('result-b');
+        var cardA = document.getElementById('card-a');
+        var cardB = document.getElementById('card-b');
+        var resultA = document.getElementById('result-a');
+        var resultB = document.getElementById('result-b');
 
-      // Click System A - reveal nothing
-      cardA.addEventListener('click', function () {
-        if (investigatedA) return;
-        investigatedA = true;
-        cardA.classList.add('investigated');
+        // Click System A - reveal nothing
+        cardA.addEventListener('click', function () {
+          if (investigatedA) return;
+          investigatedA = true;
+          cardA.classList.add('investigated');
 
-        resultA.innerHTML =
-          '<div class="no-data">' +
-            '<div class="no-data-icon">&#8709;</div>' +
-            '<div>No data available.</div>' +
-            '<div style="margin-top:0.5rem;"><span class="data-dim">$</span>&nbsp;<span class="blink">_</span></div>' +
-          '</div>';
+          resultA.innerHTML =
+            '<div class="no-data">' +
+              '<div class="no-data-icon">&#8709;</div>' +
+              '<div>' + i18n.t('koan01.noData') + '</div>' +
+              '<div style="margin-top:0.5rem;"><span class="data-dim">$</span>&nbsp;<span class="blink">_</span></div>' +
+            '</div>';
 
-        checkBothInvestigated();
-      });
-
-      // Click System B - reveal rich data, line by line
-      cardB.addEventListener('click', function () {
-        if (investigatedB) return;
-        investigatedB = true;
-        cardB.classList.add('investigated');
-        cardB.classList.add('revealed');
-
-        resultB.innerHTML =
-          '<div class="rich-data">' +
-            '<div class="data-line data-trace" data-delay="200">POST /checkout &nbsp;<span class="data-dim">trace=a7f3</span></div>' +
-            '<div class="data-line data-metric" data-delay="700">latency: 142ms &nbsp;<span class="data-dim">status=200</span></div>' +
-            '<div class="data-line data-trace" data-delay="1200">POST /checkout &nbsp;<span class="data-dim">trace=b902</span></div>' +
-            '<div class="data-line data-metric" data-delay="1700">latency: 2,340ms &nbsp;<span class="data-dim">status=200 (slow)</span></div>' +
-            '<div class="data-line data-error" data-delay="2200">ERROR: connection pool exhausted &nbsp;<span class="data-dim">db=orders</span></div>' +
-            '<div class="data-line data-error" data-delay="2700">POST /checkout 503 &nbsp;<span class="data-dim">trace=c1d8</span></div>' +
-          '</div>';
-
-        var lines = resultB.querySelectorAll('.data-line');
-        lines.forEach(function (line) {
-          var delay = parseInt(line.dataset.delay, 10);
-          setTimeout(function () {
-            line.classList.add('visible');
-          }, delay);
+          checkBothInvestigated();
         });
 
-        checkBothInvestigated();
-      });
+        // Click System B - reveal rich data, line by line
+        cardB.addEventListener('click', function () {
+          if (investigatedB) return;
+          investigatedB = true;
+          cardB.classList.add('investigated');
+          cardB.classList.add('revealed');
 
-      // Show Q1 only after both systems have been clicked
-      function checkBothInvestigated() {
-        if (investigatedA && investigatedB) {
-          setTimeout(function () {
-            document.getElementById('question1').classList.add('visible');
-          }, investigatedB ? 3200 : 400);
-          // wait for System B animation if B was clicked second
+          resultB.innerHTML =
+            '<div class="rich-data">' +
+              '<div class="data-line data-trace" data-delay="200">' + i18n.t('koan01.dataLine1') + ' &nbsp;<span class="data-dim">' + i18n.t('koan01.dataLine1Dim') + '</span></div>' +
+              '<div class="data-line data-metric" data-delay="700">' + i18n.t('koan01.dataLine2') + ' &nbsp;<span class="data-dim">' + i18n.t('koan01.dataLine2Dim') + '</span></div>' +
+              '<div class="data-line data-trace" data-delay="1200">' + i18n.t('koan01.dataLine3') + ' &nbsp;<span class="data-dim">' + i18n.t('koan01.dataLine3Dim') + '</span></div>' +
+              '<div class="data-line data-metric" data-delay="1700">' + i18n.t('koan01.dataLine4') + ' &nbsp;<span class="data-dim">' + i18n.t('koan01.dataLine4Dim') + '</span></div>' +
+              '<div class="data-line data-error" data-delay="2200">' + i18n.t('koan01.dataLine5') + ' &nbsp;<span class="data-dim">' + i18n.t('koan01.dataLine5Dim') + '</span></div>' +
+              '<div class="data-line data-error" data-delay="2700">' + i18n.t('koan01.dataLine6') + ' &nbsp;<span class="data-dim">' + i18n.t('koan01.dataLine6Dim') + '</span></div>' +
+            '</div>';
+
+          var lines = resultB.querySelectorAll('.data-line');
+          lines.forEach(function (line) {
+            var delay = parseInt(line.dataset.delay, 10);
+            setTimeout(function () {
+              line.classList.add('visible');
+            }, delay);
+          });
+
+          checkBothInvestigated();
+        });
+
+        // Show Q1 only after both systems have been clicked
+        function checkBothInvestigated() {
+          if (investigatedA && investigatedB) {
+            setTimeout(function () {
+              document.getElementById('question1').classList.add('visible');
+            }, investigatedB ? 3200 : 400);
+            // wait for System B animation if B was clicked second
+          }
         }
+
+        // Q1 logic
+        (function () {
+          var q = document.getElementById('question1');
+          var fb = document.getElementById('feedback1');
+          var opts = q.querySelectorAll('.telem-option');
+
+          opts.forEach(function (opt) {
+            opt.addEventListener('click', function () {
+              if (this.dataset.answer === 'correct') {
+                this.classList.add('correct');
+                opts.forEach(function (o) { o.classList.add('disabled'); });
+                fb.textContent = i18n.t('koan01.q1Correct');
+                fb.className = 'telem-feedback telem-feedback--correct';
+                setTimeout(function () {
+                  document.getElementById('question2').classList.add('visible');
+                }, 900);
+              } else {
+                this.classList.add('wrong');
+                fb.textContent = i18n.t('koan01.q1Wrong');
+                fb.className = 'telem-feedback telem-feedback--wrong';
+                var self = this;
+                setTimeout(function () { self.classList.remove('wrong'); }, 600);
+              }
+            });
+          });
+        })();
+
+        // Q2 logic - specific feedback per wrong answer
+        (function () {
+          var q = document.getElementById('question2');
+          var fb = document.getElementById('feedback2');
+          var opts = q.querySelectorAll('.telem-option');
+
+          var wrongMessages = {
+            debug: i18n.t('koan01.q2WrongDebug'),
+            logs: i18n.t('koan01.q2WrongLogs')
+          };
+
+          opts.forEach(function (opt) {
+            opt.addEventListener('click', function () {
+              if (this.dataset.answer === 'correct') {
+                this.classList.add('correct');
+                opts.forEach(function (o) { o.classList.add('disabled'); });
+                fb.textContent = i18n.t('koan01.q2Correct');
+                fb.className = 'telem-feedback telem-feedback--correct';
+                setTimeout(function () {
+                  document.getElementById('insight').classList.add('visible');
+                }, 800);
+              } else {
+                this.classList.add('wrong');
+                fb.textContent = wrongMessages[this.dataset.label] || i18n.t('koan01.q2WrongFallback');
+                fb.className = 'telem-feedback telem-feedback--wrong';
+                var self = this;
+                setTimeout(function () { self.classList.remove('wrong'); }, 600);
+              }
+            });
+          });
+        })();
       }
 
-      // Q1 logic
-      (function () {
-        var q = document.getElementById('question1');
-        var fb = document.getElementById('feedback1');
-        var opts = q.querySelectorAll('.telem-option');
-
-        opts.forEach(function (opt) {
-          opt.addEventListener('click', function () {
-            if (this.dataset.answer === 'correct') {
-              this.classList.add('correct');
-              opts.forEach(function (o) { o.classList.add('disabled'); });
-              fb.textContent = 'System B gives you data to work with. System A gives you nothing.';
-              fb.className = 'telem-feedback telem-feedback--correct';
-              setTimeout(function () {
-                document.getElementById('question2').classList.add('visible');
-              }, 900);
-            } else {
-              this.classList.add('wrong');
-              fb.textContent = 'System A gave you nothing when you clicked it. You can\u2019t debug what you can\u2019t see.';
-              fb.className = 'telem-feedback telem-feedback--wrong';
-              var self = this;
-              setTimeout(function () { self.classList.remove('wrong'); }, 600);
-            }
-          });
-        });
-      })();
-
-      // Q2 logic - specific feedback per wrong answer
-      (function () {
-        var q = document.getElementById('question2');
-        var fb = document.getElementById('feedback2');
-        var opts = q.querySelectorAll('.telem-option');
-
-        var wrongMessages = {
-          debug: 'Debugging output is something a developer reads during development. This data is emitted continuously by the running system itself, in production, all the time.',
-          logs: 'Error logs are one type of this data, but System B also showed latency numbers and request traces. The answer is broader than just logs.'
-        };
-
-        opts.forEach(function (opt) {
-          opt.addEventListener('click', function () {
-            if (this.dataset.answer === 'correct') {
-              this.classList.add('correct');
-              opts.forEach(function (o) { o.classList.add('disabled'); });
-              fb.textContent = 'Correct.';
-              fb.className = 'telem-feedback telem-feedback--correct';
-              setTimeout(function () {
-                document.getElementById('insight').classList.add('visible');
-              }, 800);
-            } else {
-              this.classList.add('wrong');
-              fb.textContent = wrongMessages[this.dataset.label] || 'Not quite.';
-              fb.className = 'telem-feedback telem-feedback--wrong';
-              var self = this;
-              setTimeout(function () { self.classList.remove('wrong'); }, 600);
-            }
-          });
-        });
-      })();
-
+      if (window.i18n && window.i18n.t('common.desktopOnly') !== 'common.desktopOnly') {
+        run();
+      } else {
+        window.addEventListener('i18n:ready', run, { once: true });
+      }
     })();
   </script>
   <script src="../js/scroll.js"></script>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Koan 7: The Missing Detail - OpenTelemetry Koans</title>
+  <title data-i18n="koan07.pageTitle">Koan 7: The Missing Detail - OpenTelemetry Koans</title>
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon-16x16.png">
@@ -11,6 +11,7 @@
   <link rel="manifest" href="../site.webmanifest">
   <meta name="theme-color" content="#0a0e14">
   <link rel="stylesheet" href="../css/shared.css">
+  <script src="../js/i18n.js"></script>
   <style>
     /* Failed span display */
     .failed-span {
@@ -306,15 +307,15 @@
 <body>
   <div class="mobile-gate">
     <div class="mobile-gate-icon">&#9776;</div>
-    <div class="mobile-gate-title">Desktop Only</div>
-    <div class="mobile-gate-text">These koans require a larger screen. Please visit on a desktop browser.</div>
+    <div class="mobile-gate-title" data-i18n="common.desktopOnly">Desktop Only</div>
+    <div class="mobile-gate-text" data-i18n="common.desktopOnlyText">These koans require a larger screen. Please visit on a desktop browser.</div>
   </div>
 
   <div class="koan-page">
 
-    <h1 class="koan-title">The Missing Detail</h1>
+    <h1 class="koan-title" data-i18n="koan07.title">The Missing Detail</h1>
 
-    <div class="koan-text">
+    <div class="koan-text" data-i18n-html="koan07.zen">
       The trace showed where. But what happened in that moment?<br>
       Something must have captured the details.
     </div>
@@ -322,9 +323,9 @@
     <!-- Failed span from a trace -->
     <div class="failed-span">
       <div class="failed-span-header">
-        <span>trace: order #8842</span>
-        <span>start: 10:42:17.204</span>
-        <span>trace_id: a1b2c3d4e5f6</span>
+        <span data-i18n="koan07.spanHeader">trace: order #8842</span>
+        <span data-i18n="koan07.spanStart">start: 10:42:17.204</span>
+        <span data-i18n="koan07.spanTraceId">trace_id: a1b2c3d4e5f6</span>
       </div>
       <div class="failed-span-body">
         <div class="span-row">
@@ -370,29 +371,29 @@
     </div>
 
     <!-- Narrator: pose the problem -->
-    <div class="narrator visible" id="narrator1">
+    <div class="narrator visible" id="narrator1" data-i18n-html="koan07.narrator1">
       The trace shows an error in the <strong>database</strong> span at <strong>10:42:17</strong>. It took 180ms and failed.<br>
       But what actually went wrong? What error message? What data was involved?
     </div>
 
     <!-- Q1: Feel the gap -->
     <div class="k7-question visible" id="q1">
-      <p>From this trace, can you determine the specific error that caused the failure?</p>
+      <p data-i18n="koan07.q1">From this trace, can you determine the specific error that caused the failure?</p>
       <div class="k7-opts">
-        <button class="k7-opt" data-answer="wrong">Yes, the ERROR status tells me what went wrong</button>
-        <button class="k7-opt" data-answer="correct">No — I can see it failed, but not why</button>
+        <button class="k7-opt" data-answer="wrong" data-i18n="koan07.q1OptA">Yes, the ERROR status tells me what went wrong</button>
+        <button class="k7-opt" data-answer="correct" data-i18n="koan07.q1OptB">No — I can see it failed, but not why</button>
       </div>
       <div class="k7-fb" id="fb1"></div>
     </div>
 
     <!-- Narrator: something captured it -->
-    <div class="narrator" id="narrator2">
+    <div class="narrator" id="narrator2" data-i18n-html="koan07.narrator2">
       Something <strong>did</strong> capture the exact moment of failure. Look at what appeared.
     </div>
 
     <!-- Evidence: log record revealed piece by piece -->
     <div class="evidence" id="evidence">
-      <div class="evidence-header">captured at the moment of failure</div>
+      <div class="evidence-header" data-i18n="koan07.evidenceHeader">captured at the moment of failure</div>
       <div class="evidence-body">
         <div class="evidence-part" id="ev-ts">
           <span class="ev-timestamp">10:42:17.384</span>
@@ -404,44 +405,44 @@
         <div class="evidence-part" id="ev-msg">
           <span class="ev-timestamp">10:42:17.384</span>
           <span class="ev-severity">ERROR</span>
-          <span class="ev-message">connection refused: orders-db:5432</span>
+          <span class="ev-message" data-i18n="koan07.evidenceMessage">connection refused: orders-db:5432</span>
         </div>
         <div class="evidence-part" id="ev-ctx">
           <span class="ev-timestamp">10:42:17.384</span>
           <span class="ev-severity">ERROR</span>
-          <span class="ev-message">connection refused: orders-db:5432</span>
-          <span class="ev-context">order.id=8842 retry=3 pool=exhausted</span>
+          <span class="ev-message" data-i18n="koan07.evidenceMessage">connection refused: orders-db:5432</span>
+          <span class="ev-context" data-i18n="koan07.evidenceContext">order.id=8842 retry=3 pool=exhausted</span>
         </div>
       </div>
     </div>
 
     <!-- Q2: What did it capture? -->
     <div class="k7-question" id="q2">
-      <p>Look at what just appeared. What did it capture?</p>
+      <p data-i18n="koan07.q2">Look at what just appeared. What did it capture?</p>
       <div class="k7-opts">
-        <button class="k7-opt" data-answer="wrong">A summary number over time</button>
-        <button class="k7-opt" data-answer="wrong">The path of a request through services</button>
-        <button class="k7-opt" data-answer="correct">A single event: what happened at one specific moment</button>
+        <button class="k7-opt" data-answer="wrong" data-i18n="koan07.q2OptA">A summary number over time</button>
+        <button class="k7-opt" data-answer="wrong" data-i18n="koan07.q2OptB">The path of a request through services</button>
+        <button class="k7-opt" data-answer="correct" data-i18n="koan07.q2OptC">A single event: what happened at one specific moment</button>
       </div>
       <div class="k7-fb" id="fb2"></div>
     </div>
 
     <!-- Q3: Name it -->
     <div class="k7-question" id="q3">
-      <p>This kind of record, capturing a discrete event with severity and context, is called a...</p>
+      <p data-i18n="koan07.q3">This kind of record, capturing a discrete event with severity and context, is called a...</p>
       <div class="k7-opts">
-        <button class="k7-opt" data-answer="wrong">A metric</button>
-        <button class="k7-opt" data-answer="wrong">A span</button>
-        <button class="k7-opt" data-answer="correct">A log record</button>
+        <button class="k7-opt" data-answer="wrong" data-i18n="koan07.q3OptA">A metric</button>
+        <button class="k7-opt" data-answer="wrong" data-i18n="koan07.q3OptB">A span</button>
+        <button class="k7-opt" data-answer="correct" data-i18n="koan07.q3OptC">A log record</button>
       </div>
       <div class="k7-fb" id="fb3"></div>
     </div>
 
     <!-- Insight -->
     <div class="k7-insight" id="insight">
-      <p>Metrics measure trends. Traces follow paths. Log records capture the moments that matter.</p>
-      <p>Each signal answers a different question. Together, they tell the full story.</p>
-      <a href="08-attributes.html">Continue &rarr;</a>
+      <p data-i18n="koan07.insightP1">Metrics measure trends. Traces follow paths. Log records capture the moments that matter.</p>
+      <p data-i18n="koan07.insightP2">Each signal answers a different question. Together, they tell the full story.</p>
+      <a href="08-attributes.html" data-i18n="common.continue">Continue &rarr;</a>
     </div>
   </div>
 
@@ -451,95 +452,103 @@
 
   <script>
     (function () {
-      // --- Evidence reveal sequence ---
-      // Parts build on each other: first just timestamp, then timestamp+severity, etc.
-      // Only the latest composite line is shown; previous ones hide.
-      var evParts = ['ev-ts', 'ev-sev', 'ev-msg', 'ev-ctx'];
-      var evDelays = [0, 900, 1800, 2700];
+      function run() {
+        // --- Evidence reveal sequence ---
+        // Parts build on each other: first just timestamp, then timestamp+severity, etc.
+        // Only the latest composite line is shown; previous ones hide.
+        var evParts = ['ev-ts', 'ev-sev', 'ev-msg', 'ev-ctx'];
+        var evDelays = [0, 900, 1800, 2700];
 
-      function revealEvidence() {
-        var evidenceEl = document.getElementById('evidence');
-        evidenceEl.classList.add('visible');
+        function revealEvidence() {
+          var evidenceEl = document.getElementById('evidence');
+          evidenceEl.classList.add('visible');
 
-        evParts.forEach(function (id, i) {
-          setTimeout(function () {
-            // Hide previous part
-            if (i > 0) {
-              document.getElementById(evParts[i - 1]).style.display = 'none';
-            }
-            document.getElementById(id).classList.add('visible');
-          }, evDelays[i]);
-        });
-      }
-
-      // --- Quiz logic ---
-      function setupQuiz(qId, fbId, correctMsg, wrongMsg, onCorrect) {
-        var q = document.getElementById(qId);
-        var fb = document.getElementById(fbId);
-        var opts = q.querySelectorAll('.k7-opt');
-
-        opts.forEach(function (opt) {
-          opt.addEventListener('click', function () {
-            if (this.dataset.answer === 'correct') {
-              this.classList.add('correct');
-              opts.forEach(function (o) { o.classList.add('disabled'); });
-              fb.textContent = correctMsg;
-              fb.className = 'k7-fb k7-fb--correct';
-              if (onCorrect) {
-                setTimeout(onCorrect, 800);
+          evParts.forEach(function (id, i) {
+            setTimeout(function () {
+              // Hide previous part
+              if (i > 0) {
+                document.getElementById(evParts[i - 1]).style.display = 'none';
               }
-            } else {
-              this.classList.add('wrong');
-              fb.textContent = wrongMsg;
-              fb.className = 'k7-fb k7-fb--wrong';
-              var self = this;
-              setTimeout(function () { self.classList.remove('wrong'); }, 500);
-            }
+              document.getElementById(id).classList.add('visible');
+            }, evDelays[i]);
           });
-        });
+        }
+
+        // --- Quiz logic ---
+        function setupQuiz(qId, fbId, correctMsg, wrongMsg, onCorrect) {
+          var q = document.getElementById(qId);
+          var fb = document.getElementById(fbId);
+          var opts = q.querySelectorAll('.k7-opt');
+
+          opts.forEach(function (opt) {
+            opt.addEventListener('click', function () {
+              if (this.dataset.answer === 'correct') {
+                this.classList.add('correct');
+                opts.forEach(function (o) { o.classList.add('disabled'); });
+                fb.textContent = correctMsg;
+                fb.className = 'k7-fb k7-fb--correct';
+                if (onCorrect) {
+                  setTimeout(onCorrect, 800);
+                }
+              } else {
+                this.classList.add('wrong');
+                fb.textContent = wrongMsg;
+                fb.className = 'k7-fb k7-fb--wrong';
+                var self = this;
+                setTimeout(function () { self.classList.remove('wrong'); }, 500);
+              }
+            });
+          });
+        }
+
+        // Q1: Feel the gap
+        setupQuiz(
+          'q1', 'fb1',
+          i18n.t('koan07.q1Correct'),
+          i18n.t('koan07.q1Wrong'),
+          function () {
+            // Show narrator2, then evidence, then Q2
+            var n2 = document.getElementById('narrator2');
+            n2.classList.add('visible');
+
+            setTimeout(function () {
+              revealEvidence();
+            }, 1000);
+
+            // After evidence fully revealed, show Q2
+            var totalRevealTime = 1000 + evDelays[evDelays.length - 1] + 800;
+            setTimeout(function () {
+              document.getElementById('q2').classList.add('visible');
+            }, totalRevealTime);
+          }
+        );
+
+        // Q2: What did it capture?
+        setupQuiz(
+          'q2', 'fb2',
+          i18n.t('koan07.q2Correct'),
+          i18n.t('koan07.q2Wrong'),
+          function () {
+            document.getElementById('q3').classList.add('visible');
+          }
+        );
+
+        // Q3: Name it
+        setupQuiz(
+          'q3', 'fb3',
+          i18n.t('koan07.q3Correct'),
+          i18n.t('koan07.q3Wrong'),
+          function () {
+            document.getElementById('insight').classList.add('visible');
+          }
+        );
       }
 
-      // Q1: Feel the gap
-      setupQuiz(
-        'q1', 'fb1',
-        'You can see the database span failed at 10:42:17 — but not why. The trace shows where and when. Something else captured the details.',
-        'Look again — the span says ERROR, but does it say which error? A timeout? A connection refused? A constraint violation?',
-        function () {
-          // Show narrator2, then evidence, then Q2
-          var n2 = document.getElementById('narrator2');
-          n2.classList.add('visible');
-
-          setTimeout(function () {
-            revealEvidence();
-          }, 1000);
-
-          // After evidence fully revealed, show Q2
-          var totalRevealTime = 1000 + evDelays[evDelays.length - 1] + 800;
-          setTimeout(function () {
-            document.getElementById('q2').classList.add('visible');
-          }, totalRevealTime);
-        }
-      );
-
-      // Q2: What did it capture?
-      setupQuiz(
-        'q2', 'fb2',
-        'Not a trend over time (that would be a metric). Not a path through services (that would be a trace). A single captured event.',
-        'Think about what you see: a timestamp, a severity, a message, context. Is that a trend? A path? Or a moment?',
-        function () {
-          document.getElementById('q3').classList.add('visible');
-        }
-      );
-
-      // Q3: Name it
-      setupQuiz(
-        'q3', 'fb3',
-        'A log record: a discrete event, captured with timestamp, severity, message, and context.',
-        'A metric summarizes numbers. A span tracks one step in a path. This is something else entirely.',
-        function () {
-          document.getElementById('insight').classList.add('visible');
-        }
-      );
+      if (window.i18n && window.i18n.t('common.desktopOnly') !== 'common.desktopOnly') {
+        run();
+      } else {
+        window.addEventListener('i18n:ready', run, { once: true });
+      }
     })();
   </script>
   <script src="../js/scroll.js"></script>

@@ -141,24 +141,16 @@
       var pi = parseInt(p);
       if (prog[p] >= 1 && pi > furthest) furthest = pi;
     }
-    // If user has been past koan 0, offer to continue
+    // If user has been past koan 0, offer to continue from where they left off
     if (furthest > 0) {
-      // Find next incomplete koan after furthest completed
-      var resumeIdx = furthest;
-      for (var r = 0; r <= furthest; r++) {
-        if (prog[r] === 2 && r === resumeIdx) resumeIdx = r + 1;
-      }
-      if (resumeIdx >= KOAN_ORDER.length) resumeIdx = KOAN_ORDER.length - 1;
-
       // Remove the default "Begin the path" link since we're showing a resume link instead
       var beginLink = document.querySelector('.opening-continue');
       if (beginLink) beginLink.remove();
 
       var cont = document.createElement('div');
       cont.className = 'resume-prompt';
-      cont.innerHTML = '<a href="' + KOAN_ORDER[resumeIdx].file + '">Continue: ' +
-        KOAN_ORDER[resumeIdx].title + ' →</a>';
-      // Insert after the opening-continue div or at end of opening
+      cont.innerHTML = '<a href="' + KOAN_ORDER[furthest].file + '">Continue: ' +
+        KOAN_ORDER[furthest].title + ' →</a>';
       var opening = document.querySelector('.opening');
       if (opening) opening.appendChild(cont);
     }

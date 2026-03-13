@@ -460,8 +460,9 @@
     </div>
 
     <div class="sampling-insight" id="insight">
-      <p>You can't keep everything. Sampling lets you choose what matters.</p>
-      <p>The art is keeping the needles, not the haystack.</p>
+      <p>Head-based sampling is simple and unbiased &mdash; good for understanding overall traffic patterns.</p>
+      <p>Tail-based sampling keeps what matters &mdash; good for debugging.</p>
+      <p>Most production systems use both.</p>
       <a href="17-service-map.html">Continue &rarr;</a>
     </div>
   </div>
@@ -699,7 +700,7 @@
           if (this.dataset.answer === 'correct') {
             this.classList.add('correct');
             quizOpts.forEach(function (o) { o.classList.add('disabled'); });
-            fb1.textContent = 'Tail-based sampling keeps what matters and drops the noise. Maximum signal, minimum cost.';
+            fb1.textContent = 'Tail-based sampling keeps what matters. But head-based is simpler, lower overhead, and gives an unbiased view of all traffic. Most systems use both.';
             fb1.className = 'sampling-fb sampling-fb--correct';
             setTimeout(function () {
               insight.classList.add('visible');

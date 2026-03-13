@@ -96,34 +96,6 @@
       border-left-color: rgba(63, 185, 80, 0.5);
     }
 
-    /* Animated data dot */
-    .pipeline-dot {
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--accent-blue);
-      box-shadow: 0 0 12px rgba(88, 166, 255, 0.4);
-      opacity: 0;
-      z-index: 2;
-      pointer-events: none;
-    }
-
-    .pipeline-dot.animate {
-      opacity: 1;
-      animation: flowDot 2.4s ease-in-out infinite;
-    }
-
-    @keyframes flowDot {
-      0%   { left: 8%;  opacity: 0; }
-      5%   { opacity: 1; }
-      45%  { left: 48%; opacity: 1; }
-      50%  { left: 48%; opacity: 1; }
-      90%  { left: 88%; opacity: 1; }
-      95%  { opacity: 0; }
-      100% { left: 92%; opacity: 0; }
-    }
-
     /* YAML editor area - glass code block */
     .yaml-editor {
       background: var(--bg-glass);
@@ -456,7 +428,6 @@
         <div class="pipeline-box-label">exporters</div>
         otlp
       </div>
-      <div class="pipeline-dot" id="flowDot"></div>
     </div>
 
     <!-- YAML editor -->
@@ -571,8 +542,127 @@
       var status = document.getElementById('status');
       var pipelineHint = document.getElementById('pipelineHint');
       var diagram = document.getElementById('pipelineDiagram');
-      var flowDot = document.getElementById('flowDot');
       var configApplied = false;
+
+      /* Utility: detect when a smooth scroll finishes */
+      function waitForScrollEnd(cb) {
+        var lastY = window.scrollY;
+        var stable = 0;
+        function check() {
+          if (Math.abs(window.scrollY - lastY) < 1) {
+            stable++;
+            if (stable > 10) { cb(); return; }
+          } else {
+            stable = 0;
+          }
+          lastY = window.scrollY;
+          requestAnimationFrame(check);
+        }
+        requestAnimationFrame(check);
+      }
+
+      /* Canvas particle stream — data flowing through the pipeline */
+      function startParticleFlow() {
+        var canvas = document.createElement('canvas');
+        canvas.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:2;';
+        diagram.appendChild(canvas);
+        var ctx = canvas.getContext('2d');
+        var dpr = window.devicePixelRatio || 1;
+        var particles = [];
+        var SPAWN_MS = 140;
+        var lastSpawn = 0;
+
+        var CBlue = [88, 166, 255];
+        var CGreen = [63, 185, 80];
+        var COrange = [210, 153, 34];
+        var CPurple = [188, 140, 255];
+
+        function elBounds(el) {
+          var r = el.getBoundingClientRect();
+          var d = diagram.getBoundingClientRect();
+          return { l: r.left - d.left, r: r.right - d.left };
+        }
+
+        function colorAt(x, bR, bP, bE) {
+          if (x >= bR.l && x <= bR.r) return CGreen;
+          if (x >= bP.l && x <= bP.r) return COrange;
+          if (x >= bE.l && x <= bE.r) return CPurple;
+          return CBlue;
+        }
+
+        function rgba(c, a) {
+          return 'rgba(' + (c[0] | 0) + ',' + (c[1] | 0) + ',' + (c[2] | 0) + ',' + a + ')';
+        }
+
+        function frame(ts) {
+          var dr = diagram.getBoundingClientRect();
+          var w = dr.width;
+          var h = dr.height;
+          canvas.width = Math.round(w * dpr);
+          canvas.height = Math.round(h * dpr);
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+          var bR = elBounds(document.getElementById('boxReceivers'));
+          var bP = elBounds(document.getElementById('boxProcessors'));
+          var bE = elBounds(document.getElementById('boxExporters'));
+
+          /* Spawn new particle */
+          if (!lastSpawn || ts - lastSpawn > SPAWN_MS) {
+            particles.push({
+              x: -4,
+              y: h / 2 + (Math.random() - 0.5) * 18,
+              radius: 1.5 + Math.random() * 1.5,
+              speed: 2 + Math.random() * 1.2,
+              alpha: 0.5 + Math.random() * 0.35,
+              trail: []
+            });
+            lastSpawn = ts;
+          }
+
+          /* Update and draw */
+          for (var i = particles.length - 1; i >= 0; i--) {
+            var p = particles[i];
+            p.trail.push({ x: p.x, y: p.y });
+            if (p.trail.length > 8) p.trail.shift();
+            p.x += p.speed;
+
+            if (p.x > w + 10) { particles.splice(i, 1); continue; }
+
+            var c = colorAt(p.x, bR, bP, bE);
+
+            /* Fade at edges */
+            var edge = 1;
+            if (p.x < 20) edge = Math.max(0, p.x / 20);
+            else if (p.x > w - 20) edge = Math.max(0, (w - p.x) / 20);
+
+            /* Trail */
+            for (var t = 0; t < p.trail.length; t++) {
+              var ta = (t / p.trail.length) * p.alpha * edge * 0.25;
+              var tr = p.radius * (0.4 + 0.6 * t / p.trail.length);
+              ctx.beginPath();
+              ctx.arc(p.trail[t].x, p.trail[t].y, tr, 0, Math.PI * 2);
+              ctx.fillStyle = rgba(c, ta);
+              ctx.fill();
+            }
+
+            /* Glow */
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius * 4, 0, Math.PI * 2);
+            ctx.fillStyle = rgba(c, p.alpha * edge * 0.12);
+            ctx.fill();
+
+            /* Core */
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = rgba(c, p.alpha * edge);
+            ctx.fill();
+          }
+
+          requestAnimationFrame(frame);
+        }
+
+        requestAnimationFrame(frame);
+      }
 
       /* Per-field wrong attempt counters and YAML line IDs for highlighting */
       var fieldMeta = {
@@ -720,20 +810,25 @@
           item.hint.classList.remove('visible');
         });
 
-        /* Light up the diagram */
+        /* Cinematic: scroll up to diagram, light it up with particles, scroll back */
         setTimeout(function () {
-          diagram.classList.add('active');
-        }, 300);
+          diagram.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-        /* Start the flowing dot animation */
-        setTimeout(function () {
-          flowDot.classList.add('animate');
-        }, 800);
+          waitForScrollEnd(function () {
+            diagram.classList.add('active');
 
-        /* Show the follow-up question */
-        setTimeout(function () {
-          document.getElementById('q1').classList.add('visible');
-        }, 1800);
+            setTimeout(function () {
+              startParticleFlow();
+
+              setTimeout(function () {
+                document.getElementById('q1').classList.add('visible');
+                setTimeout(function () {
+                  document.getElementById('q1').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 300);
+              }, 2000);
+            }, 400);
+          });
+        }, 600);
       });
 
       /* Follow-up question */

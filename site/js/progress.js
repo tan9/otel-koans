@@ -43,15 +43,15 @@
   // Mark current koan as visited
   if (currentIdx >= 0) {
     var prog = getProgress();
-    prog[currentIdx] = Math.max(prog[currentIdx] || 0, 1); // 1 = visited
+    prog[currentIdx] = Math.max(prog[currentIdx] || 0, 1);
     saveProgress(prog);
   }
 
-  // Watch for completion - when "next" link becomes clickable/visible or koan-complete appears
+  // Watch for completion
   function markComplete() {
     if (currentIdx < 0) return;
     var prog = getProgress();
-    prog[currentIdx] = 2; // 2 = completed
+    prog[currentIdx] = 2;
     saveProgress(prog);
     updateDots();
   }
@@ -61,13 +61,10 @@
     for (var i = 0; i < mutations.length; i++) {
       var el = mutations[i].target;
       if (el.classList && el.classList.contains('visible')) {
-        // Check if it's a completion element (insight, continue, koan-complete)
         if (el.classList.contains('opening-continue') ||
-            el.id === 'continueLink' ||
-            el.querySelector('.koan-nav a[href]')) {
+            el.id === 'continueLink') {
           markComplete();
         }
-        // Check class names that suggest completion
         var cn = el.className || '';
         if (cn.match(/insight|complete|final/i)) {
           markComplete();
@@ -77,34 +74,56 @@
   });
   compObserver.observe(document.body, { attributes: true, attributeFilter: ['class'], subtree: true });
 
-  // Also mark complete if user clicks a "next" nav link
-  var nextLinks = document.querySelectorAll('.koan-nav a');
-  for (var j = 0; j < nextLinks.length; j++) {
-    (function(link) {
-      if (link.textContent.match(/→|next|→/i)) {
-        link.addEventListener('click', markComplete);
-      }
-    })(nextLinks[j]);
+  // Helper: build href for a koan index
+  function koanHref(idx) {
+    if (idx < 0 || idx >= KOAN_ORDER.length) return null;
+    return isRoot ? KOAN_ORDER[idx].file : '../' + KOAN_ORDER[idx].file;
   }
 
-  // Build navigation dots
+  // Build unified navigation bar
   var nav = document.createElement('div');
   nav.className = 'progress-nav';
 
+  // Prev arrow
+  if (currentIdx > 0) {
+    var prevLink = document.createElement('a');
+    prevLink.href = koanHref(currentIdx - 1);
+    prevLink.className = 'progress-arrow';
+    prevLink.title = KOAN_ORDER[currentIdx - 1].title;
+    prevLink.textContent = '\u2039';
+    nav.appendChild(prevLink);
+  }
+
+  // Dots
   var dotsWrap = document.createElement('div');
   dotsWrap.className = 'progress-dots';
 
   var dots = [];
   for (var k = 0; k < KOAN_ORDER.length; k++) {
     var dot = document.createElement('a');
-    var href = isRoot ? KOAN_ORDER[k].file : '../' + KOAN_ORDER[k].file;
-    dot.href = href;
+    dot.href = koanHref(k);
     dot.className = 'progress-dot';
     dot.title = KOAN_ORDER[k].title;
     if (k === currentIdx) dot.classList.add('current');
     dots.push(dot);
     dotsWrap.appendChild(dot);
   }
+  nav.appendChild(dotsWrap);
+
+  // Next arrow
+  if (currentIdx < KOAN_ORDER.length - 1) {
+    var nextLink = document.createElement('a');
+    nextLink.href = koanHref(currentIdx + 1);
+    nextLink.className = 'progress-arrow';
+    nextLink.title = KOAN_ORDER[currentIdx + 1].title;
+    nextLink.textContent = '\u203A';
+    nav.appendChild(nextLink);
+  }
+
+  // Divider
+  var div1 = document.createElement('div');
+  div1.className = 'progress-divider';
+  nav.appendChild(div1);
 
   // Reset button
   var resetBtn = document.createElement('button');
@@ -118,16 +137,14 @@
       location.href = rootUrl;
     }
   });
-
-  nav.appendChild(dotsWrap);
   nav.appendChild(resetBtn);
 
-  // Pull the music toggle into the bar (created by music.js which loads first)
+  // Divider + music toggle (created by music.js which loads first)
   var musicBtn = document.querySelector('.music-toggle');
   if (musicBtn) {
-    var divider = document.createElement('div');
-    divider.className = 'progress-divider';
-    nav.appendChild(divider);
+    var div2 = document.createElement('div');
+    div2.className = 'progress-divider';
+    nav.appendChild(div2);
     nav.appendChild(musicBtn);
   }
 
@@ -151,13 +168,12 @@
       var pi = parseInt(p);
       if (prog[p] >= 1 && pi > furthest) furthest = pi;
     }
-    // If user has been past koan 0, replace "Begin the path" with a resume link
     if (furthest > 0) {
       var beginLink = document.querySelector('.opening-continue');
       if (beginLink) {
         beginLink.classList.add('visible');
         beginLink.innerHTML = '<a href="' + KOAN_ORDER[furthest].file + '">Continue: ' +
-          KOAN_ORDER[furthest].title + ' →</a>';
+          KOAN_ORDER[furthest].title + ' \u2192</a>';
       }
     }
   }

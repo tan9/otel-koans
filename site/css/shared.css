@@ -53,43 +53,7 @@ body {
   padding: 2.5rem 3rem 40vh;
 }
 
-/* Koan number and navigation */
-.koan-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.koan-number {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-}
-
-.koan-nav {
-  display: flex;
-  gap: 1.25rem;
-}
-
-.koan-nav a {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  text-decoration: none;
-  padding: 0.25em 0.5em;
-  border-radius: 0.5em;
-  transition: all 0.3s var(--ease-spring);
-}
-
-.koan-nav a:hover {
-  color: var(--accent-blue);
-  background: rgba(88, 166, 255, 0.08);
-}
+/* (koan-header removed - navigation lives in the unified bottom bar) */
 
 /* The zen text */
 .koan-text {
@@ -305,7 +269,7 @@ body {
   -webkit-backdrop-filter: none;
   border-radius: 0;
   opacity: 0.7;
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: var(--text-muted);
   padding: 0 0.1rem;
 }
@@ -324,33 +288,52 @@ body {
 /* Divider between bar sections */
 .progress-divider {
   width: 1px;
-  height: 14px;
-  background: var(--border-subtle);
+  height: 12px;
+  background: var(--border);
+  opacity: 0.4;
   flex-shrink: 0;
 }
 
 /* Progress navigation - unified bottom bar */
 .progress-nav {
   position: fixed;
-  bottom: 12px;
+  bottom: 14px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
   display: flex;
   align-items: center;
-  gap: 0.7rem;
-  padding: 0.45rem 1rem;
+  gap: 0.65rem;
+  padding: 0.5rem 0.9rem;
   background: var(--bg-glass);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-subtle);
   border-radius: 2em;
-  opacity: 0.6;
+  opacity: 0.5;
   transition: opacity 0.4s var(--ease-smooth);
 }
 
 .progress-nav:hover {
   opacity: 0.95;
+}
+
+/* Prev / Next arrows */
+.progress-arrow {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  line-height: 1;
+  padding: 0.1rem 0;
+  opacity: 0.6;
+  transition: all 0.3s var(--ease-spring);
+  flex-shrink: 0;
+}
+
+.progress-arrow:hover {
+  color: var(--accent-blue);
+  opacity: 1;
 }
 
 .progress-dots {
@@ -361,8 +344,8 @@ body {
 
 .progress-dot {
   display: block;
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: var(--border);
   transition: all 0.3s var(--ease-spring);
@@ -371,13 +354,13 @@ body {
 
 .progress-dot:hover {
   background: var(--text-secondary);
-  transform: scale(1.5);
+  transform: scale(1.6);
 }
 
 .progress-dot.current {
   background: var(--accent-blue);
-  box-shadow: 0 0 5px rgba(88, 166, 255, 0.4);
-  transform: scale(1.3);
+  box-shadow: 0 0 6px rgba(88, 166, 255, 0.4);
+  transform: scale(1.35);
 }
 
 .progress-dot.visited {
@@ -391,12 +374,12 @@ body {
 .progress-reset {
   background: none;
   border: none;
-  color: var(--text-secondary);
-  font-size: 1rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
   cursor: pointer;
-  padding: 0 0.15rem;
+  padding: 0 0.1rem;
   line-height: 1;
-  opacity: 0.7;
+  opacity: 0.6;
   transition: all 0.3s var(--ease-spring);
 }
 

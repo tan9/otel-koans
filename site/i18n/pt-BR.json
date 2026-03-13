@@ -1,8 +1,8 @@
 {
   "common": {
     "desktopOnly": "Desktop Only",
-    "desktopOnlyText": "These koans require a larger screen. Please visit on a desktop browser.",
-    "desktopOnlyTextIndex": "These koans require a larger screen for the interactive exercises. Please visit on a desktop browser.",
+    "desktopOnlyText": "Alguns caminhos exigem uma vis\u00e3o mais ampla.\nVolte em uma tela maior.",
+    "desktopOnlyTextIndex": "Alguns caminhos exigem uma vis\u00e3o mais ampla.\nVolte em uma tela maior.",
     "continue": "Continue \u2192",
     "check": "Check",
     "toggleMusic": "Toggle music",

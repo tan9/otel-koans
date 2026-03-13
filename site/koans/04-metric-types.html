@@ -310,9 +310,40 @@
 </head>
 <body>
   <div class="mobile-gate">
-    <div class="mobile-gate-icon">&#9776;</div>
-    <div class="mobile-gate-title" data-i18n="common.desktopOnly">Desktop Only</div>
-    <div class="mobile-gate-text" data-i18n="common.desktopOnlyText">These koans require a larger screen. Please visit on a desktop browser.</div>
+    <svg class="mobile-gate-anim" viewBox="0 0 180 140">
+      <path class="mg-edge" d="M 50,30 Q 70,25 90,45" />
+      <path class="mg-edge" d="M 50,30 Q 75,55 90,75" />
+      <path class="mg-edge" d="M 90,45 Q 90,60 90,75" />
+      <path class="mg-edge" d="M 90,75 Q 70,95 55,110" />
+      <path class="mg-edge" d="M 90,75 Q 110,95 125,110" />
+      <path class="mg-edge" d="M 55,110 Q 105,100 140,75" />
+      <path class="mg-edge" d="M 125,110 Q 135,95 140,75" />
+      <circle class="mg-particle--green" r="1.5" opacity="0"><animateMotion dur="3s" repeatCount="indefinite" begin="0s"><mpath href="#mgp1"/></animateMotion><animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.1;0.9;1" dur="3s" repeatCount="indefinite" begin="0s"/></circle>
+      <circle class="mg-particle--green" r="1.5" opacity="0"><animateMotion dur="3.5s" repeatCount="indefinite" begin="1.2s"><mpath href="#mgp2"/></animateMotion><animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.1;0.9;1" dur="3.5s" repeatCount="indefinite" begin="1.2s"/></circle>
+      <circle class="mg-particle--orange" r="1.5" opacity="0"><animateMotion dur="2.8s" repeatCount="indefinite" begin="0.5s"><mpath href="#mgp3"/></animateMotion><animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.1;0.9;1" dur="2.8s" repeatCount="indefinite" begin="0.5s"/></circle>
+      <circle class="mg-particle--purple" r="1.5" opacity="0"><animateMotion dur="3.2s" repeatCount="indefinite" begin="1.8s"><mpath href="#mgp4"/></animateMotion><animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.1;0.9;1" dur="3.2s" repeatCount="indefinite" begin="1.8s"/></circle>
+      <circle class="mg-particle--green" r="1.5" opacity="0"><animateMotion dur="2.6s" repeatCount="indefinite" begin="0.8s"><mpath href="#mgp5"/></animateMotion><animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.1;0.9;1" dur="2.6s" repeatCount="indefinite" begin="0.8s"/></circle>
+      <defs>
+        <path id="mgp1" d="M 50,30 Q 70,25 90,45" />
+        <path id="mgp2" d="M 50,30 Q 75,55 90,75" />
+        <path id="mgp3" d="M 90,75 Q 70,95 55,110" />
+        <path id="mgp4" d="M 55,110 Q 105,100 140,75" />
+        <path id="mgp5" d="M 125,110 Q 135,95 140,75" />
+      </defs>
+      <circle class="mg-node" cx="50" cy="30" r="12" />
+      <text class="mg-label" x="50" y="33">gw</text>
+      <circle class="mg-node" cx="90" cy="45" r="10" />
+      <text class="mg-label" x="90" y="48">auth</text>
+      <circle class="mg-node" cx="90" cy="75" r="13" />
+      <text class="mg-label" x="90" y="78">api</text>
+      <circle class="mg-node" cx="55" cy="110" r="10" />
+      <text class="mg-label" x="55" y="113">ord</text>
+      <circle class="mg-node" cx="125" cy="110" r="10" />
+      <text class="mg-label" x="125" y="113">inv</text>
+      <circle class="mg-node" cx="140" cy="75" r="11" />
+      <text class="mg-label" x="140" y="78">db</text>
+    </svg>
+    <div class="mobile-gate-text" data-i18n-html="common.desktopOnlyText">Some paths require a wider view.<br>Return on a larger screen.</div>
   </div>
 
   <div class="koan-page">

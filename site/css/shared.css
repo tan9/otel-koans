@@ -226,26 +226,64 @@ body {
   padding: 2rem;
 }
 
-.mobile-gate-icon {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-  opacity: 0.5;
+.mobile-gate-anim {
+  width: 180px;
+  height: 140px;
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: mobileGateFadeIn 2s var(--ease-smooth) 0.3s forwards;
 }
 
-.mobile-gate-title {
+.mobile-gate-anim .mg-node {
+  fill: rgba(28, 33, 40, 0.3);
+  stroke: rgba(88, 166, 255, 0.4);
+  stroke-width: 1;
+}
+
+.mobile-gate-anim .mg-edge {
+  stroke: var(--border);
+  stroke-width: 0.5;
+  fill: none;
+  opacity: 0.3;
+}
+
+.mobile-gate-anim .mg-label {
   font-family: var(--font-mono);
-  font-size: 0.9rem;
-  color: var(--text-primary);
-  margin-bottom: 0.75rem;
-  letter-spacing: 0.05em;
+  font-size: 6px;
+  fill: var(--text-muted);
+  text-anchor: middle;
+}
+
+.mobile-gate-anim .mg-particle {
+  r: 1.5;
+  opacity: 0;
+}
+
+.mobile-gate-anim .mg-particle--green { fill: var(--accent-green); }
+.mobile-gate-anim .mg-particle--orange { fill: var(--accent-orange); }
+.mobile-gate-anim .mg-particle--purple { fill: var(--accent-purple); }
+
+@keyframes mobileGateFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes mgFlow {
+  0%   { offset-distance: 0%;   opacity: 0; }
+  10%  { opacity: 0.7; }
+  90%  { opacity: 0.7; }
+  100% { offset-distance: 100%; opacity: 0; }
 }
 
 .mobile-gate-text {
   font-family: var(--font-sans);
-  font-size: 0.85rem;
+  font-style: italic;
+  font-size: 1rem;
   color: var(--text-secondary);
-  max-width: 320px;
-  line-height: 1.7;
+  max-width: 260px;
+  line-height: 1.9;
+  opacity: 0;
+  animation: mobileGateFadeIn 2s var(--ease-smooth) 1s forwards;
 }
 
 /* Music toggle - standalone fallback (before progress-nav moves it) */

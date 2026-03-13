@@ -55,7 +55,7 @@ body {
 
 /* (koan-header removed - navigation lives in the unified bottom bar) */
 
-/* The zen text */
+/* The zen text — contemplative opening quote */
 .koan-text {
   font-family: var(--font-sans);
   font-size: 1.1rem;
@@ -63,9 +63,35 @@ body {
   color: var(--text-secondary);
   line-height: 1.8;
   max-width: 660px;
-  margin: 0 auto 1.5rem;
+  margin: 0 auto 1.75rem;
   text-align: center;
   letter-spacing: 0.01em;
+  padding: 1rem 0;
+  position: relative;
+}
+
+.koan-text::before,
+.koan-text::after {
+  content: '';
+  display: block;
+  width: 3rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  margin: 0 auto;
+  opacity: 0.6;
+}
+
+.koan-text::before { margin-bottom: 1rem; }
+.koan-text::after  { margin-top: 1rem; }
+
+/* Instruction text — tells the learner what to do */
+.koan-instruction {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: 1rem;
+  letter-spacing: 0.02em;
 }
 
 /* Koan title */

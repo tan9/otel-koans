@@ -28,13 +28,7 @@
       color: var(--accent-red);
     }
 
-    .scenario-prompt {
-      font-family: var(--font-mono);
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      text-align: center;
-      margin-bottom: 0.75rem;
-    }
+    /* scenario-prompt styling now in shared.css as .koan-instruction */
 
     .telem-scene {
       display: grid;
@@ -351,7 +345,7 @@
       <p>A user reports: "Checkout is broken. I can't place an order."</p>
     </div>
 
-    <div class="scenario-prompt">Click each system to investigate the failure.</div>
+    <div class="koan-instruction">Click each system to investigate the failure.</div>
 
     <!-- Two systems side by side -->
     <div class="telem-scene">

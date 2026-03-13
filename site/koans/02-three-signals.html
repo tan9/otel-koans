@@ -17,13 +17,7 @@
       margin-bottom: 1.25rem;
     }
 
-    .sort-instructions {
-      text-align: center;
-      font-family: var(--font-mono);
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-      margin-bottom: 1rem;
-    }
+    /* sort-instructions styling now in shared.css as .koan-instruction */
 
     /* Telemetry item pool */
     .item-pool {
@@ -273,13 +267,7 @@
       transform: translateY(0);
     }
 
-    .match-prompt {
-      font-family: var(--font-sans);
-      font-size: 1rem;
-      color: var(--text-primary);
-      text-align: center;
-      margin-bottom: 1rem;
-    }
+    /* match-prompt styling now in shared.css as .koan-instruction */
 
     .match-grid {
       display: grid;
@@ -418,7 +406,7 @@
 
     <!-- ═══ Phase 1: Sorting exercise ═══ -->
     <div class="sort-section" id="sortSection">
-      <div class="sort-instructions">
+      <div class="koan-instruction">
         A stream of telemetry arrives. Sort these items into three groups.
       </div>
 
@@ -465,7 +453,7 @@
 
     <!-- ═══ Phase 2: Matching exercise ═══ -->
     <div class="match-exercise phase-hidden" id="matchExercise">
-      <div class="match-prompt">Apply what you discovered. Which signal would you reach for in each scenario?</div>
+      <div class="koan-instruction">Apply what you discovered. Which signal would you reach for in each scenario?</div>
 
       <div class="match-grid">
         <div class="match-question">Your checkout is slow and getting worse over time. You need to see the trend.</div>

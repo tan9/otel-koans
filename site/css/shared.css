@@ -363,32 +363,6 @@ body {
   transform: scale(1.35);
 }
 
-.progress-dot.visited {
-  background: var(--text-muted);
-}
-
-.progress-dot.completed {
-  background: var(--accent-green);
-}
-
-.progress-reset {
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  cursor: pointer;
-  padding: 0 0.1rem;
-  line-height: 1;
-  opacity: 0.6;
-  transition: all 0.3s var(--ease-spring);
-}
-
-.progress-reset:hover {
-  opacity: 1;
-  color: var(--text-primary);
-  transform: rotate(-45deg);
-}
-
 /* Icon links in the bar (GitHub, etc.) */
 .progress-icon {
   display: flex;
@@ -429,29 +403,6 @@ body {
 
 .progress-nav:hover .site-copyright {
   opacity: 0.5;
-}
-
-/* Resume prompt on index */
-.resume-prompt {
-  margin-top: 1rem;
-  opacity: 0;
-  animation: fadeIn 1s var(--ease-smooth) 0.5s forwards;
-}
-
-.resume-prompt a {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--accent-green);
-  text-decoration: none;
-  padding: 0.3em 0.9em;
-  border-radius: 2em;
-  border: 1px solid rgba(63, 185, 80, 0.2);
-  transition: all 0.3s var(--ease-spring);
-}
-
-.resume-prompt a:hover {
-  background: rgba(63, 185, 80, 0.08);
-  border-color: rgba(63, 185, 80, 0.4);
 }
 
 @media (max-width: 768px) {

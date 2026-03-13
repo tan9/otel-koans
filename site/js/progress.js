@@ -1,6 +1,5 @@
-/* Progress tracking and navigation */
+/* Navigation bar */
 (function () {
-  var KEY = 'otel-koans-progress';
   var KOAN_ORDER = [
     { n: 0,  file: 'index.html',              title: 'The Opening' },
     { n: 1,  file: 'koans/01-telemetry.html',  title: 'Telemetry' },
@@ -24,7 +23,6 @@
     { n: 19, file: 'koans/19-full-picture.html', title: 'Full Picture' }
   ];
 
-  // Determine current koan from URL
   var path = location.pathname;
   var isRoot = !path.match(/\/koans\//);
   var currentFile = isRoot ? 'index.html' : 'koans/' + path.split('/').pop();
@@ -33,54 +31,12 @@
     if (KOAN_ORDER[i].file === currentFile) { currentIdx = i; break; }
   }
 
-  function getProgress() {
-    try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; }
-  }
-  function saveProgress(data) {
-    localStorage.setItem(KEY, JSON.stringify(data));
-  }
-
-  // Mark current koan as visited
-  if (currentIdx >= 0) {
-    var prog = getProgress();
-    prog[currentIdx] = Math.max(prog[currentIdx] || 0, 1);
-    saveProgress(prog);
-  }
-
-  // Watch for completion
-  function markComplete() {
-    if (currentIdx < 0) return;
-    var prog = getProgress();
-    prog[currentIdx] = 2;
-    saveProgress(prog);
-    updateDots();
-  }
-
-  // Observe for completion signals
-  var compObserver = new MutationObserver(function (mutations) {
-    for (var i = 0; i < mutations.length; i++) {
-      var el = mutations[i].target;
-      if (el.classList && el.classList.contains('visible')) {
-        if (el.classList.contains('opening-continue') ||
-            el.id === 'continueLink') {
-          markComplete();
-        }
-        var cn = el.className || '';
-        if (cn.match(/insight|complete|final/i)) {
-          markComplete();
-        }
-      }
-    }
-  });
-  compObserver.observe(document.body, { attributes: true, attributeFilter: ['class'], subtree: true });
-
-  // Helper: build href for a koan index
   function koanHref(idx) {
     if (idx < 0 || idx >= KOAN_ORDER.length) return null;
     return isRoot ? KOAN_ORDER[idx].file : '../' + KOAN_ORDER[idx].file;
   }
 
-  // Build unified navigation bar
+  // Build navigation bar
   var nav = document.createElement('div');
   nav.className = 'progress-nav';
 
@@ -98,14 +54,12 @@
   var dotsWrap = document.createElement('div');
   dotsWrap.className = 'progress-dots';
 
-  var dots = [];
   for (var k = 0; k < KOAN_ORDER.length; k++) {
     var dot = document.createElement('a');
     dot.href = koanHref(k);
     dot.className = 'progress-dot';
     dot.title = KOAN_ORDER[k].title;
     if (k === currentIdx) dot.classList.add('current');
-    dots.push(dot);
     dotsWrap.appendChild(dot);
   }
   nav.appendChild(dotsWrap);
@@ -120,31 +74,12 @@
     nav.appendChild(nextLink);
   }
 
-  // Divider
-  var div1 = document.createElement('div');
-  div1.className = 'progress-divider';
-  nav.appendChild(div1);
-
-  // Reset button
-  var resetBtn = document.createElement('button');
-  resetBtn.className = 'progress-reset';
-  resetBtn.title = 'Start over';
-  resetBtn.textContent = '\u21BA';
-  resetBtn.addEventListener('click', function () {
-    if (confirm('Reset all progress and start from the beginning?')) {
-      localStorage.removeItem(KEY);
-      var rootUrl = isRoot ? 'index.html' : '../index.html';
-      location.href = rootUrl;
-    }
-  });
-  nav.appendChild(resetBtn);
-
   // Divider + music toggle (created by music.js which loads first)
   var musicBtn = document.querySelector('.music-toggle');
   if (musicBtn) {
-    var div2 = document.createElement('div');
-    div2.className = 'progress-divider';
-    nav.appendChild(div2);
+    var div1 = document.createElement('div');
+    div1.className = 'progress-divider';
+    nav.appendChild(div1);
     nav.appendChild(musicBtn);
   }
 
@@ -165,32 +100,4 @@
   nav.appendChild(copy);
 
   document.body.appendChild(nav);
-
-  function updateDots() {
-    var prog = getProgress();
-    for (var d = 0; d < dots.length; d++) {
-      dots[d].classList.remove('visited', 'completed');
-      if (prog[d] === 2) dots[d].classList.add('completed');
-      else if (prog[d] === 1) dots[d].classList.add('visited');
-    }
-  }
-  updateDots();
-
-  // On index page: show continue prompt if there's progress
-  if (isRoot && currentIdx === 0) {
-    var prog = getProgress();
-    var furthest = -1;
-    for (var p in prog) {
-      var pi = parseInt(p);
-      if (prog[p] >= 1 && pi > furthest) furthest = pi;
-    }
-    if (furthest > 0) {
-      var beginLink = document.querySelector('.opening-continue');
-      if (beginLink) {
-        beginLink.classList.add('visible');
-        beginLink.innerHTML = '<a href="' + KOAN_ORDER[furthest].file + '">Continue: ' +
-          KOAN_ORDER[furthest].title + ' \u2192</a>';
-      }
-    }
-  }
 })();

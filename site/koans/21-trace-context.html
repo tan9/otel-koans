@@ -242,6 +242,60 @@
       margin-top: 0.15rem;
     }
 
+    /* ── Segment breakdown ── */
+    .tc-breakdown {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: 1em;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      box-shadow: var(--shadow-inset);
+      transition: opacity 0.6s var(--ease-smooth), max-height 0.8s ease;
+    }
+
+    .tc-breakdown.visible {
+      opacity: 1;
+      max-height: 400px;
+    }
+
+    .tc-breakdown-title {
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .tc-breakdown-grid {
+      display: grid;
+      grid-template-columns: auto auto 1fr;
+      gap: 0.5rem 0.75rem;
+      align-items: center;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .tc-breakdown-grid > span:nth-child(3n+1) {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      text-align: right;
+    }
+
+    .tc-breakdown-eq {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .tc-breakdown-desc {
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
     /* ── Matching exercise ── */
     .tc-match-area {
       background: var(--bg-glass);
@@ -589,9 +643,31 @@
       When gateway calls api, it sends a <strong>traceparent</strong> HTTP header. This single header carries everything api needs to continue the same trace.
     </div>
 
+    <!-- ═══ Segment breakdown — teaches before matching ═══ -->
+    <div class="tc-breakdown" id="breakdown">
+      <div class="tc-breakdown-title" data-i18n="koan21.breakdownTitle">Four segments, separated by dashes:</div>
+      <div class="tc-breakdown-grid">
+        <span class="tc-seg-version">00</span>
+        <span class="tc-breakdown-eq">=</span>
+        <span class="tc-breakdown-desc" data-i18n="koan21.breakdownVersion">version (always 00 today)</span>
+
+        <span class="tc-seg-traceid">4bf92f...d7ac</span>
+        <span class="tc-breakdown-eq">=</span>
+        <span class="tc-breakdown-desc" data-i18n="koan21.breakdownTraceId">trace-id (32 hex chars &mdash; the shared identity)</span>
+
+        <span class="tc-seg-parentid">00f067...02b7</span>
+        <span class="tc-breakdown-eq">=</span>
+        <span class="tc-breakdown-desc" data-i18n="koan21.breakdownParentId">parent-span-id (16 hex chars &mdash; the calling span)</span>
+
+        <span class="tc-seg-flags">01</span>
+        <span class="tc-breakdown-eq">=</span>
+        <span class="tc-breakdown-desc" data-i18n="koan21.breakdownFlags">trace-flags (01 = sampled)</span>
+      </div>
+    </div>
+
     <!-- ═══ Matching exercise ═══ -->
     <div class="tc-match-area" id="matchArea">
-      <div class="tc-match-title" data-i18n="koan21.matchTitle">Match each segment to its meaning</div>
+      <div class="tc-match-title" data-i18n="koan21.matchTitle">Now match each segment to its meaning</div>
       <div class="tc-match-full">
         <span class="tc-seg-version">00</span><span class="tc-seg-dash"> - </span><span class="tc-seg-traceid">4bf92f3577b58681a65c3c24e8d2d7ac</span><span class="tc-seg-dash"> - </span><span class="tc-seg-parentid">00f067aa0ba902b7</span><span class="tc-seg-dash"> - </span><span class="tc-seg-flags">01</span>
       </div>
@@ -673,8 +749,12 @@
             }, 2000);
 
             setTimeout(function () {
-              document.getElementById('matchArea').classList.add('visible');
+              document.getElementById('breakdown').classList.add('visible');
             }, 2800);
+
+            setTimeout(function () {
+              document.getElementById('matchArea').classList.add('visible');
+            }, 4000);
           } else {
             this.classList.add('wrong');
             fb1.textContent = feedbackText;

@@ -352,14 +352,16 @@
     .pf-completion-link {
       display: inline-block;
       margin-top: 1.25rem;
-      font-family: var(--font-mono);
-      font-size: 0.95rem;
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      font-weight: 500;
       color: var(--text-secondary);
       text-decoration: none;
       border: 1px solid var(--border);
-      padding: 0.6rem 1.5rem;
-      border-radius: 0.5em;
-      transition: all 0.3s var(--ease-spring);
+      padding: 0.5em 1.5em;
+      transition: background 0.3s var(--ease-smooth),
+                  color 0.3s var(--ease-smooth),
+                  border-color 0.3s var(--ease-smooth);
     }
 
     .pf-completion-link:hover {

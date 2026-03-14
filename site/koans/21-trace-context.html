@@ -553,6 +553,17 @@
       Both spans share the same <strong>trace_id</strong>. The trace appears connected. But gateway and api are separate processes, separate machines. How does api know it belongs to the same trace?
     </div>
 
+    <!-- ═══ Question 1: asked before revealing the answer ═══ -->
+    <div class="trace-question" id="q1">
+      <p data-i18n="koan21.q1">What carries trace context between services?</p>
+      <div class="trace-opts">
+        <button class="trace-opt" data-answer="wrong" data-fb-key="koan21.q1FbDb" data-i18n="koan21.q1OptDb">The database</button>
+        <button class="trace-opt" data-answer="correct" data-fb-key="koan21.q1FbHeader" data-i18n="koan21.q1OptHeader">An HTTP header</button>
+        <button class="trace-opt" data-answer="wrong" data-fb-key="koan21.q1FbLog" data-i18n="koan21.q1OptLog">The log file</button>
+      </div>
+      <div class="trace-fb" id="fb1"></div>
+    </div>
+
     <!-- ═══ Arrow down to the answer ═══ -->
     <div class="tc-arrow-down" id="arrowReveal">
       <div class="tc-arrow-line"></div>
@@ -610,17 +621,6 @@
       <div class="tc-match-status" id="matchStatus"></div>
     </div>
 
-    <!-- ═══ Question 1 ═══ -->
-    <div class="trace-question" id="q1">
-      <p data-i18n="koan21.q1">What carries trace context between services?</p>
-      <div class="trace-opts">
-        <button class="trace-opt" data-answer="wrong" data-fb-key="koan21.q1FbDb" data-i18n="koan21.q1OptDb">The database</button>
-        <button class="trace-opt" data-answer="correct" data-fb-key="koan21.q1FbHeader" data-i18n="koan21.q1OptHeader">An HTTP header</button>
-        <button class="trace-opt" data-answer="wrong" data-fb-key="koan21.q1FbLog" data-i18n="koan21.q1OptLog">The log file</button>
-      </div>
-      <div class="trace-fb" id="fb1"></div>
-    </div>
-
     <!-- ═══ Insight ═══ -->
     <div class="tc-insight" id="insight">
       <p data-i18n="koan21.insightLine1">The traceparent header is the invisible thread. It carries just enough &mdash; a trace ID, a span ID, and a flag &mdash; for every service to continue the same story.</p>
@@ -636,24 +636,54 @@
   <script>
     (function () {
       function run() {
-      /* ── Phase 1: Reveal the header ────────────────────── */
+      /* ── Phase 1: Show Q1 first (before revealing the answer) ── */
 
-      /* Show the arrow and header panel after a short pause */
+      var q1 = document.getElementById('q1');
       setTimeout(function () {
-        document.getElementById('arrowReveal').classList.add('visible');
-      }, 600);
+        q1.classList.add('visible');
+      }, 800);
 
-      setTimeout(function () {
-        document.getElementById('headerPanel').classList.add('visible');
-      }, 1200);
+      /* ── Q1 logic — correct answer reveals the traceparent header ── */
 
-      setTimeout(function () {
-        document.getElementById('narrative2').classList.add('visible');
-      }, 2000);
+      var fb1 = document.getElementById('fb1');
+      var q1Opts = q1.querySelectorAll('.trace-opt');
 
-      setTimeout(function () {
-        document.getElementById('matchArea').classList.add('visible');
-      }, 2800);
+      q1Opts.forEach(function (opt) {
+        opt.addEventListener('click', function () {
+          var fbKey = this.dataset.fbKey;
+          var feedbackText = fbKey ? i18n.t(fbKey) : '';
+
+          if (this.dataset.answer === 'correct') {
+            this.classList.add('correct');
+            q1Opts.forEach(function (o) { o.classList.add('disabled'); });
+            fb1.textContent = feedbackText;
+            fb1.className = 'trace-fb trace-fb--correct';
+
+            /* Reveal the answer: arrow, header, narrative2, then matching */
+            setTimeout(function () {
+              document.getElementById('arrowReveal').classList.add('visible');
+            }, 600);
+
+            setTimeout(function () {
+              document.getElementById('headerPanel').classList.add('visible');
+            }, 1200);
+
+            setTimeout(function () {
+              document.getElementById('narrative2').classList.add('visible');
+            }, 2000);
+
+            setTimeout(function () {
+              document.getElementById('matchArea').classList.add('visible');
+            }, 2800);
+          } else {
+            this.classList.add('wrong');
+            fb1.textContent = feedbackText;
+            fb1.className = 'trace-fb trace-fb--wrong';
+            var self = this;
+            setTimeout(function () { self.classList.remove('wrong'); }, 600);
+          }
+        });
+      });
 
       /* ── Phase 2: Matching exercise ────────────────────── */
 
@@ -665,20 +695,12 @@
       var matchedCount = 0;
       var totalPairs = 4;
 
-      /* Correct mappings: segment data-seg → label data-label */
       var correctMap = {
         'version': 'version',
         'trace-id': 'trace-id',
         'parent-span-id': 'parent-span-id',
         'trace-flags': 'trace-flags'
       };
-
-      function clearSelections() {
-        segments.forEach(function (s) { s.classList.remove('selected'); });
-        labels.forEach(function (l) { l.classList.remove('selected'); });
-        selectedSeg = null;
-        selectedLabel = null;
-      }
 
       function tryMatch() {
         if (!selectedSeg || !selectedLabel) return;
@@ -687,7 +709,6 @@
         var labelKey = selectedLabel.dataset.label;
 
         if (correctMap[segKey] === labelKey) {
-          /* Correct match */
           selectedSeg.classList.remove('selected');
           selectedLabel.classList.remove('selected');
           selectedSeg.classList.add('matched');
@@ -704,13 +725,12 @@
             matchStatus.textContent = i18n.t('koan21.matchComplete');
             matchStatus.className = 'tc-match-status tc-match-status--correct';
 
-            /* Show Q1 */
+            /* Show insight after all matched */
             setTimeout(function () {
-              document.getElementById('q1').classList.add('visible');
+              document.getElementById('insight').classList.add('visible');
             }, 800);
           }
         } else {
-          /* Wrong match - flash red, then reset */
           var badSeg = selectedSeg;
           var badLabel = selectedLabel;
           badSeg.classList.remove('selected');
@@ -734,20 +754,14 @@
       segments.forEach(function (seg) {
         seg.addEventListener('click', function () {
           if (this.classList.contains('matched')) return;
-
-          /* If clicking an already-selected segment, deselect */
           if (selectedSeg === this) {
             this.classList.remove('selected');
             selectedSeg = null;
             return;
           }
-
-          /* Deselect any previous segment selection */
           segments.forEach(function (s) { s.classList.remove('selected'); });
           this.classList.add('selected');
           selectedSeg = this;
-
-          /* If a label is already selected, try match */
           tryMatch();
         });
       });
@@ -755,51 +769,15 @@
       labels.forEach(function (lbl) {
         lbl.addEventListener('click', function () {
           if (this.classList.contains('matched')) return;
-
-          /* If clicking an already-selected label, deselect */
           if (selectedLabel === this) {
             this.classList.remove('selected');
             selectedLabel = null;
             return;
           }
-
-          /* Deselect any previous label selection */
           labels.forEach(function (l) { l.classList.remove('selected'); });
           this.classList.add('selected');
           selectedLabel = this;
-
-          /* If a segment is already selected, try match */
           tryMatch();
-        });
-      });
-
-      /* ── Question 1 ──────────────────────────────────── */
-
-      var q1 = document.getElementById('q1');
-      var fb1 = document.getElementById('fb1');
-      var q1Opts = q1.querySelectorAll('.trace-opt');
-
-      q1Opts.forEach(function (opt) {
-        opt.addEventListener('click', function () {
-          var fbKey = this.dataset.fbKey;
-          var feedbackText = fbKey ? i18n.t(fbKey) : '';
-
-          if (this.dataset.answer === 'correct') {
-            this.classList.add('correct');
-            q1Opts.forEach(function (o) { o.classList.add('disabled'); });
-            fb1.textContent = feedbackText;
-            fb1.className = 'trace-fb trace-fb--correct';
-
-            setTimeout(function () {
-              document.getElementById('insight').classList.add('visible');
-            }, 800);
-          } else {
-            this.classList.add('wrong');
-            fb1.textContent = feedbackText;
-            fb1.className = 'trace-fb trace-fb--wrong';
-            var self = this;
-            setTimeout(function () { self.classList.remove('wrong'); }, 600);
-          }
         });
       });
       }

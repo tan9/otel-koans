@@ -728,14 +728,23 @@
     .fp-completion-link {
       display: inline-block;
       margin-top: 1.25rem;
-      font-family: var(--font-mono);
-      font-size: 0.9rem;
-      color: var(--accent-blue);
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-secondary);
       text-decoration: none;
-      transition: all 0.3s var(--ease-spring);
+      border: 1px solid var(--border);
+      padding: 0.5em 1.5em;
+      transition: background 0.3s var(--ease-smooth),
+                  color 0.3s var(--ease-smooth),
+                  border-color 0.3s var(--ease-smooth);
     }
 
-    .fp-completion-link:hover { text-decoration: underline; }
+    .fp-completion-link:hover {
+      border-color: var(--text-secondary);
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.04);
+    }
   </style>
 </head>
 <body>

@@ -471,7 +471,8 @@
     <!-- Insight -->
     <div class="bg-insight" id="insight">
       <p data-i18n="koan22.insightLine1">Trace context carries telemetry identity. Baggage carries your application data &mdash; user tier, priority, feature flags.</p>
-      <p data-i18n="koan22.insightLine2">Same propagation, different cargo. Baggage is not telemetry. It is business data riding on the same highway.</p>
+      <p data-i18n="koan22.insightLine2">Same propagation mechanism, different cargo.</p>
+      <p data-i18n="koan22.insightLine3">But the line blurs: when a span processor extracts baggage into attributes, that business data becomes an observability dimension &mdash; filter traces by customer tier, split metrics by deployment ring, consistently across every service.</p>
       <a href="23-span-links.html" data-i18n="common.continue">Continue &rarr;</a>
     </div>
   </div>

@@ -944,11 +944,12 @@
     "q2OptA": "Trace context carries telemetry identity, baggage carries application data",
     "q2OptB": "They are the same thing",
     "q2OptC": "Baggage is only for debugging",
-    "q2FbCorrect": "Exactly. Both propagate across services, but they serve different purposes.",
+    "q2FbCorrect": "Exactly. Both propagate across services, but they carry different things. And when baggage is extracted into span attributes, it becomes a powerful observability dimension too.",
     "q2FbSame": "Trace context carries trace_id and span_id. Baggage carries key-value pairs you define.",
     "q2FbDebug": "Baggage can carry any application data: user tier, request priority, feature flags.",
     "insightLine1": "Trace context carries telemetry identity. Baggage carries your application data \u2014 user tier, priority, feature flags.",
-    "insightLine2": "Same propagation, different cargo. Baggage is not telemetry. It is business data riding on the same highway."
+    "insightLine2": "Same propagation mechanism, different cargo.",
+    "insightLine3": "But the line blurs: when a span processor extracts baggage into attributes, that business data becomes an observability dimension \u2014 filter traces by customer tier, split metrics by deployment ring, consistently across every service."
   },
   "koan23": {
     "pageTitle": "Koan 23: Threads Between - OpenTelemetry Koans",

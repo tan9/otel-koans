@@ -170,6 +170,8 @@
     var num = document.createElement('span');
     num.className = 'toc-num';
     num.textContent = koan.n;
+    var entryColor = getGroupColor(idx);
+    if (entryColor && idx !== currentIdx) num.style.color = entryColor;
     entry.appendChild(num);
 
     var info = document.createElement('span');

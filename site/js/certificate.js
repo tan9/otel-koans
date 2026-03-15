@@ -125,89 +125,79 @@
     ctx.fillStyle = glow;
     ctx.fillRect(0, 0, w, h);
 
-    // Thin border inset
-    ctx.strokeStyle = 'rgba(88, 166, 255, 0.12)';
+    // Border
+    ctx.strokeStyle = 'rgba(88, 166, 255, 0.15)';
     ctx.lineWidth = 1;
-    roundRect(ctx, 30, 20, w - 60, h - 40, 8);
+    roundRect(ctx, 24, 16, w - 48, h - 32, 6);
     ctx.stroke();
 
-    // Inner border
-    ctx.strokeStyle = 'rgba(88, 166, 255, 0.06)';
-    roundRect(ctx, 38, 28, w - 76, h - 56, 6);
-    ctx.stroke();
+    // Layout: trophy on left, text on right — horizontal composition
+    var leftX = 280;  // trophy center
+    var rightX = 720; // text center
 
-    // Top accent line
-    ctx.strokeStyle = 'rgba(88, 166, 255, 0.25)';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(w / 2 - 100, 60);
-    ctx.lineTo(w / 2 + 100, 60);
-    ctx.stroke();
+    // Left side: Trophy (large, centered vertically)
+    drawTrophy(ctx, leftX, h / 2 - 20, 2.4);
 
-    // Trophy
-    drawTrophy(ctx, w / 2, 130, 1.6);
-
-    // "OPENTELEMETRY KOANS"
+    // Left side: "OPENTELEMETRY KOANS" below trophy
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.font = '500 13px "Helvetica Neue", Helvetica, Arial, sans-serif';
+    ctx.font = '500 11px "Helvetica Neue", Helvetica, Arial, sans-serif';
     ctx.fillStyle = '#58a6ff';
-    var titleText = 'O P E N T E L E M E T R Y   K O A N S';
-    ctx.fillText(titleText, w / 2, 210);
+    ctx.fillText('O P E N T E L E M E T R Y', leftX, h / 2 + 60);
+    ctx.fillText('K O A N S', leftX, h / 2 + 78);
 
-    // Small divider
-    ctx.strokeStyle = 'rgba(165, 165, 165, 0.25)';
-    ctx.lineWidth = 1;
+    // Vertical divider between left and right
+    ctx.strokeStyle = 'rgba(165, 165, 165, 0.12)';
     ctx.beginPath();
-    ctx.moveTo(w / 2 - 40, 235);
-    ctx.lineTo(w / 2 + 40, 235);
+    ctx.moveTo(w / 2, 80);
+    ctx.lineTo(w / 2, h - 80);
     ctx.stroke();
 
-    // "COMPLETED"
-    ctx.font = '300 32px "Helvetica Neue", Helvetica, Arial, sans-serif';
-    ctx.fillStyle = 'rgba(224, 224, 224, 0.85)';
-    ctx.fillText(t('cert.completed', 'COMPLETED'), w / 2, 275);
+    // Right side: "COMPLETED"
+    ctx.textAlign = 'center';
+    ctx.font = '300 16px "Helvetica Neue", Helvetica, Arial, sans-serif';
+    ctx.fillStyle = 'rgba(165, 165, 165, 0.5)';
+    ctx.fillText(t('cert.completed', 'COMPLETED'), rightX, 160);
 
-    // Name
-    ctx.font = 'italic 42px Baskerville, "Times New Roman", Georgia, serif';
+    // Right side: horizontal accent
+    ctx.strokeStyle = 'rgba(88, 166, 255, 0.2)';
+    ctx.beginPath();
+    ctx.moveTo(rightX - 80, 185);
+    ctx.lineTo(rightX + 80, 185);
+    ctx.stroke();
+
+    // Right side: Name (large, prominent)
+    ctx.font = 'italic 52px Baskerville, "Times New Roman", Georgia, serif';
     ctx.fillStyle = '#e0e0e0';
-    // Truncate very long names
-    var displayName = name.length > 40 ? name.substring(0, 37) + '...' : name;
-    ctx.fillText(displayName, w / 2, 345);
+    var displayName = name.length > 30 ? name.substring(0, 27) + '...' : name;
+    ctx.fillText(displayName, rightX, 260);
 
-    // Divider below name
-    ctx.strokeStyle = 'rgba(165, 165, 165, 0.2)';
+    // Right side: accent below name
+    ctx.strokeStyle = 'rgba(88, 166, 255, 0.2)';
     ctx.beginPath();
-    ctx.moveTo(w / 2 - 60, 385);
-    ctx.lineTo(w / 2 + 60, 385);
+    ctx.moveTo(rightX - 80, 305);
+    ctx.lineTo(rightX + 80, 305);
     ctx.stroke();
 
-    // Koan count + date
+    // Right side: Koan count + date
     var months = [
       'January', 'February', 'March', 'April', 'May', 'June',
       'July', 'August', 'September', 'October', 'November', 'December'
     ];
     var now = new Date();
     var dateStr = TOTAL_KOANS + ' koans \u00B7 ' + months[now.getMonth()] + ' ' + now.getFullYear();
-    ctx.font = '14px "Helvetica Neue", Helvetica, Arial, sans-serif';
-    ctx.fillStyle = 'rgba(165, 165, 165, 0.5)';
-    ctx.fillText(dateStr, w / 2, 420);
+    ctx.font = '16px "Helvetica Neue", Helvetica, Arial, sans-serif';
+    ctx.fillStyle = 'rgba(165, 165, 165, 0.45)';
+    ctx.fillText(dateStr, rightX, 360);
 
-    // Site URL
-    ctx.font = '500 14px "Helvetica Neue", Helvetica, Arial, sans-serif';
+    // Right side: Site URL
+    ctx.font = '500 16px "Helvetica Neue", Helvetica, Arial, sans-serif';
     ctx.fillStyle = '#3fb950';
-    ctx.fillText(SITE_URL, w / 2, 470);
+    ctx.fillText(SITE_URL, rightX, 420);
 
-    // Bottom accent line
-    ctx.strokeStyle = 'rgba(88, 166, 255, 0.25)';
-    ctx.beginPath();
-    ctx.moveTo(w / 2 - 100, h - 60);
-    ctx.lineTo(w / 2 + 100, h - 60);
-    ctx.stroke();
-
-    // Subtle corner dots (decorative)
-    ctx.fillStyle = 'rgba(88, 166, 255, 0.15)';
-    [[50, 40], [w - 50, 40], [50, h - 40], [w - 50, h - 40]].forEach(function (p) {
+    // Corner dots (decorative)
+    ctx.fillStyle = 'rgba(88, 166, 255, 0.12)';
+    [[40, 32], [w - 40, 32], [40, h - 32], [w - 40, h - 32]].forEach(function (p) {
       ctx.beginPath();
       ctx.arc(p[0], p[1], 2, 0, Math.PI * 2);
       ctx.fill();

@@ -136,6 +136,7 @@
     var w = 1200, h = 627;
     canvas.width = w;
     canvas.height = h;
+    var cx = w / 2;
 
     // Background gradient
     var bg = ctx.createLinearGradient(0, 0, 0, h);
@@ -144,15 +145,15 @@
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, w, h);
 
-    // Subtle radial glow
-    var glow = ctx.createRadialGradient(w / 2, h * 0.42, 0, w / 2, h * 0.42, 350);
-    glow.addColorStop(0, 'rgba(88, 166, 255, 0.035)');
+    // Subtle radial glow — centered
+    var glow = ctx.createRadialGradient(cx, h * 0.45, 0, cx, h * 0.45, 420);
+    glow.addColorStop(0, 'rgba(88, 166, 255, 0.04)');
     glow.addColorStop(1, 'transparent');
     ctx.fillStyle = glow;
     ctx.fillRect(0, 0, w, h);
 
-    // OTel logo watermark — large, ghosted behind left panel
-    drawOTelWatermark(ctx, 180, h / 2, 3.2, 0.06);
+    // OTel watermark — centered behind everything, very subtle
+    drawOTelWatermark(ctx, cx, h / 2, 3.8, 0.035);
 
     // Border
     ctx.strokeStyle = 'rgba(88, 166, 255, 0.15)';
@@ -160,71 +161,61 @@
     roundRect(ctx, 24, 16, w - 48, h - 32, 6);
     ctx.stroke();
 
-    // Layout: trophy on left, text on right — horizontal composition
-    var leftX = 280;  // trophy center
-    var rightX = 720; // text center
-
-    // Left side: Trophy (large, centered vertically)
-    drawTrophy(ctx, leftX, h / 2 - 20, 2.0);
-
-    // Left side: OTel logo (small, crisp) below trophy
-    drawOTelLogo(ctx, leftX, h / 2 + 75, 0.2);
-
-    // Left side: "OPENTELEMETRY KOANS" below logo
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.font = '500 11px "Helvetica Neue", Helvetica, Arial, sans-serif';
+
+    // ── Top zone: Trophy + branding ──
+    drawTrophy(ctx, cx, 90, 1.3);
+
+    ctx.font = '500 15px "Helvetica Neue", Helvetica, Arial, sans-serif';
     ctx.fillStyle = '#58a6ff';
-    ctx.fillText('O P E N T E L E M E T R Y   K O A N S', leftX, h / 2 + 105);
+    ctx.letterSpacing = '3px';
+    ctx.fillText('O P E N T E L E M E T R Y   K O A N S', cx, 158);
+    ctx.letterSpacing = '0px';
 
-    // Vertical divider between left and right
-    ctx.strokeStyle = 'rgba(165, 165, 165, 0.12)';
-    ctx.beginPath();
-    ctx.moveTo(w / 2, 80);
-    ctx.lineTo(w / 2, h - 80);
-    ctx.stroke();
-
-    // Right side: "COMPLETED"
-    ctx.textAlign = 'center';
-    ctx.font = '300 16px "Helvetica Neue", Helvetica, Arial, sans-serif';
-    ctx.fillStyle = 'rgba(165, 165, 165, 0.5)';
-    ctx.fillText(t('cert.completed', 'COMPLETED'), rightX, 160);
-
-    // Right side: horizontal accent
+    // ── Accent line ──
     ctx.strokeStyle = 'rgba(88, 166, 255, 0.2)';
     ctx.beginPath();
-    ctx.moveTo(rightX - 80, 185);
-    ctx.lineTo(rightX + 80, 185);
+    ctx.moveTo(cx - 120, 188);
+    ctx.lineTo(cx + 120, 188);
     ctx.stroke();
 
-    // Right side: Name (large, prominent)
-    ctx.font = 'italic 52px Baskerville, "Times New Roman", Georgia, serif';
-    ctx.fillStyle = '#e0e0e0';
-    var displayName = name.length > 30 ? name.substring(0, 27) + '...' : name;
-    ctx.fillText(displayName, rightX, 260);
+    // ── "COMPLETED" ──
+    ctx.font = '300 22px "Helvetica Neue", Helvetica, Arial, sans-serif';
+    ctx.fillStyle = 'rgba(165, 165, 165, 0.6)';
+    ctx.fillText(t('cert.completed', 'COMPLETED'), cx, 225);
 
-    // Right side: accent below name
+    // ── Name — the hero element ──
+    ctx.font = 'italic 72px Baskerville, "Times New Roman", Georgia, serif';
+    ctx.fillStyle = '#e6e6e6';
+    var displayName = name.length > 24 ? name.substring(0, 21) + '\u2026' : name;
+    ctx.fillText(displayName, cx, 320);
+
+    // ── Accent below name ──
     ctx.strokeStyle = 'rgba(88, 166, 255, 0.2)';
     ctx.beginPath();
-    ctx.moveTo(rightX - 80, 305);
-    ctx.lineTo(rightX + 80, 305);
+    ctx.moveTo(cx - 120, 375);
+    ctx.lineTo(cx + 120, 375);
     ctx.stroke();
 
-    // Right side: Koan count + date
+    // ── Details: koan count + date ──
     var months = [
       'January', 'February', 'March', 'April', 'May', 'June',
       'July', 'August', 'September', 'October', 'November', 'December'
     ];
     var now = new Date();
     var dateStr = TOTAL_KOANS + ' koans \u00B7 ' + months[now.getMonth()] + ' ' + now.getFullYear();
-    ctx.font = '16px "Helvetica Neue", Helvetica, Arial, sans-serif';
-    ctx.fillStyle = 'rgba(165, 165, 165, 0.45)';
-    ctx.fillText(dateStr, rightX, 360);
+    ctx.font = '20px "Helvetica Neue", Helvetica, Arial, sans-serif';
+    ctx.fillStyle = 'rgba(165, 165, 165, 0.55)';
+    ctx.fillText(dateStr, cx, 430);
 
-    // Right side: Site URL
-    ctx.font = '500 16px "Helvetica Neue", Helvetica, Arial, sans-serif';
+    // ── Site URL ──
+    ctx.font = '500 20px "Helvetica Neue", Helvetica, Arial, sans-serif';
     ctx.fillStyle = '#3fb950';
-    ctx.fillText(SITE_URL, rightX, 420);
+    ctx.fillText(SITE_URL, cx, 485);
+
+    // ── Small OTel logo at bottom center ──
+    drawOTelLogo(ctx, cx, 548, 0.25);
 
     // Corner dots (decorative)
     ctx.fillStyle = 'rgba(88, 166, 255, 0.12)';

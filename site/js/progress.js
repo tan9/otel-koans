@@ -12,7 +12,7 @@
   var KOAN_ORDER = [
     { n: 0,  file: 'index.html',              titleKey: 'nav.theOpening',       fallback: 'The Opening' },
     { n: 1,  file: 'koans/01-telemetry.html',  titleKey: 'nav.telemetry',       fallback: 'Telemetry' },
-    { n: 2,  file: 'koans/02-three-signals.html', titleKey: 'nav.threeSignals', fallback: 'Three Signals' },
+    { n: 2,  file: 'koans/02-three-signals.html', titleKey: 'nav.threeSignals', fallback: 'Core Signals' },
     { n: 3,  file: 'koans/03-metric.html',     titleKey: 'nav.metric',          fallback: 'Metric' },
     { n: 4,  file: 'koans/04-metric-types.html', titleKey: 'nav.metricTypes',   fallback: 'Metric Types' },
     { n: 5,  file: 'koans/05-trace.html',      titleKey: 'nav.trace',           fallback: 'Trace' },

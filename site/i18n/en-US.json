@@ -30,7 +30,7 @@
   "nav": {
     "theOpening": "The Opening",
     "telemetry": "Telemetry",
-    "threeSignals": "Three Signals",
+    "threeSignals": "Core Signals",
     "metric": "Metric",
     "metricTypes": "Metric Types",
     "trace": "Trace",
@@ -111,8 +111,8 @@
     "insightP2": "Without it, a system is a black box. With it, you can see inside."
   },
   "koan02": {
-    "pageTitle": "Koan 2: Three Signals - OpenTelemetry Koans",
-    "title": "Three Signals",
+    "pageTitle": "Koan 2: Core Signals - OpenTelemetry Koans",
+    "title": "Core Signals",
     "zen": "A system speaks, but not with one voice.\nIt measures. It narrates. It records.\nThree ways of seeing. Each reveals what the others cannot.",
     "sortInstruction": "A stream of telemetry arrives. Sort these items into three groups.",
     "bucketA": "Bucket A",
@@ -155,10 +155,10 @@
     "matchOptLog": "Log",
     "matchCheckBtn": "Check",
     "matchFeedbackEmpty": "Choose an answer for each question.",
-    "matchCorrect": "Three signals. Three questions only they can answer.",
+    "matchCorrect": "Each signal answers a different question. Together they show the full picture.",
     "matchWrong": "Not quite. Think about what kind of data each scenario needs: a number over time, a path through services, or a discrete event.",
     "insightLine1": "Metrics measure. Traces narrate. Logs record.",
-    "insightLine2": "Together, they are the three signals of observability."
+    "insightLine2": "These are the core signals of observability. Others, like profiles, are emerging."
   },
   "koan03": {
     "pageTitle": "Koan 3: What is a Metric? - OpenTelemetry Koans",
@@ -577,10 +577,11 @@
     "hintText2": "Format C uses key=value pairs, one field per line.",
     "hintJson1": "Look at the format cards. Which one uses curly braces and named fields?",
     "hintJson2": "Format A is JSON with curly braces, keys in quotes, and nested values.",
-    "revealIntro": "In practice, these backends have names you\u2019ll encounter:",
-    "revealJaeger": "A tracing tool that accepts binary-encoded data",
-    "revealPrometheus": "A metrics system that scrapes key=value text",
-    "revealElastic": "Logging tools that ingest structured JSON",
+    "revealIntro": "Some backends you may encounter (many others exist):",
+    "revealJaeger": "Tracing \u2014 accepts binary-encoded data (e.g. Jaeger, Tempo)",
+    "revealPrometheus": "Metrics \u2014 scrapes key=value text (e.g. Prometheus, Mimir)",
+    "revealElastic": "Logging \u2014 ingests structured JSON (e.g. Elasticsearch, Loki)",
+    "revealNote": "Many observability platforms combine all three. The format is what matters, not the tool.",
     "insightLine1": "The data is the same. The format is the envelope.",
     "insightLine2": "Different destinations need different envelopes."
   },
@@ -829,7 +830,7 @@
     "narr2": "Two signals, two perspectives. One showed the shape, the other added context.\nThe last signal will complete the picture.",
     "chooserPrompt3": "Check the final signal.",
     "chooserHint3": "You know what is left.",
-    "narr3": "You have seen all three signals. Errors appear in gateway, api, and orders. Logs mention payment and inventory too.\nBut which service is the actual root cause?",
+    "narr3": "You have checked all three signals. Errors appear in gateway, api, and orders. Logs mention payment and inventory too.\nBut which service is the actual root cause?",
     "serviceMapPrompt": "Click the service where the failure originates.",
     "serviceMapHint": "Think about what the trace showed you.",
     "serviceMapCorrect": "Correct. The database is the origin. Everything upstream failed because of it.",
@@ -1014,6 +1015,7 @@
     "logA3Msg": "Order #9281 failed: inventory unavailable",
     "narrative2": "Now each log carries a <strong>trace_id</strong> and <strong>span_id</strong>. The first two logs share trace a1b2c3d4e5f6 -- they belong to the same request. You can jump from the error log straight to its trace.",
     "matchTitle": "Match each log entry to the trace it belongs to",
+    "matchHint": "Click a log on the left, then click its matching trace on the right.",
     "matchLog1": "Order created #9281",
     "matchTrace1": "trace f7e8d9c0b1a2",
     "matchLog2": "Stock check failed SKU-440",

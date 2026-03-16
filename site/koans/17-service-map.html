@@ -61,6 +61,7 @@
       cursor: pointer;
       transition: all 0.3s var(--ease-spring);
       user-select: none;
+      overflow: hidden;
     }
 
     .trace-row:hover:not(.processed):not(.locked) {
@@ -102,6 +103,8 @@
       gap: 0.25rem;
       font-family: var(--font-mono);
       font-size: 0.8rem;
+      flex-wrap: wrap;
+      min-width: 0;
     }
 
     .trace-svc {

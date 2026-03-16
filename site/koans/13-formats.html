@@ -562,21 +562,19 @@
 
     <!-- Real tool names revealed after matching (label-last) -->
     <div class="fmt-reveal" id="nameReveal">
-      <p data-i18n="koan13.revealIntro">In practice, these backends have names you'll encounter:</p>
+      <p data-i18n="koan13.revealIntro">Some backends you may encounter (many others exist):</p>
       <div class="fmt-reveal-grid">
         <div class="fmt-reveal-item">
-          <strong>Jaeger</strong>
-          <span data-i18n="koan13.revealJaeger">A tracing tool that accepts binary-encoded data</span>
+          <span data-i18n="koan13.revealJaeger">Tracing &mdash; accepts binary-encoded data (e.g. Jaeger, Tempo)</span>
         </div>
         <div class="fmt-reveal-item">
-          <strong>Prometheus</strong>
-          <span data-i18n="koan13.revealPrometheus">A metrics system that scrapes key=value text</span>
+          <span data-i18n="koan13.revealPrometheus">Metrics &mdash; scrapes key=value text (e.g. Prometheus, Mimir)</span>
         </div>
         <div class="fmt-reveal-item">
-          <strong>Elasticsearch / Loki</strong>
-          <span data-i18n="koan13.revealElastic">Logging tools that ingest structured JSON</span>
+          <span data-i18n="koan13.revealElastic">Logging &mdash; ingests structured JSON (e.g. Elasticsearch, Loki)</span>
         </div>
       </div>
+      <p style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); margin-top: 0.75rem;" data-i18n="koan13.revealNote">Many observability platforms combine all three. The format is what matters, not the tool.</p>
     </div>
 
     <!-- Insight -->

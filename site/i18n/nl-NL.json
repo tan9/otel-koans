@@ -48,7 +48,7 @@
         "serviceMap": "Servicediagram",
         "correlation": "Correlatie",
         "fullPicture": "Het Totaalbeeld",
-        "spanEvents": "Span Events",
+        "spanEvents": "Events",
         "traceContext": "Trace Context",
         "baggage": "Baggage",
         "spanLinks": "Span Links",
@@ -864,7 +864,7 @@
         "goDeeper": "Het pad gaat verder voor wie dichterbij wil kijken →"
     },
     "koan20": {
-        "pageTitle": "Koan 20: Span Events - OpenTelemetry Koans",
+        "pageTitle": "Koan 20: Events - OpenTelemetry Koans",
         "title": "Momenten Binnenin",
         "zen": "Een span vertelt het verhaal van een bewerking.\nMaar binnen dat verhaal verdienen sommige momenten hun eigen naam.",
         "scenarioHeader": "observatie",
@@ -880,19 +880,19 @@
         "q1": "Drie child spans voor twee korte momenten voelt zwaar. Is er een lichtere manier om vast te leggen wat er gebeurde?",
         "q1OptA": "Meer detail aan de child spans toevoegen",
         "q1OptB": "De parent span annoteren met notities met tijdstempel",
-        "q1OptC": "Ze apart loggen",
+        "q1OptC": "Ze buiten de trace loggen",
         "q1Correct": "Annotaties met tijdstempel op de parent span — licht en schoon.",
         "q1WrongChild": "Meer child spans betekent meer rommel. Denk lichter — wat als de parent span zelf deze momenten kon vastleggen?",
-        "q1WrongLog": "Logs staan los van de trace. Events houden de annotatie binnen de span waar het plaatsvond.",
+        "q1WrongLog": "Buiten de trace loggen verliest de verbinding met deze span. Events houden de annotatie precies waar het moment plaatsvond.",
         "q2": "Deze annotaties met tijdstempel op een span heten...",
         "q2OptA": "Attributes",
-        "q2OptB": "Span events",
+        "q2OptB": "Events",
         "q2OptC": "Child spans",
-        "q2Correct": "Span events — annotaties met tijdstempel en naam die op de span zelf leven.",
+        "q2Correct": "Events — benoemde annotaties met tijdstempel die momenten binnen een span markeren.",
         "q2WrongAttr": "Attributes zijn sleutel-waardeparen op een span, maar ze hebben geen tijdstempel. Events wel.",
         "q2WrongChild": "Child spans zijn aparte spans. Events zijn annotaties op de parent span.",
         "insightLine1": "Niet elk moment heeft zijn eigen span nodig.",
-        "insightLine2": "Een span event markeert wat er gebeurde en wanneer — een lichte annotatie die je traces schoon houdt."
+        "insightLine2": "Een event markeert wat er gebeurde en wanneer — een lichte annotatie die je traces schoon houdt."
     },
     "koan21": {
         "pageTitle": "Koan 21: De Onzichtbare Draad - OpenTelemetry Koans",

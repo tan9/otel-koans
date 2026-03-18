@@ -48,7 +48,7 @@
         "serviceMap": "Mappa dei Servizi",
         "correlation": "Correlazione",
         "fullPicture": "Il Quadro Completo",
-        "spanEvents": "Span Events",
+        "spanEvents": "Events",
         "traceContext": "Trace Context",
         "baggage": "Baggage",
         "spanLinks": "Span Links",
@@ -864,7 +864,7 @@
         "goDeeper": "Il cammino continua per chi vuole guardare più da vicino →"
     },
     "koan20": {
-        "pageTitle": "Koan 20: Span Events - OpenTelemetry Koans",
+        "pageTitle": "Koan 20: Events - OpenTelemetry Koans",
         "title": "Istanti Dentro",
         "zen": "Uno span racconta la storia di un’operazione.\nMa dentro quella storia, alcuni istanti meritano un nome proprio.",
         "scenarioHeader": "osservazione",
@@ -880,19 +880,19 @@
         "q1": "Tre span figli per due brevi istanti sembra eccessivo. C’è un modo più leggero per registrare cosa è successo?",
         "q1OptA": "Aggiungere più dettagli agli span figli",
         "q1OptB": "Annotare lo span padre con note temporizzate",
-        "q1OptC": "Registrarli separatamente nei log",
+        "q1OptC": "Registrarli fuori dal trace",
         "q1Correct": "Annotazioni temporizzate sullo span padre — leggere e pulite.",
         "q1WrongChild": "Più span figli significa più disordine. Pensa più leggero — e se lo span padre stesso potesse registrare questi istanti?",
-        "q1WrongLog": "I log sono separati dal trace. Gli event mantengono l’annotazione dentro lo span dove è avvenuta.",
+        "q1WrongLog": "Registrare fuori dal trace perde la connessione con questo span. Gli event mantengono l’annotazione esattamente dove il momento è avvenuto.",
         "q2": "Queste annotazioni temporizzate su uno span si chiamano...",
         "q2OptA": "Attributes",
-        "q2OptB": "Span events",
+        "q2OptB": "Events",
         "q2OptC": "Span figli",
-        "q2Correct": "Span events — annotazioni nominali e temporizzate che vivono sullo span stesso.",
+        "q2Correct": "Events — annotazioni con nome e timestamp che segnano momenti all'interno di uno span.",
         "q2WrongAttr": "Gli attributes sono coppie chiave-valore su uno span, ma non hanno timestamp. Gli event sì.",
         "q2WrongChild": "Gli span figli sono span separati. Gli event sono annotazioni sullo span padre.",
         "insightLine1": "Non ogni istante ha bisogno del proprio span.",
-        "insightLine2": "Uno span event segna cosa è successo e quando — un’annotazione leggera che mantiene i tuoi trace puliti."
+        "insightLine2": "Un event segna cosa è successo e quando — un’annotazione leggera che mantiene i tuoi trace puliti."
     },
     "koan21": {
         "pageTitle": "Koan 21: Il Filo Invisibile - OpenTelemetry Koans",

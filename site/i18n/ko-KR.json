@@ -48,7 +48,7 @@
         "serviceMap": "서비스 맵",
         "correlation": "상관 관계",
         "fullPicture": "전체 그림",
-        "spanEvents": "Span Events",
+        "spanEvents": "Events",
         "traceContext": "Trace Context",
         "baggage": "Baggage",
         "spanLinks": "Span Links",
@@ -864,7 +864,7 @@
         "goDeeper": "더 깊이 보고 싶다면, 길은 계속돼요 →"
     },
     "koan20": {
-        "pageTitle": "Koan 20: Span Events - OpenTelemetry Koans",
+        "pageTitle": "Koan 20: Events - OpenTelemetry Koans",
         "title": "그 안의 순간들",
         "zen": "Span은 하나의 작업의 이야기를 들려줘요.\n하지만 그 이야기 안에서, 어떤 순간은 고유한 이름을 가질 자격이 있어요.",
         "scenarioHeader": "관찰",
@@ -880,19 +880,19 @@
         "q1": "두 개의 짧은 순간에 세 개의 자식 span은 무거워요. 더 가벼운 기록 방법이 있나요?",
         "q1OptA": "자식 span에 더 많은 세부 사항 추가",
         "q1OptB": "부모 span에 타임스탬프가 있는 메모 달기",
-        "q1OptC": "별도로 log로 기록하기",
+        "q1OptC": "trace 밖에서 log로 기록하기",
         "q1Correct": "부모 span에 타임스탬프가 있는 주석 — 가볍고 깔끔해요.",
         "q1WrongChild": "더 많은 자식 span은 더 많은 잡음이에요. 더 가볍게 생각해 보세요 — 부모 span 자체가 이 순간들을 기록할 수 있다면요?",
-        "q1WrongLog": "Log는 trace와 별개예요. Event는 주석을 발생한 span 안에 유지해요.",
+        "q1WrongLog": "trace 밖에서 log를 기록하면 이 span과의 연결이 끊겨요. Event는 주석을 그 순간이 발생한 바로 그 자리에 유지해요.",
         "q2": "Span에 있는 이 타임스탬프가 있는 주석들을 뭐라고 부를까요?",
         "q2OptA": "Attributes",
-        "q2OptB": "Span events",
+        "q2OptB": "Events",
         "q2OptC": "자식 span",
-        "q2Correct": "Span events — span 자체에 존재하는, 타임스탬프가 있고 이름이 있는 주석이에요.",
+        "q2Correct": "Events — span 안의 순간을 표시하는, 이름이 있고 타임스탬프가 있는 주석이에요.",
         "q2WrongAttr": "Attributes는 span의 키-값 쌍이지만, 타임스탬프가 없어요. Event에는 있어요.",
         "q2WrongChild": "자식 span은 별도의 span이에요. Event는 부모 span의 주석이에요.",
         "insightLine1": "모든 순간에 별도의 span이 필요한 것은 아니에요.",
-        "insightLine2": "Span event는 무슨 일이 있었는지, 언제 있었는지를 표시해요 — trace를 깔끔하게 유지하는 가벼운 주석이에요."
+        "insightLine2": "Event는 무슨 일이 있었는지, 언제 있었는지를 표시해요 — trace를 깔끔하게 유지하는 가벼운 주석이에요."
     },
     "koan21": {
         "pageTitle": "Koan 21: 보이지 않는 실 - OpenTelemetry Koans",

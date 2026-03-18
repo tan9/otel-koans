@@ -48,7 +48,7 @@
         "serviceMap": "Mapa de Servicios",
         "correlation": "Correlación",
         "fullPicture": "La Imagen Completa",
-        "spanEvents": "Span Events",
+        "spanEvents": "Events",
         "traceContext": "Trace Context",
         "baggage": "Baggage",
         "spanLinks": "Span Links",
@@ -864,7 +864,7 @@
         "goDeeper": "El camino continúa para quienes deseen mirar más de cerca →"
     },
     "koan20": {
-        "pageTitle": "Koan 20: Span Events - OpenTelemetry Koans",
+        "pageTitle": "Koan 20: Events - OpenTelemetry Koans",
         "title": "Momentos Internos",
         "zen": "Un span cuenta la historia de una operación.\nPero dentro de esa historia, algunos momentos merecen su propio nombre.",
         "scenarioHeader": "observación",
@@ -880,19 +880,19 @@
         "q1": "Tres spans hijos para dos momentos breves se siente excesivo. ¿Hay una forma más ligera de registrar lo que pasó?",
         "q1OptA": "Añadir más detalle a los spans hijos",
         "q1OptB": "Anotar el span padre con notas con marca de tiempo",
-        "q1OptC": "Registrarlos por separado en logs",
+        "q1OptC": "Registrarlos fuera de la trace",
         "q1Correct": "Anotaciones con marca de tiempo en el span padre: ligeras y limpias.",
         "q1WrongChild": "Más spans hijos significa más ruido. Piensa en algo más ligero: ¿y si el propio span padre pudiera registrar estos momentos?",
-        "q1WrongLog": "Los logs están separados del trace. Los events mantienen la anotación dentro del span donde ocurrió.",
+        "q1WrongLog": "Registrar fuera de la trace pierde la conexión con este span. Los events mantienen la anotación justo donde el momento ocurrió.",
         "q2": "Estas anotaciones con marca de tiempo en un span se llaman...",
         "q2OptA": "Attributes",
-        "q2OptB": "Span events",
+        "q2OptB": "Events",
         "q2OptC": "Spans hijos",
-        "q2Correct": "Span events: anotaciones con marca de tiempo y nombre que viven en el propio span.",
+        "q2Correct": "Events — anotaciones nombradas y con marca de tiempo que marcan momentos dentro de un span.",
         "q2WrongAttr": "Los attributes son pares clave-valor en un span, pero no tienen marca de tiempo. Los events sí.",
         "q2WrongChild": "Los spans hijos son spans separados. Los events son anotaciones en el span padre.",
         "insightLine1": "No todo momento necesita su propio span.",
-        "insightLine2": "Un span event marca qué pasó y cuándo: una anotación ligera que mantiene tus traces limpios."
+        "insightLine2": "Un event marca qué pasó y cuándo — una anotación ligera que mantiene tus traces limpios."
     },
     "koan21": {
         "pageTitle": "Koan 21: El Hilo Invisible - OpenTelemetry Koans",

@@ -48,7 +48,7 @@
         "serviceMap": "Carte des services",
         "correlation": "Corrélation",
         "fullPicture": "Vue d'ensemble",
-        "spanEvents": "Span Events",
+        "spanEvents": "Events",
         "traceContext": "Trace Context",
         "baggage": "Baggage",
         "spanLinks": "Span Links",
@@ -864,7 +864,7 @@
         "goDeeper": "Le chemin continue pour ceux qui veulent regarder de plus près →"
     },
     "koan20": {
-        "pageTitle": "Koan 20 : Span Events - OpenTelemetry Koans",
+        "pageTitle": "Koan 20 : Events - OpenTelemetry Koans",
         "title": "Les instants intérieurs",
         "zen": "Un span raconte l'histoire d'une opération.\nMais dans cette histoire, certains instants méritent leur propre nom.",
         "scenarioHeader": "observation",
@@ -880,19 +880,19 @@
         "q1": "Trois spans enfants pour deux brefs instants, c'est lourd. Existe-t-il une façon plus légère d'enregistrer ce qui s'est passé ?",
         "q1OptA": "Ajouter plus de détails aux spans enfants",
         "q1OptB": "Annoter le span parent avec des notes horodatées",
-        "q1OptC": "Les enregistrer séparément dans les logs",
+        "q1OptC": "Les enregistrer en dehors de la trace",
         "q1Correct": "Des annotations horodatées sur le span parent — légères et propres.",
         "q1WrongChild": "Plus de spans enfants signifie plus de bruit. Pensez plus léger — et si le span parent lui-même pouvait enregistrer ces instants ?",
-        "q1WrongLog": "Les logs sont séparés de la trace. Les events gardent l'annotation à l'intérieur du span où elle s'est produite.",
+        "q1WrongLog": "Enregistrer en dehors de la trace perd la connexion avec ce span. Les events gardent l'annotation exactement là où le moment s'est produit.",
         "q2": "Ces annotations horodatées sur un span s'appellent...",
         "q2OptA": "Des attributs",
-        "q2OptB": "Des span events",
+        "q2OptB": "Des events",
         "q2OptC": "Des spans enfants",
-        "q2Correct": "Les span events — des annotations horodatées et nommées qui vivent sur le span lui-même.",
+        "q2Correct": "Les events — des annotations nommées et horodatées qui marquent des moments au sein d'un span.",
         "q2WrongAttr": "Les attributs sont des paires clé-valeur sur un span, mais ils n'ont pas d'horodatage. Les events en ont.",
         "q2WrongChild": "Les spans enfants sont des spans séparés. Les events sont des annotations sur le span parent.",
         "insightLine1": "Tous les instants n'ont pas besoin de leur propre span.",
-        "insightLine2": "Un span event marque ce qui s'est passé et quand — une annotation légère qui garde vos traces propres."
+        "insightLine2": "Un event marque ce qui s'est passé et quand — une annotation légère qui garde vos traces propres."
     },
     "koan21": {
         "pageTitle": "Koan 21 : Le fil invisible - OpenTelemetry Koans",

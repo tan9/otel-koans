@@ -48,7 +48,7 @@
     "serviceMap": "Service Map",
     "correlation": "Correlation",
     "fullPicture": "Full Picture",
-    "spanEvents": "Span Events",
+    "spanEvents": "Events",
     "traceContext": "Trace Context",
     "baggage": "Baggage",
     "spanLinks": "Span Links",
@@ -865,7 +865,7 @@
     "goDeeper": "The path continues for those who wish to look closer \u2192"
   },
   "koan20": {
-    "pageTitle": "Koan 20: Span Events - OpenTelemetry Koans",
+    "pageTitle": "Koan 20: Events - OpenTelemetry Koans",
     "title": "Moments Within",
     "zen": "A span tells the story of an operation.\nBut within that story, some moments deserve their own name.",
     "scenarioHeader": "observation",
@@ -881,19 +881,19 @@
     "q1": "Three child spans for two brief moments feels heavy. Is there a lighter way to record what happened?",
     "q1OptA": "Add more detail to the child spans",
     "q1OptB": "Annotate the parent span with timestamped notes",
-    "q1OptC": "Log them separately",
+    "q1OptC": "Log them outside the trace",
     "q1Correct": "Timestamped annotations on the parent span \u2014 lightweight and clean.",
     "q1WrongChild": "More child spans means more clutter. Think lighter \u2014 what if the parent span itself could record these moments?",
-    "q1WrongLog": "Logs are separate from the trace. Events keep the annotation inside the span where it happened.",
+    "q1WrongLog": "Logging outside the trace loses the connection to this span. Events keep the annotation right where the moment happened.",
     "q2": "These timestamped annotations on a span are called...",
     "q2OptA": "Attributes",
-    "q2OptB": "Span events",
+    "q2OptB": "Events",
     "q2OptC": "Child spans",
-    "q2Correct": "Span events \u2014 timestamped, named annotations that live on the span itself.",
+    "q2Correct": "Events \u2014 named, timestamped annotations that mark moments within a span.",
     "q2WrongAttr": "Attributes are key-value pairs on a span, but they don\u2019t have timestamps. Events do.",
     "q2WrongChild": "Child spans are separate spans. Events are annotations on the parent span.",
     "insightLine1": "Not every moment needs its own span.",
-    "insightLine2": "A span event marks what happened and when \u2014 a lightweight annotation that keeps your traces clean."
+    "insightLine2": "An event marks what happened and when \u2014 a lightweight annotation that keeps your traces clean."
   },
   "koan21": {
     "pageTitle": "Koan 21: The Invisible Thread - OpenTelemetry Koans",

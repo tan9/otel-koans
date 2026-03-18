@@ -48,7 +48,7 @@
         "serviceMap": "Service Map",
         "correlation": "Korrelation",
         "fullPicture": "Das Gesamtbild",
-        "spanEvents": "Span Events",
+        "spanEvents": "Events",
         "traceContext": "Trace Context",
         "baggage": "Baggage",
         "spanLinks": "Span Links",
@@ -864,7 +864,7 @@
         "goDeeper": "Der Pfad geht weiter für alle, die genauer hinsehen wollen →"
     },
     "koan20": {
-        "pageTitle": "Koan 20: Span Events - OpenTelemetry Koans",
+        "pageTitle": "Koan 20: Events - OpenTelemetry Koans",
         "title": "Momente im Inneren",
         "zen": "Ein Span erzählt die Geschichte einer Operation.\nAber innerhalb dieser Geschichte verdienen manche Momente ihren eigenen Namen.",
         "scenarioHeader": "Beobachtung",
@@ -880,19 +880,19 @@
         "q1": "Drei untergeordnete Spans für zwei kurze Momente fühlt sich schwer an. Gibt es einen leichteren Weg, festzuhalten, was passiert ist?",
         "q1OptA": "Mehr Details zu den untergeordneten Spans hinzufügen",
         "q1OptB": "Den übergeordneten Span mit zeitgestempelten Notizen annotieren",
-        "q1OptC": "Sie separat loggen",
+        "q1OptC": "Sie ausserhalb der Trace loggen",
         "q1Correct": "Zeitgestempelte Annotationen auf dem übergeordneten Span — leichtgewichtig und sauber.",
         "q1WrongChild": "Mehr untergeordnete Spans bedeuten mehr Unordnung. Denke leichter — was, wenn der übergeordnete Span selbst diese Momente festhalten könnte?",
-        "q1WrongLog": "Logs sind vom Trace getrennt. Events halten die Annotation innerhalb des Spans, in dem sie passiert ist.",
+        "q1WrongLog": "Ausserhalb der Trace loggen verliert die Verbindung zu diesem Span. Events halten die Annotation genau dort, wo der Moment passiert ist.",
         "q2": "Diese zeitgestempelten Annotationen auf einem Span heissen...",
         "q2OptA": "Attributes",
-        "q2OptB": "Span Events",
+        "q2OptB": "Events",
         "q2OptC": "Untergeordnete Spans",
-        "q2Correct": "Span Events — zeitgestempelte, benannte Annotationen, die auf dem Span selbst leben.",
+        "q2Correct": "Events — benannte, zeitgestempelte Annotationen, die Momente innerhalb eines Spans markieren.",
         "q2WrongAttr": "Attributes sind Schlüssel-Wert-Paare auf einem Span, aber sie haben keine Zeitstempel. Events schon.",
         "q2WrongChild": "Untergeordnete Spans sind separate Spans. Events sind Annotationen auf dem übergeordneten Span.",
         "insightLine1": "Nicht jeder Moment braucht seinen eigenen Span.",
-        "insightLine2": "Ein Span Event markiert, was passiert ist und wann — eine leichtgewichtige Annotation, die deine Traces sauber hält."
+        "insightLine2": "Ein Event markiert, was passiert ist und wann — eine leichtgewichtige Annotation, die deine Traces sauber hält."
     },
     "koan21": {
         "pageTitle": "Koan 21: Der unsichtbare Faden - OpenTelemetry Koans",

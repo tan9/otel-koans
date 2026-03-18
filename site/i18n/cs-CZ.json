@@ -48,7 +48,7 @@
         "serviceMap": "Mapa služeb",
         "correlation": "Korelace",
         "fullPicture": "Celý obraz",
-        "spanEvents": "Span Events",
+        "spanEvents": "Events",
         "traceContext": "Trace Context",
         "baggage": "Baggage",
         "spanLinks": "Span Links",
@@ -864,7 +864,7 @@
         "goDeeper": "Cesta pokračuje pro ty, kdo se chtějí podívat blíž →"
     },
     "koan20": {
-        "pageTitle": "Koan 20: Span Events - OpenTelemetry Koans",
+        "pageTitle": "Koan 20: Events - OpenTelemetry Koans",
         "title": "Okamžiky uvnitř",
         "zen": "Span vypráví příběh operace.\nAle uvnitř toho příběhu si některé okamžiky zaslouží vlastní jméno.",
         "scenarioHeader": "pozorování",
@@ -880,19 +880,19 @@
         "q1": "Tři dětské spans pro dva krátké okamžiky jsou zbytečně těžké. Existuje lehčí způsob, jak zaznamenat, co se stalo?",
         "q1OptA": "Přidat více detailů do dětských spans",
         "q1OptB": "Anotovat rodičovský span poznámkami s časovým razítkem",
-        "q1OptC": "Zalogovat je odděleně",
+        "q1OptC": "Zalogovat je mimo trace",
         "q1Correct": "Anotace s časovým razítkem na rodičovském span — lehké a čisté.",
         "q1WrongChild": "Více dětských spans znamená více nepořádku. Mysli lehčeji — co kdyby rodičovský span sám dokázal zaznamenat tyto okamžiky?",
-        "q1WrongLog": "Logy jsou oddělené od trace. Span events udržují anotaci uvnitř span, kde se událost stala.",
+        "q1WrongLog": "Logování mimo trace ztrácí spojení s tímto span. Events udržují anotaci přesně tam, kde se okamžik udál.",
         "q2": "Tyto anotace s časovým razítkem na span se nazývají...",
         "q2OptA": "Atributy",
-        "q2OptB": "Span events",
+        "q2OptB": "Events",
         "q2OptC": "Dětské spans",
-        "q2Correct": "Span events — pojmenované anotace s časovým razítkem, které žijí přímo na span.",
+        "q2Correct": "Events — pojmenované anotace s časovým razítkem, které označují okamžiky uvnitř span.",
         "q2WrongAttr": "Atributy jsou páry klíč-hodnota na span, ale nemají časové razítko. Events ho mají.",
         "q2WrongChild": "Dětské spans jsou samostatné spans. Events jsou anotace na rodičovském span.",
         "insightLine1": "Ne každý okamžik potřebuje vlastní span.",
-        "insightLine2": "Span event zaznamenává, co se stalo a kdy — lehká anotace, která udržuje tvé traces čisté."
+        "insightLine2": "Event zaznamenává, co se stalo a kdy — lehká anotace, která udržuje tvé traces čisté."
     },
     "koan21": {
         "pageTitle": "Koan 21: Neviditelná nit - OpenTelemetry Koans",

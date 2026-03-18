@@ -30,7 +30,7 @@
     { n: 17, file: 'koans/17-service-map.html', titleKey: 'nav.serviceMap',     fallback: 'Service Map' },
     { n: 18, file: 'koans/18-correlation.html', titleKey: 'nav.correlation',    fallback: 'Correlation' },
     { n: 19, file: 'koans/19-full-picture.html', titleKey: 'nav.fullPicture',   fallback: 'Full Picture' },
-    { n: 20, file: 'koans/20-span-events.html', titleKey: 'nav.spanEvents',    fallback: 'Span Events' },
+    { n: 20, file: 'koans/20-events.html', titleKey: 'nav.spanEvents',    fallback: 'Events' },
     { n: 21, file: 'koans/21-trace-context.html', titleKey: 'nav.traceContext', fallback: 'Trace Context' },
     { n: 22, file: 'koans/22-baggage.html',    titleKey: 'nav.baggage',         fallback: 'Baggage' },
     { n: 23, file: 'koans/23-span-links.html', titleKey: 'nav.spanLinks',       fallback: 'Span Links' },

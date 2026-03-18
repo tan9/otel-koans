@@ -48,7 +48,7 @@
         "serviceMap": "サービスマップ",
         "correlation": "相関",
         "fullPicture": "全体像",
-        "spanEvents": "Span Events",
+        "spanEvents": "Events",
         "traceContext": "Trace Context",
         "baggage": "Baggage",
         "spanLinks": "Span Links",
@@ -864,7 +864,7 @@
         "goDeeper": "より深く見たい者には、道が続いています →"
     },
     "koan20": {
-        "pageTitle": "公案20：Span Events - OpenTelemetry Koans",
+        "pageTitle": "公案20：Events - OpenTelemetry Koans",
         "title": "内なる瞬間",
         "zen": "spanはある処理の物語を語る。\nしかしその物語の中で、ある瞬間は独自の名を持つに値する。",
         "scenarioHeader": "観察",
@@ -880,19 +880,19 @@
         "q1": "二つの短い瞬間のために三つの子spanは重すぎます。何が起きたかを記録するより軽量な方法はありますか？",
         "q1OptA": "子spanにより詳細を追加する",
         "q1OptB": "タイムスタンプ付きのメモで親spanにアノテーションを追加する",
-        "q1OptC": "別途logに記録する",
+        "q1OptC": "trace外にlogとして記録する",
         "q1Correct": "親spanへのタイムスタンプ付きアノテーション — 軽量で整然としています。",
         "q1WrongChild": "子spanが増えると煩雑になります。より軽く考えてみてください — 親span自体でこれらの瞬間を記録できるとしたら？",
-        "q1WrongLog": "logはtraceとは別です。eventsはそれが起きたspan内にアノテーションを保持します。",
+        "q1WrongLog": "trace外にlogを記録すると、このspanとの接続が失われます。eventsはアノテーションをその瞬間が起きた場所に保持します。",
         "q2": "spanへのこれらのタイムスタンプ付きアノテーションは何と呼ばれますか？",
         "q2OptA": "Attributes",
-        "q2OptB": "Span events",
+        "q2OptB": "Events",
         "q2OptC": "Child spans",
-        "q2Correct": "Span events — span自体に存在するタイムスタンプ付きの名前付きアノテーションです。",
+        "q2Correct": "Events — span内の瞬間を記録する、名前付きでタイムスタンプ付きのアノテーションです。",
         "q2WrongAttr": "attributeはspanのキーと値のペアですが、タイムスタンプはありません。eventsにはあります。",
         "q2WrongChild": "子spanは別々のspanです。eventsは親spanへのアノテーションです。",
         "insightLine1": "すべての瞬間がその独自のspanを必要とするわけではありません。",
-        "insightLine2": "span eventは何がいつ起きたかを記録します — traceをすっきり保つ軽量なアノテーションです。"
+        "insightLine2": "eventは何がいつ起きたかを記録します — traceをすっきり保つ軽量なアノテーションです。"
     },
     "koan21": {
         "pageTitle": "公案21：見えない糸 - OpenTelemetry Koans",

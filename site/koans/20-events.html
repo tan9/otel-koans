@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title data-i18n="koan20.pageTitle">Koan 20: Span Events - OpenTelemetry Koans</title>
+  <title data-i18n="koan20.pageTitle">Koan 20: Events - OpenTelemetry Koans</title>
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon-16x16.png">
@@ -447,7 +447,7 @@
       <div class="trace-opts">
         <button class="trace-opt" data-answer="wrong" data-fb="wrong-child" data-i18n="koan20.q1OptA">Add more detail to the child spans</button>
         <button class="trace-opt" data-answer="correct" data-fb="correct" data-i18n="koan20.q1OptB">Annotate the parent span with timestamped notes</button>
-        <button class="trace-opt" data-answer="wrong" data-fb="wrong-log" data-i18n="koan20.q1OptC">Log them separately</button>
+        <button class="trace-opt" data-answer="wrong" data-fb="wrong-log" data-i18n="koan20.q1OptC">Log them outside the trace</button>
       </div>
       <div class="trace-fb" id="fb1"></div>
     </div>
@@ -496,7 +496,7 @@
       <p data-i18n="koan20.q2">These timestamped annotations on a span are called...</p>
       <div class="trace-opts">
         <button class="trace-opt" data-answer="wrong" data-fb="wrong-attr" data-i18n="koan20.q2OptA">Attributes</button>
-        <button class="trace-opt" data-answer="correct" data-fb="correct" data-i18n="koan20.q2OptB">Span events</button>
+        <button class="trace-opt" data-answer="correct" data-fb="correct" data-i18n="koan20.q2OptB">Events</button>
         <button class="trace-opt" data-answer="wrong" data-fb="wrong-child2" data-i18n="koan20.q2OptC">Child spans</button>
       </div>
       <div class="trace-fb" id="fb2"></div>
@@ -504,7 +504,7 @@
 
     <div class="se-insight" id="insight">
       <p data-i18n="koan20.insightLine1">Not every moment needs its own span.</p>
-      <p data-i18n="koan20.insightLine2">A span event marks what happened and when &mdash; a lightweight annotation that keeps your traces clean.</p>
+      <p data-i18n="koan20.insightLine2">An event marks what happened and when &mdash; a lightweight annotation that keeps your traces clean.</p>
       <a href="21-trace-context.html" data-i18n="common.continue">Continue &rarr;</a>
     </div>
   </div>

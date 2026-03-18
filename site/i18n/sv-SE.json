@@ -48,7 +48,7 @@
         "serviceMap": "Tjänstkarta",
         "correlation": "Korrelation",
         "fullPicture": "Helheten",
-        "spanEvents": "Span Events",
+        "spanEvents": "Events",
         "traceContext": "Trace Context",
         "baggage": "Baggage",
         "spanLinks": "Span Links",
@@ -864,7 +864,7 @@
         "goDeeper": "Vägen fortsätter för den som vill titta närmare →"
     },
     "koan20": {
-        "pageTitle": "Koan 20: Span Events - OpenTelemetry Koans",
+        "pageTitle": "Koan 20: Events - OpenTelemetry Koans",
         "title": "Ögonblick inuti",
         "zen": "En span berättar historien om en operation.\nMen inuti den historien förtjänar vissa ögonblick sitt eget namn.",
         "scenarioHeader": "observation",
@@ -880,19 +880,19 @@
         "q1": "Tre child-spans för två korta ögonblick känns tungt. Finns det ett lättare sätt att registrera vad som hände?",
         "q1OptA": "Lägg till mer detaljer i child-spannarna",
         "q1OptB": "Annotera föräldra-spannen med tidsstämplade noteringar",
-        "q1OptC": "Logga dem separat",
+        "q1OptC": "Logga dem utanför tracen",
         "q1Correct": "Tidsstämplade annoteringar på föräldra-spannen — lättviktigt och rent.",
         "q1WrongChild": "Fler child-spans innebär mer brus. Tänk lättare — tänk om föräldra-spannen själv kunde registrera dessa ögonblick?",
-        "q1WrongLog": "Loggar är separata från tracen. Events håller annoteringen inuti spannen där den hände.",
+        "q1WrongLog": "Att logga utanför tracen tappar kopplingen till denna span. Events håller annoteringen precis där ögonblicket inträffade.",
         "q2": "Dessa tidsstämplade annoteringar på en span kallas...",
         "q2OptA": "Attribut",
-        "q2OptB": "Span events",
+        "q2OptB": "Events",
         "q2OptC": "Child-spans",
-        "q2Correct": "Span events — tidsstämplade, namngivna annoteringar som lever på själva spannen.",
+        "q2Correct": "Events — namngivna, tidsstämplade annoteringar som markerar ögonblick inom en span.",
         "q2WrongAttr": "Attribut är nyckel-värde-par på en span, men de har inga tidsstämplar. Events har det.",
         "q2WrongChild": "Child-spans är separata spans. Events är annoteringar på föräldra-spannen.",
         "insightLine1": "Inte varje ögonblick behöver sin egen span.",
-        "insightLine2": "En span event markerar vad som hände och när — en lättviktsannotering som håller dina traces rena."
+        "insightLine2": "En event markerar vad som hände och när — en lättviktsannotering som håller dina traces rena."
     },
     "koan21": {
         "pageTitle": "Koan 21: Den osynliga tråden - OpenTelemetry Koans",

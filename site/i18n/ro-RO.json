@@ -48,7 +48,7 @@
         "serviceMap": "Harta serviciilor",
         "correlation": "Corelație",
         "fullPicture": "Imaginea completă",
-        "spanEvents": "Span Events",
+        "spanEvents": "Events",
         "traceContext": "Trace Context",
         "baggage": "Baggage",
         "spanLinks": "Span Links",
@@ -864,7 +864,7 @@
         "goDeeper": "Drumul continuă pentru cei care doresc să privească mai aproape →"
     },
     "koan20": {
-        "pageTitle": "Koan 20: Span Events - OpenTelemetry Koans",
+        "pageTitle": "Koan 20: Events - OpenTelemetry Koans",
         "title": "Momente dinăuntru",
         "zen": "Un span spune povestea unei operații.\nDar în cadrul acelei povești, unele momente merită propriul lor nume.",
         "scenarioHeader": "observație",
@@ -880,19 +880,19 @@
         "q1": "Trei child spans pentru două momente scurte pare mult. Există o cale mai ușoară de a înregistra ce s-a întâmplat?",
         "q1OptA": "Adaugă mai multe detalii la child spans",
         "q1OptB": "Adnotează spanul părinte cu note marcate temporal",
-        "q1OptC": "Înregistrează-le separat în loguri",
+        "q1OptC": "Înregistrează-le în afara trace-ului",
         "q1Correct": "Adnotări marcate temporal pe spanul părinte — ușoare și curate.",
         "q1WrongChild": "Mai multe child spans înseamnă mai mult zgomot. Gândește-te mai ușor — ce-ar fi dacă spanul părinte însuși ar putea înregistra aceste momente?",
-        "q1WrongLog": "Logurile sunt separate de trace. Evenimentele păstrează adnotarea în interiorul spanului unde s-a produs.",
+        "q1WrongLog": "Înregistrarea în afara trace-ului pierde conexiunea cu acest span. Evenimentele păstrează adnotarea exact acolo unde s-a produs momentul.",
         "q2": "Aceste adnotări marcate temporal pe un span se numesc...",
         "q2OptA": "Attributes",
-        "q2OptB": "Span events",
+        "q2OptB": "Events",
         "q2OptC": "Child spans",
-        "q2Correct": "Span events — adnotări marcate temporal, cu nume, care trăiesc pe spanul însuși.",
+        "q2Correct": "Events — adnotări cu nume și marcaj temporal care marchează momente în cadrul unui span.",
         "q2WrongAttr": "Attributes sunt perechi cheie-valoare pe un span, dar nu au marcaje temporale. Evenimentele au.",
         "q2WrongChild": "Child spans sunt spans separate. Evenimentele sunt adnotări pe spanul părinte.",
         "insightLine1": "Nu fiecare moment are nevoie de propriul span.",
-        "insightLine2": "Un span event marchează ce s-a întâmplat și când — o adnotare ușoară care îți păstrează traces curate."
+        "insightLine2": "Un event marchează ce s-a întâmplat și când — o adnotare ușoară care îți păstrează traces curate."
     },
     "koan21": {
         "pageTitle": "Koan 21: Firul invizibil - OpenTelemetry Koans",

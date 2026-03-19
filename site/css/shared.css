@@ -1003,12 +1003,13 @@ body {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 2px;
+  padding: 0 0.1rem;
   display: flex;
   align-items: center;
-  color: var(--text-muted);
-  opacity: 0.65;
+  color: var(--text-secondary);
+  opacity: 0.85;
   transition: opacity 0.2s, color 0.2s, filter 0.3s;
+  line-height: 1;
 }
 .trophy-toggle:hover {
   opacity: 1;

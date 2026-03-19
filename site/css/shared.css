@@ -375,6 +375,32 @@ body {
   animation: mobileGateFadeIn 2s var(--ease-smooth) 1s forwards;
 }
 
+/* Mobile gate - reference guide link */
+.mobile-gate-ref {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 2rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  text-decoration: none;
+  opacity: 0;
+  animation: mobileGateFadeIn 2s var(--ease-smooth) 2s forwards;
+  transition: color 0.3s var(--ease-smooth);
+}
+
+.mobile-gate-ref:hover {
+  color: var(--text-secondary);
+}
+
+.mobile-gate-ref svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
 /* Music toggle - standalone fallback (before progress-nav moves it) */
 .music-toggle {
   position: fixed;

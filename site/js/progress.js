@@ -259,7 +259,7 @@
   nav.appendChild(refDiv);
 
   var refLink = document.createElement('a');
-  refLink.href = 'https://otel-ref.mreider.com';
+  refLink.href = 'https://otel-primer.mreider.com';
   refLink.className = 'progress-icon';
   refLink.title = t('common.referenceGuide', 'OpenTelemetry Reference Guide');
   refLink.target = '_blank';
@@ -323,7 +323,7 @@
   var gate = document.querySelector('.mobile-gate');
   if (gate) {
     var mobileRef = document.createElement('a');
-    mobileRef.href = 'https://otel-ref.mreider.com';
+    mobileRef.href = 'https://otel-primer.mreider.com';
     mobileRef.className = 'mobile-gate-ref';
     mobileRef.target = '_blank';
     mobileRef.rel = 'noopener';

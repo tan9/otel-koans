@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title data-i18n="koan08.pageTitle">Koan 8: Attributes - OpenTelemetry Koans</title>
+  <title data-i18n="koan09.pageTitle">Koan 8: Attributes - OpenTelemetry Koans</title>
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon-16x16.png">
@@ -395,9 +395,9 @@
 
   <div class="koan-page">
 
-    <h1 class="koan-title" data-i18n="koan08.title">Attributes</h1>
+    <h1 class="koan-title" data-i18n="koan09.title">Attributes</h1>
 
-    <div class="koan-text" data-i18n-html="koan08.zen">
+    <div class="koan-text" data-i18n-html="koan09.zen">
       A number without a name is noise.<br>
       A span without detail is a blank page.<br>
       Attributes give telemetry its meaning: the who, what, where, and why.
@@ -405,8 +405,8 @@
 
     <!-- The problem: a bare, useless metric -->
     <div class="bare-metric">
-      <div class="bare-metric-value" data-i18n="koan08.bareMetric">request_duration: 142ms</div>
-      <div class="bare-metric-frustration" data-i18n-html="koan08.bareFrustration">
+      <div class="bare-metric-value" data-i18n="koan09.bareMetric">request_duration: 142ms</div>
+      <div class="bare-metric-frustration" data-i18n-html="koan09.bareFrustration">
         A developer sees this metric in a dashboard. They ask:<br>
         <em>Which endpoint was hit? What HTTP method? Did the request succeed?</em><br>
         The metric alone cannot answer any of these questions.
@@ -415,12 +415,12 @@
 
     <!-- Challenge: pick the right attribute for each question -->
     <div class="challenge-section">
-      <div class="challenge-intro" data-i18n="koan08.challengeIntro">Choose the attribute that answers each question</div>
+      <div class="challenge-intro" data-i18n="koan09.challengeIntro">Choose the attribute that answers each question</div>
 
       <div class="attr-question-row" id="row1">
-        <div class="attr-question-label" id="label1"><em data-i18n="koan08.q1Label">"Which endpoint was hit?"</em></div>
+        <div class="attr-question-label" id="label1"><em data-i18n="koan09.q1Label">"Which endpoint was hit?"</em></div>
         <select class="attr-select" id="sel1">
-          <option value="" disabled selected data-i18n="koan08.selectPlaceholder">pick an attribute...</option>
+          <option value="" disabled selected data-i18n="koan09.selectPlaceholder">pick an attribute...</option>
           <option value="http.route">http.route</option>
           <option value="db.system">db.system</option>
           <option value="error.type">error.type</option>
@@ -430,9 +430,9 @@
       </div>
 
       <div class="attr-question-row" id="row2">
-        <div class="attr-question-label" id="label2"><em data-i18n="koan08.q2Label">"What HTTP method was used?"</em></div>
+        <div class="attr-question-label" id="label2"><em data-i18n="koan09.q2Label">"What HTTP method was used?"</em></div>
         <select class="attr-select" id="sel2">
-          <option value="" disabled selected data-i18n="koan08.selectPlaceholder">pick an attribute...</option>
+          <option value="" disabled selected data-i18n="koan09.selectPlaceholder">pick an attribute...</option>
           <option value="http.request.method">http.request.method</option>
           <option value="pool.name">pool.name</option>
           <option value="service.version">service.version</option>
@@ -442,9 +442,9 @@
       </div>
 
       <div class="attr-question-row" id="row3">
-        <div class="attr-question-label" id="label3"><em data-i18n="koan08.q3Label">"Did the request succeed?"</em></div>
+        <div class="attr-question-label" id="label3"><em data-i18n="koan09.q3Label">"Did the request succeed?"</em></div>
         <select class="attr-select" id="sel3">
-          <option value="" disabled selected data-i18n="koan08.selectPlaceholder">pick an attribute...</option>
+          <option value="" disabled selected data-i18n="koan09.selectPlaceholder">pick an attribute...</option>
           <option value="order.id">order.id</option>
           <option value="http.response.status_code">http.response.status_code</option>
           <option value="host.name">host.name</option>
@@ -455,13 +455,13 @@
     </div>
 
     <div class="check-area">
-      <button class="koan-btn koan-btn--primary" id="checkBtn" data-i18n="koan08.checkBtn">Check</button>
+      <button class="koan-btn koan-btn--primary" id="checkBtn" data-i18n="koan09.checkBtn">Check</button>
       <div class="check-status" id="checkStatus"></div>
     </div>
 
     <!-- Enriched metric (revealed on success) -->
     <div class="enriched-metric" id="enriched">
-      <div class="enriched-label" data-i18n="koan08.enrichedLabel">metric + attributes</div>
+      <div class="enriched-label" data-i18n="koan09.enrichedLabel">metric + attributes</div>
       <div class="enriched-name">request_duration: 142ms</div>
       <div class="enriched-attrs">
         <div class="enriched-pair" id="ep1">
@@ -478,12 +478,12 @@
 
     <!-- Other signals with attributes (revealed after enriched metric) -->
     <div class="other-signals" id="otherSignals">
-      <div class="other-signals-title" data-i18n="koan08.otherSignalsTitle">Attributes work on every signal, not just metrics</div>
+      <div class="other-signals-title" data-i18n="koan09.otherSignalsTitle">Attributes work on every signal, not just metrics</div>
       <div class="signal-cards">
         <div class="signal-card">
-          <div class="signal-card-header signal-card-header--span" data-i18n="koan08.spanCardHeader">span</div>
+          <div class="signal-card-header signal-card-header--span" data-i18n="koan09.spanCardHeader">span</div>
           <div class="signal-card-body">
-            <div class="signal-card-name" data-i18n="koan08.spanCardName">INSERT orders &middot; 85ms</div>
+            <div class="signal-card-name" data-i18n="koan09.spanCardName">INSERT orders &middot; 85ms</div>
             <div class="signal-card-time">10:42:17.231 &rarr; 10:42:17.316</div>
             <div class="signal-card-attr"><span class="sk">db.system</span> <span class="se">=</span> <span class="sv">"postgresql"</span></div>
             <div class="signal-card-attr"><span class="sk">db.name</span> <span class="se">=</span> <span class="sv">"orders"</span></div>
@@ -491,9 +491,9 @@
           </div>
         </div>
         <div class="signal-card">
-          <div class="signal-card-header signal-card-header--log" data-i18n="koan08.logCardHeader">log</div>
+          <div class="signal-card-header signal-card-header--log" data-i18n="koan09.logCardHeader">log</div>
           <div class="signal-card-body">
-            <div class="signal-card-name" data-i18n="koan08.logCardName">ERROR: pool exhausted</div>
+            <div class="signal-card-name" data-i18n="koan09.logCardName">ERROR: pool exhausted</div>
             <div class="signal-card-time">10:42:17.384</div>
             <div class="signal-card-attr"><span class="sk">pool.name</span> <span class="se">=</span> <span class="sv">"orders"</span></div>
             <div class="signal-card-attr"><span class="sk">pool.max</span> <span class="se">=</span> <span class="sv">10</span></div>
@@ -505,15 +505,15 @@
 
     <!-- Final insight -->
     <div class="attr-insight" id="insight">
-      <p data-i18n-html="koan08.insightP1"><strong>Attributes are key-value pairs.</strong> They turn raw data into answers.</p>
-      <p data-i18n="koan08.insightP2">Every metric, span, and log can carry them.</p>
-      <p data-i18n-html="koan08.insightP3">Metrics have long called these <strong>dimensions</strong>, same truth, older name.</p>
-      <a href="10-naming.html" data-i18n="common.continue">Continue &rarr;</a>
+      <p data-i18n-html="koan09.insightP1"><strong>Attributes are key-value pairs.</strong> They turn raw data into answers.</p>
+      <p data-i18n="koan09.insightP2">Every metric, span, and log can carry them.</p>
+      <p data-i18n-html="koan09.insightP3">Metrics have long called these <strong>dimensions</strong>, same truth, older name.</p>
+      <a href="10-resources.html" data-i18n="common.continue">Continue &rarr;</a>
     </div>
   </div>
 
   <div class="koan-progress">
-    <div class="koan-progress-fill" style="width: 29%"></div>
+    <div class="koan-progress-fill" style="width: 32%"></div>
   </div>
 
   <script>
@@ -532,23 +532,23 @@
           sel1: {
             keyword: 'endpoint',
             labelId: 'label1',
-            hint1: i18n.t('koan08.hint1L1'),
-            hint2: i18n.t('koan08.hint1L2'),
-            hint3: i18n.t('koan08.hint1L3')
+            hint1: i18n.t('koan09.hint1L1'),
+            hint2: i18n.t('koan09.hint1L2'),
+            hint3: i18n.t('koan09.hint1L3')
           },
           sel2: {
             keyword: 'HTTP method',
             labelId: 'label2',
-            hint1: i18n.t('koan08.hint2L1'),
-            hint2: i18n.t('koan08.hint2L2'),
-            hint3: i18n.t('koan08.hint2L3')
+            hint1: i18n.t('koan09.hint2L1'),
+            hint2: i18n.t('koan09.hint2L2'),
+            hint3: i18n.t('koan09.hint2L3')
           },
           sel3: {
             keyword: 'succeed',
             labelId: 'label3',
-            hint1: i18n.t('koan08.hint3L1'),
-            hint2: i18n.t('koan08.hint3L2'),
-            hint3: i18n.t('koan08.hint3L3')
+            hint1: i18n.t('koan09.hint3L1'),
+            hint2: i18n.t('koan09.hint3L2'),
+            hint3: i18n.t('koan09.hint3L3')
           }
         };
 
@@ -624,13 +624,13 @@
           });
 
           if (anyEmpty) {
-            checkStatus.textContent = i18n.t('koan08.statusEmpty');
+            checkStatus.textContent = i18n.t('koan09.statusEmpty');
             checkStatus.className = 'check-status error';
             return;
           }
 
           if (!allCorrect) {
-            checkStatus.textContent = i18n.t('koan08.statusWrong');
+            checkStatus.textContent = i18n.t('koan09.statusWrong');
             checkStatus.className = 'check-status error';
             // Allow retry - reset wrong selects after a moment
             setTimeout(function () {
@@ -648,7 +648,7 @@
 
           // All correct
           solved = true;
-          checkStatus.textContent = i18n.t('koan08.statusCorrect');
+          checkStatus.textContent = i18n.t('koan09.statusCorrect');
           checkStatus.className = 'check-status success';
           checkBtn.style.opacity = '0.4';
           checkBtn.style.pointerEvents = 'none';

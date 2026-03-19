@@ -445,9 +445,9 @@
 
   <div class="koan-page">
 
-    <h1 class="koan-title" data-i18n="koan05.title">What is a Trace?</h1>
+    <h1 class="koan-title" data-i18n="koan06.title">What is a Trace?</h1>
 
-    <div class="koan-text" data-i18n-html="koan05.zen">
+    <div class="koan-text" data-i18n-html="koan06.zen">
       A hundred events pass. A number rises.<br>
       Somewhere in the system, something waits.<br>
       But where?
@@ -455,26 +455,26 @@
 
     <!-- Scenario: the problem -->
     <div class="scenario-panel" id="scenario">
-      <div class="scenario-header" data-i18n="koan05.scenarioHeader">incident report</div>
+      <div class="scenario-header" data-i18n="koan06.scenarioHeader">incident report</div>
       <div class="scenario-body">
-        <div class="scenario-alert" data-i18n="koan05.scenarioAlert">Users report that checkout is slow.</div>
-        <div class="scenario-detail" data-i18n="koan05.scenarioDetail">Your system has four services: gateway, api, orders, and database. Let's investigate with the monitoring tools you have.</div>
+        <div class="scenario-alert" data-i18n="koan06.scenarioAlert">Users report that checkout is slow.</div>
+        <div class="scenario-detail" data-i18n="koan06.scenarioDetail">Your system has four services: gateway, api, orders, and database. Let's investigate with the monitoring tools you have.</div>
       </div>
     </div>
 
     <!-- Metric panel -->
     <div class="metric-panel" id="metricPanel">
-      <div class="metric-panel-header" data-i18n="koan05.metricHeader">metrics dashboard</div>
+      <div class="metric-panel-header" data-i18n="koan06.metricHeader">metrics dashboard</div>
       <div class="metric-panel-body">
         <div class="metric-stat metric-stat-ok">
-          <div class="metric-stat-value" data-i18n="koan05.metricValue1">842</div>
-          <div class="metric-stat-label" data-i18n="koan05.metricLabel1">requests / min</div>
+          <div class="metric-stat-value" data-i18n="koan06.metricValue1">842</div>
+          <div class="metric-stat-label" data-i18n="koan06.metricLabel1">requests / min</div>
         </div>
         <div class="metric-stat">
-          <div class="metric-stat-value" data-i18n="koan05.metricValue2">1.2s</div>
-          <div class="metric-stat-label" data-i18n="koan05.metricLabel2">latency p99</div>
+          <div class="metric-stat-value" data-i18n="koan06.metricValue2">1.2s</div>
+          <div class="metric-stat-label" data-i18n="koan06.metricLabel2">latency p99</div>
         </div>
-        <div class="metric-verdict" data-i18n-html="koan05.metricVerdict">
+        <div class="metric-verdict" data-i18n-html="koan06.metricVerdict">
           Request count looks normal. But latency is high.<br>
           The metric tells you <em>something</em> is slow, but not <em>which service</em>.
         </div>
@@ -483,47 +483,47 @@
 
     <!-- Q0: What does the metric tell you? -->
     <div class="trace-question" id="q0">
-      <p data-i18n="koan05.q0">Looking at the metric dashboard: what does it tell you?</p>
+      <p data-i18n="koan06.q0">Looking at the metric dashboard: what does it tell you?</p>
       <div class="trace-opts">
-        <button class="trace-opt" data-answer="wrong" data-fb="wrong-db" data-i18n="koan05.q0OptA">The database is slow</button>
-        <button class="trace-opt" data-answer="correct" data-fb="correct" data-i18n="koan05.q0OptB">Something is slow, but not which service</button>
-        <button class="trace-opt" data-answer="wrong" data-fb="wrong-ok" data-i18n="koan05.q0OptC">Everything looks normal</button>
+        <button class="trace-opt" data-answer="wrong" data-fb="wrong-db" data-i18n="koan06.q0OptA">The database is slow</button>
+        <button class="trace-opt" data-answer="correct" data-fb="correct" data-i18n="koan06.q0OptB">Something is slow, but not which service</button>
+        <button class="trace-opt" data-answer="wrong" data-fb="wrong-ok" data-i18n="koan06.q0OptC">Everything looks normal</button>
       </div>
       <div class="trace-fb" id="fb0"></div>
     </div>
 
     <!-- Bridge: explain what logs are before showing them -->
-    <div class="koan-instruction" id="logBridge" style="opacity: 0; transition: opacity 0.6s;" data-i18n="koan05.logBridge">The metric found a problem but can't point to the cause. Let's check the other tool: logs — messages each service writes as it handles requests.</div>
+    <div class="koan-instruction" id="logBridge" style="opacity: 0; transition: opacity 0.6s;" data-i18n="koan06.logBridge">The metric found a problem but can't point to the cause. Let's check the other tool: logs — messages each service writes as it handles requests.</div>
 
     <!-- Log panel -->
     <div class="log-panel" id="logPanel">
-      <div class="log-panel-header" data-i18n="koan05.logHeader">log viewer - last 5 seconds</div>
+      <div class="log-panel-header" data-i18n="koan06.logHeader">log viewer - last 5 seconds</div>
       <div class="log-panel-body">
-        <div class="log-line" id="log0"><span class="log-ts">14:32:01.204</span> <span class="log-svc-gateway">[gateway]</span> <span class="log-msg" data-i18n="koan05.logMsg0">incoming POST /checkout</span></div>
-        <div class="log-line" id="log1"><span class="log-ts">14:32:01.218</span> <span class="log-svc-api">[api]</span> <span class="log-msg" data-i18n="koan05.logMsg1">validating cart items</span></div>
-        <div class="log-line" id="log2"><span class="log-ts">14:32:01.307</span> <span class="log-svc-db">[database]</span> <span class="log-msg" data-i18n="koan05.logMsg2">query inventory_check: OK</span></div>
-        <div class="log-line" id="log3"><span class="log-ts">14:32:01.412</span> <span class="log-svc-orders">[orders]</span> <span class="log-msg" data-i18n="koan05.logMsg3">reserve_stock called</span></div>
-        <div class="log-line" id="log4"><span class="log-ts">14:32:01.884</span> <span class="log-svc-db">[database]</span> <span class="log-msg" data-i18n="koan05.logMsg4">write order_record: OK</span></div>
-        <div class="log-line" id="log5"><span class="log-ts">14:32:02.003</span> <span class="log-svc-orders">[orders]</span> <span class="log-msg" data-i18n="koan05.logMsg5">confirmation generated</span></div>
-        <div class="log-line" id="log6"><span class="log-ts">14:32:02.117</span> <span class="log-svc-api">[api]</span> <span class="log-msg" data-i18n="koan05.logMsg6">response sent: 200 OK</span></div>
-        <div class="log-line" id="log7"><span class="log-ts">14:32:02.130</span> <span class="log-svc-gateway">[gateway]</span> <span class="log-msg" data-i18n="koan05.logMsg7">POST /checkout completed</span></div>
+        <div class="log-line" id="log0"><span class="log-ts">14:32:01.204</span> <span class="log-svc-gateway">[gateway]</span> <span class="log-msg" data-i18n="koan06.logMsg0">incoming POST /checkout</span></div>
+        <div class="log-line" id="log1"><span class="log-ts">14:32:01.218</span> <span class="log-svc-api">[api]</span> <span class="log-msg" data-i18n="koan06.logMsg1">validating cart items</span></div>
+        <div class="log-line" id="log2"><span class="log-ts">14:32:01.307</span> <span class="log-svc-db">[database]</span> <span class="log-msg" data-i18n="koan06.logMsg2">query inventory_check: OK</span></div>
+        <div class="log-line" id="log3"><span class="log-ts">14:32:01.412</span> <span class="log-svc-orders">[orders]</span> <span class="log-msg" data-i18n="koan06.logMsg3">reserve_stock called</span></div>
+        <div class="log-line" id="log4"><span class="log-ts">14:32:01.884</span> <span class="log-svc-db">[database]</span> <span class="log-msg" data-i18n="koan06.logMsg4">write order_record: OK</span></div>
+        <div class="log-line" id="log5"><span class="log-ts">14:32:02.003</span> <span class="log-svc-orders">[orders]</span> <span class="log-msg" data-i18n="koan06.logMsg5">confirmation generated</span></div>
+        <div class="log-line" id="log6"><span class="log-ts">14:32:02.117</span> <span class="log-svc-api">[api]</span> <span class="log-msg" data-i18n="koan06.logMsg6">response sent: 200 OK</span></div>
+        <div class="log-line" id="log7"><span class="log-ts">14:32:02.130</span> <span class="log-svc-gateway">[gateway]</span> <span class="log-msg" data-i18n="koan06.logMsg7">POST /checkout completed</span></div>
       </div>
     </div>
 
     <!-- Q1: Can you find the bottleneck from the logs? -->
     <div class="trace-question" id="q1">
-      <p data-i18n="koan05.q1">The logs show what each service did. Can you now pinpoint which service is the bottleneck?</p>
+      <p data-i18n="koan06.q1">The logs show what each service did. Can you now pinpoint which service is the bottleneck?</p>
       <div class="trace-opts">
-        <button class="trace-opt" data-answer="wrong" data-fb="wrong-db" data-i18n="koan05.q1OptA">Yes &mdash; the database, it appears twice</button>
-        <button class="trace-opt" data-answer="wrong" data-fb="wrong-gw" data-i18n="koan05.q1OptB">Yes &mdash; the gateway, it started and ended the request</button>
-        <button class="trace-opt" data-answer="correct" data-fb="correct" data-i18n="koan05.q1OptC">No &mdash; I see events, but not timing or connections</button>
+        <button class="trace-opt" data-answer="wrong" data-fb="wrong-db" data-i18n="koan06.q1OptA">Yes &mdash; the database, it appears twice</button>
+        <button class="trace-opt" data-answer="wrong" data-fb="wrong-gw" data-i18n="koan06.q1OptB">Yes &mdash; the gateway, it started and ended the request</button>
+        <button class="trace-opt" data-answer="correct" data-fb="correct" data-i18n="koan06.q1OptC">No &mdash; I see events, but not timing or connections</button>
       </div>
       <div class="trace-fb" id="fb1"></div>
     </div>
 
     <!-- Follow-request scene (hidden until Q1 correct) -->
     <div class="trace-scene" id="traceScene">
-      <div class="trace-scene-header" data-i18n="koan05.traceHeader">following one request</div>
+      <div class="trace-scene-header" data-i18n="koan06.traceHeader">following one request</div>
       <div class="trace-scene-body">
         <div class="svc-chain" id="svcChain">
           <div class="svc-node" id="svc-gateway">gateway</div>
@@ -536,7 +536,7 @@
         </div>
 
         <div class="waterfall" id="waterfall">
-          <div class="waterfall-title" id="wfTitle" data-i18n="koan05.waterfallTitle">timing breakdown:</div>
+          <div class="waterfall-title" id="wfTitle" data-i18n="koan06.waterfallTitle">timing breakdown:</div>
 
           <div class="wf-row" id="wf-0">
             <div class="wf-dot"></div>
@@ -565,7 +565,7 @@
           <div class="wf-row" id="wf-3">
             <div class="wf-dot"></div>
             <div class="wf-svc">database</div>
-            <div class="wf-track"><div class="wf-bar" style="left: 12%; width: 18%;"></div></div>
+            <div class="wf-track"><div class="wf-bar" style="left: 12%; width: 21%;"></div></div>
             <div class="wf-time">140 &ndash; 360ms</div>
           </div>
         </div>
@@ -573,17 +573,17 @@
     </div>
 
     <div class="trace-controls" id="followControls">
-      <button class="koan-btn koan-btn--primary" id="followBtn" data-i18n="koan05.followBtn">Follow a request</button>
+      <button class="koan-btn koan-btn--primary" id="followBtn" data-i18n="koan06.followBtn">Follow a request</button>
       <div class="trace-status" id="status"></div>
     </div>
 
     <!-- Q2: What is this called? -->
     <div class="trace-question" id="q2">
-      <p data-i18n="koan05.q2">What you just did, following one request through multiple services, is called a...</p>
+      <p data-i18n="koan06.q2">What you just did, following one request through multiple services, is called a...</p>
       <div class="trace-opts">
-        <button class="trace-opt" data-answer="wrong" data-fb="wrong-metric" data-i18n="koan05.q2OptA">A metric</button>
-        <button class="trace-opt" data-answer="wrong" data-fb="wrong-log" data-i18n="koan05.q2OptB">A log</button>
-        <button class="trace-opt" data-answer="correct" data-fb="correct-trace" data-i18n="koan05.q2OptC">A trace</button>
+        <button class="trace-opt" data-answer="wrong" data-fb="wrong-metric" data-i18n="koan06.q2OptA">A metric</button>
+        <button class="trace-opt" data-answer="wrong" data-fb="wrong-log" data-i18n="koan06.q2OptB">A log</button>
+        <button class="trace-opt" data-answer="correct" data-fb="correct-trace" data-i18n="koan06.q2OptC">A trace</button>
       </div>
       <div class="trace-fb" id="fb2"></div>
     </div>
@@ -594,14 +594,14 @@
     </div>
 
     <div class="trace-insight" id="insight">
-      <p data-i18n="koan05.insightLine1">A trace follows a single request from beginning to end.</p>
-      <p data-i18n="koan05.insightLine2">What metrics and logs could not reveal alone, the trace shows.</p>
-      <a href="06-spans.html" data-i18n="common.continue">Continue &rarr;</a>
+      <p data-i18n="koan06.insightLine1">A trace follows a single request from beginning to end.</p>
+      <p data-i18n="koan06.insightLine2">What metrics and logs could not reveal alone, the trace shows.</p>
+      <a href="07-spans.html" data-i18n="common.continue">Continue &rarr;</a>
     </div>
   </div>
 
   <div class="koan-progress">
-    <div class="koan-progress-fill" style="width: 18%"></div>
+    <div class="koan-progress-fill" style="width: 21%"></div>
   </div>
 
   <script>
@@ -638,7 +638,7 @@
             if (this.dataset.answer === 'correct') {
               this.classList.add('correct');
               q0Opts.forEach(function (o) { o.classList.add('disabled'); });
-              fb0.textContent = i18n.t('koan05.q0Correct');
+              fb0.textContent = i18n.t('koan06.q0Correct');
               fb0.className = 'trace-fb trace-fb--correct';
 
               // Show bridge text, then log panel
@@ -664,9 +664,9 @@
             } else {
               this.classList.add('wrong');
               if (fbType === 'wrong-db') {
-                fb0.textContent = i18n.t('koan05.q0WrongDb');
+                fb0.textContent = i18n.t('koan06.q0WrongDb');
               } else {
-                fb0.textContent = i18n.t('koan05.q0WrongOk');
+                fb0.textContent = i18n.t('koan06.q0WrongOk');
               }
               fb0.className = 'trace-fb trace-fb--wrong';
               var self = this;
@@ -686,21 +686,21 @@
             if (this.dataset.answer === 'correct') {
               this.classList.add('correct');
               q1Opts.forEach(function (o) { o.classList.add('disabled'); });
-              fb1.textContent = i18n.t('koan05.q1Correct');
+              fb1.textContent = i18n.t('koan06.q1Correct');
               fb1.className = 'trace-fb trace-fb--correct';
 
               // Reveal the trace scene and follow button
               setTimeout(function () {
-                status.textContent = i18n.t('koan05.statusNeedFollow');
+                status.textContent = i18n.t('koan06.statusNeedFollow');
                 traceScene.classList.add('visible');
                 followControls.classList.add('visible');
               }, 1000);
             } else {
               this.classList.add('wrong');
               if (fbType === 'wrong-db') {
-                fb1.textContent = i18n.t('koan05.q1WrongDb');
+                fb1.textContent = i18n.t('koan06.q1WrongDb');
               } else {
-                fb1.textContent = i18n.t('koan05.q1WrongGw');
+                fb1.textContent = i18n.t('koan06.q1WrongGw');
               }
               fb1.className = 'trace-fb trace-fb--wrong';
               var self = this;
@@ -720,7 +720,7 @@
             { delay: 2100, arrow: 'arrow-3', svc: 'svc-db',      wf: 'wf-3', conn: 'wfc-2' }
           ];
 
-          status.textContent = i18n.t('koan05.statusFollowing');
+          status.textContent = i18n.t('koan06.statusFollowing');
 
           steps.forEach(function (s) {
             setTimeout(function () {
@@ -742,7 +742,7 @@
           // After animation completes, show waterfall title and Q2
           setTimeout(function () {
             document.getElementById('wfTitle').classList.add('visible');
-            status.textContent = i18n.t('koan05.statusAfterFollow');
+            status.textContent = i18n.t('koan06.statusAfterFollow');
 
             setTimeout(function () {
               q2.classList.add('visible');
@@ -769,7 +769,7 @@
             if (this.dataset.answer === 'correct') {
               this.classList.add('correct');
               q2Opts.forEach(function (o) { o.classList.add('disabled'); });
-              fb2.textContent = i18n.t('koan05.q2Correct');
+              fb2.textContent = i18n.t('koan06.q2Correct');
               fb2.className = 'trace-fb trace-fb--correct';
 
               // Reveal the word "trace" and the insight
@@ -783,9 +783,9 @@
             } else {
               this.classList.add('wrong');
               if (fbType === 'wrong-metric') {
-                fb2.textContent = i18n.t('koan05.q2WrongMetric');
+                fb2.textContent = i18n.t('koan06.q2WrongMetric');
               } else {
-                fb2.textContent = i18n.t('koan05.q2WrongLog');
+                fb2.textContent = i18n.t('koan06.q2WrongLog');
               }
               fb2.className = 'trace-fb trace-fb--wrong';
               var self = this;

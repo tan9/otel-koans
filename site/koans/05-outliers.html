@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="koan05.pageTitle">Koan 5: Outliers - OpenTelemetry Koans</title>
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../img/apple-touch-icon.png">
+  <link rel="manifest" href="../site.webmanifest">
+  <meta name="theme-color" content="#0a0e14">
+  <link rel="stylesheet" href="../css/shared.css">
+  <script src="../js/i18n.js"></script>
+  <style>
+    /* Dashboard panel showing the average */
+    .dashboard-panel {
+      background: var(--bg-glass);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1em;
+      overflow: hidden;
+      box-shadow: var(--shadow-inset);
+      margin-bottom: 1.25rem;
+    }
+
+    .dashboard-header {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .dashboard-body {
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .avg-value {
+      font-family: var(--font-mono);
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--accent-green);
+      line-height: 1;
+      margin-bottom: 0.35rem;
+      transition: color 0.6s var(--ease-smooth);
+    }
+
+    .avg-value.warning {
+      color: var(--accent-orange);
+    }
+
+    .avg-label {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .avg-status {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 2em;
+      margin-top: 0.75rem;
+      background: rgba(63, 185, 80, 0.1);
+      color: var(--accent-green);
+      border: 1px solid rgba(63, 185, 80, 0.2);
+      transition: all 0.6s var(--ease-smooth);
+    }
+
+    .avg-status.warning {
+      background: rgba(210, 153, 34, 0.1);
+      color: var(--accent-orange);
+      border-color: rgba(210, 153, 34, 0.2);
+    }
+
+    /* Histogram panel */
+    .histogram-panel {
+      background: var(--bg-glass);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1em;
+      overflow: hidden;
+      box-shadow: var(--shadow-inset);
+      margin-bottom: 1.25rem;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.6s var(--ease-smooth), transform 0.6s var(--ease-smooth);
+    }
+
+    .histogram-panel.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .histogram-header {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .histogram-body {
+      padding: 1rem 1.5rem 1.5rem;
+    }
+
+    .histogram-chart {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .histogram-chart svg {
+      width: 100%;
+      height: auto;
+    }
+
+    .chart-axis-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      fill: var(--text-muted);
+    }
+
+    .hist-bar {
+      transition: opacity 0.3s;
+    }
+
+    .hist-bar:hover {
+      opacity: 1 !important;
+    }
+
+    /* Percentile marker lines */
+    .pct-line {
+      stroke-dasharray: 4,3;
+      opacity: 0;
+      transition: opacity 0.6s var(--ease-smooth);
+    }
+
+    .pct-line.visible {
+      opacity: 1;
+    }
+
+    .pct-label {
+      opacity: 0;
+      transition: opacity 0.6s var(--ease-smooth);
+    }
+
+    .pct-label.visible {
+      opacity: 1;
+    }
+
+    .pct-value {
+      opacity: 0;
+      transition: opacity 0.6s var(--ease-smooth);
+    }
+
+    .pct-value.visible {
+      opacity: 1;
+    }
+
+    /* Percentile legend */
+    .pct-legend {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 0.75rem;
+      opacity: 0;
+      transition: opacity 0.6s var(--ease-smooth);
+    }
+
+    .pct-legend.visible {
+      opacity: 1;
+    }
+
+    .pct-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+    }
+
+    .pct-legend-swatch {
+      width: 12px;
+      height: 3px;
+      border-radius: 1px;
+    }
+
+    .pct-legend-swatch--p50 { background: var(--accent-green); }
+    .pct-legend-swatch--p95 { background: var(--accent-orange); }
+    .pct-legend-swatch--p99 { background: var(--accent-red); }
+
+    .pct-legend-text--p50 { color: var(--accent-green); }
+    .pct-legend-text--p95 { color: var(--accent-orange); }
+    .pct-legend-text--p99 { color: var(--accent-red); }
+
+    /* Question panels */
+    .outlier-question {
+      background: var(--bg-glass);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1em;
+      padding: 1.25rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      opacity: 0;
+      transform: translateY(8px);
+      box-shadow: var(--shadow-inset);
+      transition: opacity 0.5s var(--ease-smooth), transform 0.5s var(--ease-smooth);
+    }
+
+    .outlier-question.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .outlier-question p {
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .outlier-options {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .outlier-opt {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      padding: 0.6rem 1.4rem;
+      border: 1px solid var(--border);
+      border-radius: 0.5em;
+      background: var(--bg-glass);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.3s var(--ease-spring);
+    }
+
+    .outlier-opt:hover {
+      border-color: var(--accent-blue);
+      background: var(--bg-glass-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .outlier-opt.correct {
+      border-color: transparent;
+      background: rgba(63, 185, 80, 0.08);
+      color: var(--accent-green);
+      box-shadow: 0 0 12px rgba(63, 185, 80, 0.15);
+    }
+
+    .outlier-opt.wrong {
+      border-color: transparent;
+      color: var(--accent-red);
+      box-shadow: 0 0 12px rgba(248, 81, 73, 0.15);
+    }
+
+    .outlier-opt.disabled { pointer-events: none; opacity: 0.4; }
+
+    .outlier-fb {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      min-height: 1.5em;
+      margin-top: 0.5rem;
+      line-height: 1.5;
+    }
+
+    .outlier-fb--correct { color: var(--accent-green); }
+    .outlier-fb--wrong { color: var(--accent-red); }
+
+    /* Reveal button */
+    .reveal-controls {
+      text-align: center;
+      margin-bottom: 1rem;
+      opacity: 0;
+      transition: opacity 0.6s var(--ease-smooth);
+    }
+
+    .reveal-controls.visible {
+      opacity: 1;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-gate">
+    <svg class="mobile-gate-anim" viewBox="0 0 180 140">
+      <path class="mg-edge" d="M 50,30 Q 70,25 90,45" />
+      <path class="mg-edge" d="M 50,30 Q 75,55 90,75" />
+      <path class="mg-edge" d="M 90,45 Q 90,60 90,75" />
+      <path class="mg-edge" d="M 90,75 Q 70,95 55,110" />
+      <path class="mg-edge" d="M 90,75 Q 110,95 125,110" />
+      <path class="mg-edge" d="M 55,110 Q 105,100 140,75" />
+      <path class="mg-edge" d="M 125,110 Q 135,95 140,75" />
+      <circle class="mg-particle--green" r="1.5" opacity="0"><animateMotion dur="3s" repeatCount="indefinite" begin="0s"><mpath href="#mgp1"/></animateMotion><animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.1;0.9;1" dur="3s" repeatCount="indefinite" begin="0s"/></circle>
+      <circle class="mg-particle--green" r="1.5" opacity="0"><animateMotion dur="3.5s" repeatCount="indefinite" begin="1.2s"><mpath href="#mgp2"/></animateMotion><animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.1;0.9;1" dur="3.5s" repeatCount="indefinite" begin="1.2s"/></circle>
+      <circle class="mg-particle--orange" r="1.5" opacity="0"><animateMotion dur="2.8s" repeatCount="indefinite" begin="0.5s"><mpath href="#mgp3"/></animateMotion><animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.1;0.9;1" dur="2.8s" repeatCount="indefinite" begin="0.5s"/></circle>
+      <circle class="mg-particle--purple" r="1.5" opacity="0"><animateMotion dur="3.2s" repeatCount="indefinite" begin="1.8s"><mpath href="#mgp4"/></animateMotion><animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.1;0.9;1" dur="3.2s" repeatCount="indefinite" begin="1.8s"/></circle>
+      <circle class="mg-particle--green" r="1.5" opacity="0"><animateMotion dur="2.6s" repeatCount="indefinite" begin="0.8s"><mpath href="#mgp5"/></animateMotion><animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.1;0.9;1" dur="2.6s" repeatCount="indefinite" begin="0.8s"/></circle>
+      <defs>
+        <path id="mgp1" d="M 50,30 Q 70,25 90,45" />
+        <path id="mgp2" d="M 50,30 Q 75,55 90,75" />
+        <path id="mgp3" d="M 90,75 Q 70,95 55,110" />
+        <path id="mgp4" d="M 55,110 Q 105,100 140,75" />
+        <path id="mgp5" d="M 125,110 Q 135,95 140,75" />
+      </defs>
+      <circle class="mg-node" cx="50" cy="30" r="12" />
+      <text class="mg-label" x="50" y="33">gw</text>
+      <circle class="mg-node" cx="90" cy="45" r="10" />
+      <text class="mg-label" x="90" y="48">auth</text>
+      <circle class="mg-node" cx="90" cy="75" r="13" />
+      <text class="mg-label" x="90" y="78">api</text>
+      <circle class="mg-node" cx="55" cy="110" r="10" />
+      <text class="mg-label" x="55" y="113">ord</text>
+      <circle class="mg-node" cx="125" cy="110" r="10" />
+      <text class="mg-label" x="125" y="113">inv</text>
+      <circle class="mg-node" cx="140" cy="75" r="11" />
+      <text class="mg-label" x="140" y="78">db</text>
+    </svg>
+    <div class="mobile-gate-text" data-i18n-html="common.desktopOnlyText">Some paths require a wider view.<br>Return on a larger screen.</div>
+  </div>
+
+  <div class="koan-page">
+
+    <h1 class="koan-title" data-i18n="koan05.title">The Hidden Tail</h1>
+
+    <div class="koan-text" data-i18n-html="koan05.zen">
+      Not all numbers tell the same story.<br>
+      The average says everyone is fine. But the few who suffer are hidden in the tail.
+    </div>
+
+    <!-- Dashboard showing the average -->
+    <div class="dashboard-panel" id="dashboard">
+      <div class="dashboard-header" data-i18n="koan05.dashHeader">checkout-svc &mdash; latency</div>
+      <div class="dashboard-body">
+        <div class="avg-value" id="avgValue">197 ms</div>
+        <div class="avg-label" data-i18n="koan05.avgLabel">average response time</div>
+        <div class="avg-status" id="avgStatus" data-i18n="koan05.avgStatus">healthy</div>
+      </div>
+    </div>
+
+    <!-- Histogram of actual distribution (hidden initially) -->
+    <div class="histogram-panel" id="histPanel">
+      <div class="histogram-header" data-i18n="koan05.histHeader">actual request distribution &mdash; last 5 minutes</div>
+      <div class="histogram-body">
+        <div class="histogram-chart">
+          <svg id="histSvg" viewBox="0 0 600 240" preserveAspectRatio="xMidYMid meet">
+            <!-- Grid lines -->
+            <line x1="60" y1="190" x2="570" y2="190" stroke="var(--border)" stroke-width="0.5" />
+            <line x1="60" y1="150" x2="570" y2="150" stroke="var(--border)" stroke-width="0.5" />
+            <line x1="60" y1="110" x2="570" y2="110" stroke="var(--border)" stroke-width="0.5" />
+            <line x1="60" y1="70" x2="570" y2="70" stroke="var(--border)" stroke-width="0.5" />
+            <line x1="60" y1="30" x2="570" y2="30" stroke="var(--border)" stroke-width="0.5" />
+
+            <!-- Y-axis labels -->
+            <text class="chart-axis-label" x="55" y="193" text-anchor="end">0</text>
+            <text class="chart-axis-label" x="55" y="153" text-anchor="end">10</text>
+            <text class="chart-axis-label" x="55" y="113" text-anchor="end">20</text>
+            <text class="chart-axis-label" x="55" y="73" text-anchor="end">30</text>
+            <text class="chart-axis-label" x="55" y="33" text-anchor="end">40</text>
+
+            <!-- Histogram bars (rendered by JS) -->
+            <g id="histBars"></g>
+
+            <!-- X-axis labels (rendered by JS) -->
+            <g id="histLabels"></g>
+
+            <!-- Percentile marker lines (hidden initially) -->
+            <!-- p50 = 52ms -> bucket 0-100 area -->
+            <line class="pct-line" id="lineP50" x1="0" y1="25" x2="0" y2="195" stroke="var(--accent-green)" stroke-width="2" />
+            <text class="pct-label" id="labelP50" x="0" y="20" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--accent-green)">p50</text>
+            <text class="pct-value" id="valueP50" x="0" y="210" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--accent-green)">52ms</text>
+
+            <!-- p95 = 210ms -> bucket 200-500 area -->
+            <line class="pct-line" id="lineP95" x1="0" y1="25" x2="0" y2="195" stroke="var(--accent-orange)" stroke-width="2" />
+            <text class="pct-label" id="labelP95" x="0" y="20" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--accent-orange)">p95</text>
+            <text class="pct-value" id="valueP95" x="0" y="210" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--accent-orange)">210ms</text>
+
+            <!-- p99 = 3200ms -> bucket 3000+ area -->
+            <line class="pct-line" id="lineP99" x1="0" y1="25" x2="0" y2="195" stroke="var(--accent-red)" stroke-width="2" />
+            <text class="pct-label" id="labelP99" x="0" y="20" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--accent-red)">p99</text>
+            <text class="pct-value" id="valueP99" x="0" y="210" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--accent-red)">3200ms</text>
+          </svg>
+        </div>
+        <div class="pct-legend" id="pctLegend">
+          <div class="pct-legend-item">
+            <div class="pct-legend-swatch pct-legend-swatch--p50"></div>
+            <span class="pct-legend-text--p50" data-i18n="koan05.legendP50">p50 = 52ms</span>
+          </div>
+          <div class="pct-legend-item">
+            <div class="pct-legend-swatch pct-legend-swatch--p95"></div>
+            <span class="pct-legend-text--p95" data-i18n="koan05.legendP95">p95 = 210ms</span>
+          </div>
+          <div class="pct-legend-item">
+            <div class="pct-legend-swatch pct-legend-swatch--p99"></div>
+            <span class="pct-legend-text--p99" data-i18n="koan05.legendP99">p99 = 3200ms</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q1: Is everything healthy? -->
+    <div class="outlier-question" id="question1">
+      <p data-i18n-html="koan05.q1">The average says 197ms. Is everything healthy?</p>
+      <div class="outlier-options">
+        <button class="outlier-opt" data-answer="wrong" data-i18n="koan05.q1OptYes">Yes</button>
+        <button class="outlier-opt" data-answer="correct" data-i18n="koan05.q1OptNo">No, some requests are very slow</button>
+      </div>
+      <div class="outlier-fb" id="feedback1"></div>
+    </div>
+
+    <!-- Reveal percentiles button -->
+    <div class="reveal-controls" id="revealControls">
+      <button class="koan-btn koan-btn--primary" id="revealBtn" data-i18n="koan05.revealBtn">Reveal the percentiles</button>
+    </div>
+
+    <!-- Q2: Which percentile would catch this problem? -->
+    <div class="outlier-question" id="question2">
+      <p data-i18n="koan05.q2">Which percentile would catch this problem?</p>
+      <div class="outlier-options">
+        <button class="outlier-opt" data-answer="wrong" data-i18n="koan05.q2OptP50">p50</button>
+        <button class="outlier-opt" data-answer="wrong" data-i18n="koan05.q2OptP95">p95</button>
+        <button class="outlier-opt" data-answer="correct" data-i18n="koan05.q2OptP99">p99</button>
+      </div>
+      <div class="outlier-fb" id="feedback2"></div>
+    </div>
+
+    <!-- Q3: Why percentiles instead of averages? -->
+    <div class="outlier-question" id="question3">
+      <p data-i18n="koan05.q3">Why do teams alert on percentiles instead of averages?</p>
+      <div class="outlier-options">
+        <button class="outlier-opt" data-answer="wrong" data-i18n="koan05.q3OptFaster">Percentiles are faster to compute</button>
+        <button class="outlier-opt" data-answer="correct" data-i18n="koan05.q3OptHide">Averages hide outliers</button>
+        <button class="outlier-opt" data-answer="wrong" data-i18n="koan05.q3OptSame">They show the same thing</button>
+      </div>
+      <div class="outlier-fb" id="feedback3"></div>
+    </div>
+
+    <!-- Insight -->
+    <div class="outlier-insight" id="insight">
+      <div class="insight-label" data-i18n="koan05.insightLabel">Outliers</div>
+      <p data-i18n="koan05.insightP1">An average smooths away the pain of the few. Percentiles expose it.</p>
+      <a href="06-trace.html" data-i18n="common.continue">Continue &rarr;</a>
+    </div>
+  </div>
+
+  <div class="koan-progress">
+    <div class="koan-progress-fill" style="width: 18%"></div>
+  </div>
+
+  <script>
+    (function () {
+      function run() {
+        // --- Histogram data ---
+        // 100 requests: 95 fast (spread across low buckets), 5 very slow
+        // Distribution designed so average = ~197ms, p50=52ms, p95=210ms, p99=3200ms
+        var buckets = [
+          { label: '0-50',     count: 38 },
+          { label: '50-100',   count: 32 },
+          { label: '100-200',  count: 18 },
+          { label: '200-500',  count: 5  },
+          { label: '500-1000', count: 2  },
+          { label: '1000-3000', count: 3 },
+          { label: '3000+',    count: 2  }
+        ];
+        var maxCount = 40;
+
+        // Chart geometry (matches SVG viewBox 600x240)
+        var chartLeft = 65;
+        var chartRight = 565;
+        var chartTop = 30;
+        var chartBottom = 190;
+        var chartH = chartBottom - chartTop;
+        var chartW = chartRight - chartLeft;
+        var gap = 8;
+        var bucketCount = buckets.length;
+        var barW = (chartW - gap * (bucketCount - 1)) / bucketCount;
+
+        // Percentile x-positions (mapped into the bar area)
+        // p50=52ms is inside bucket index 1 (50-100), near start
+        // p95=210ms is inside bucket index 3 (200-500), near start
+        // p99=3200ms is inside bucket index 6 (3000+), near middle
+        function bucketX(bucketIdx, fraction) {
+          return chartLeft + bucketIdx * (barW + gap) + fraction * barW;
+        }
+
+        var p50x = bucketX(1, 0.04);   // 52ms is just past start of 50-100
+        var p95x = bucketX(3, 0.03);   // 210ms is just past start of 200-500
+        var p99x = bucketX(6, 0.5);    // 3200ms is middle of 3000+
+
+        // Position percentile markers in SVG
+        function setLineX(id, x) {
+          var el = document.getElementById(id);
+          el.setAttribute('x1', x);
+          el.setAttribute('x2', x);
+        }
+        function setTextX(id, x) {
+          document.getElementById(id).setAttribute('x', x);
+        }
+
+        setLineX('lineP50', p50x);
+        setTextX('labelP50', p50x);
+        setTextX('valueP50', p50x);
+
+        setLineX('lineP95', p95x);
+        setTextX('labelP95', p95x);
+        setTextX('valueP95', p95x);
+
+        setLineX('lineP99', p99x);
+        setTextX('labelP99', p99x);
+        setTextX('valueP99', p99x);
+
+        // --- Animate histogram bars ---
+        var barsGroup = document.getElementById('histBars');
+        var labelsGroup = document.getElementById('histLabels');
+
+        function animateHistogram() {
+          buckets.forEach(function (bucket, i) {
+            var barH = (bucket.count / maxCount) * chartH;
+            var x = chartLeft + i * (barW + gap);
+            var y = chartBottom - barH;
+
+            var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            rect.setAttribute('class', 'hist-bar');
+            rect.setAttribute('x', x);
+            rect.setAttribute('width', barW);
+            rect.setAttribute('rx', '2');
+            rect.setAttribute('fill', 'var(--accent-blue)');
+            rect.setAttribute('opacity', '0.7');
+            barsGroup.appendChild(rect);
+
+            // Animate bar growing upward
+            (function (r, targetH, targetY, delay) {
+              setTimeout(function () {
+                var startTime = null;
+                var duration = 400;
+                function step(time) {
+                  if (!startTime) startTime = time;
+                  var t = Math.min((time - startTime) / duration, 1);
+                  var ease = 1 - Math.pow(1 - t, 3);
+                  var h = targetH * ease;
+                  r.setAttribute('y', chartBottom - h);
+                  r.setAttribute('height', h);
+                  if (t < 1) requestAnimationFrame(step);
+                }
+                requestAnimationFrame(step);
+              }, delay);
+            })(rect, barH, y, i * 120);
+
+            // X-axis bucket label
+            var label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            label.setAttribute('x', x + barW / 2);
+            label.setAttribute('y', chartBottom + 14);
+            label.setAttribute('text-anchor', 'middle');
+            label.setAttribute('class', 'chart-axis-label');
+            label.setAttribute('font-size', '9');
+            label.textContent = bucket.label;
+            labelsGroup.appendChild(label);
+
+            // Count label above bar
+            var countLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            countLabel.setAttribute('x', x + barW / 2);
+            countLabel.setAttribute('y', y - 5);
+            countLabel.setAttribute('text-anchor', 'middle');
+            countLabel.setAttribute('class', 'chart-axis-label');
+            countLabel.setAttribute('font-size', '9');
+            countLabel.setAttribute('fill', 'var(--accent-blue)');
+            countLabel.setAttribute('opacity', '0');
+            labelsGroup.appendChild(countLabel);
+            (function (cl, delay) {
+              setTimeout(function () {
+                cl.textContent = bucket.count;
+                cl.setAttribute('opacity', '1');
+              }, delay + 450);
+            })(countLabel, i * 120);
+          });
+        }
+
+        // --- Show histogram after short pause ---
+        setTimeout(function () {
+          document.getElementById('histPanel').classList.add('visible');
+          setTimeout(animateHistogram, 300);
+
+          // Show Q1 after bars finish animating
+          var totalAnimTime = buckets.length * 120 + 500;
+          setTimeout(function () {
+            document.getElementById('question1').classList.add('visible');
+          }, totalAnimTime);
+        }, 800);
+
+        // --- Q1: Is everything healthy? ---
+        (function () {
+          var q = document.getElementById('question1');
+          var fb = document.getElementById('feedback1');
+          var opts = q.querySelectorAll('.outlier-opt');
+
+          opts.forEach(function (opt) {
+            opt.addEventListener('click', function () {
+              if (this.dataset.answer === 'correct') {
+                this.classList.add('correct');
+                opts.forEach(function (o) { o.classList.add('disabled'); });
+                fb.textContent = i18n.t('koan05.q1Correct');
+                fb.className = 'outlier-fb outlier-fb--correct';
+
+                // Update dashboard to show warning
+                document.getElementById('avgValue').classList.add('warning');
+                var statusEl = document.getElementById('avgStatus');
+                statusEl.classList.add('warning');
+                statusEl.textContent = i18n.t('koan05.avgStatusMisleading');
+
+                // Show reveal button
+                setTimeout(function () {
+                  document.getElementById('revealControls').classList.add('visible');
+                }, 600);
+              } else {
+                this.classList.add('wrong');
+                fb.textContent = i18n.t('koan05.q1Wrong');
+                fb.className = 'outlier-fb outlier-fb--wrong';
+                var self = this;
+                setTimeout(function () { self.classList.remove('wrong'); }, 600);
+              }
+            });
+          });
+        })();
+
+        // --- Reveal percentile markers ---
+        document.getElementById('revealBtn').addEventListener('click', function () {
+          this.style.opacity = '0';
+          this.style.pointerEvents = 'none';
+
+          // Animate p50 first
+          setTimeout(function () {
+            document.getElementById('lineP50').classList.add('visible');
+            document.getElementById('labelP50').classList.add('visible');
+            document.getElementById('valueP50').classList.add('visible');
+          }, 200);
+
+          // Then p95
+          setTimeout(function () {
+            document.getElementById('lineP95').classList.add('visible');
+            document.getElementById('labelP95').classList.add('visible');
+            document.getElementById('valueP95').classList.add('visible');
+          }, 700);
+
+          // Then p99
+          setTimeout(function () {
+            document.getElementById('lineP99').classList.add('visible');
+            document.getElementById('labelP99').classList.add('visible');
+            document.getElementById('valueP99').classList.add('visible');
+          }, 1200);
+
+          // Show legend
+          setTimeout(function () {
+            document.getElementById('pctLegend').classList.add('visible');
+          }, 1600);
+
+          // Show Q2
+          setTimeout(function () {
+            document.getElementById('question2').classList.add('visible');
+          }, 2000);
+        });
+
+        // --- Q2: Which percentile catches this? ---
+        (function () {
+          var q = document.getElementById('question2');
+          var fb = document.getElementById('feedback2');
+          var opts = q.querySelectorAll('.outlier-opt');
+
+          opts.forEach(function (opt) {
+            opt.addEventListener('click', function () {
+              if (this.dataset.answer === 'correct') {
+                this.classList.add('correct');
+                opts.forEach(function (o) { o.classList.add('disabled'); });
+                fb.textContent = i18n.t('koan05.q2Correct');
+                fb.className = 'outlier-fb outlier-fb--correct';
+                setTimeout(function () {
+                  document.getElementById('question3').classList.add('visible');
+                }, 900);
+              } else {
+                this.classList.add('wrong');
+                if (this.textContent.indexOf('p50') !== -1) {
+                  fb.textContent = i18n.t('koan05.q2WrongP50');
+                } else {
+                  fb.textContent = i18n.t('koan05.q2WrongP95');
+                }
+                fb.className = 'outlier-fb outlier-fb--wrong';
+                var self = this;
+                setTimeout(function () { self.classList.remove('wrong'); }, 600);
+              }
+            });
+          });
+        })();
+
+        // --- Q3: Why percentiles instead of averages? ---
+        (function () {
+          var q = document.getElementById('question3');
+          var fb = document.getElementById('feedback3');
+          var opts = q.querySelectorAll('.outlier-opt');
+
+          opts.forEach(function (opt) {
+            opt.addEventListener('click', function () {
+              if (this.dataset.answer === 'correct') {
+                this.classList.add('correct');
+                opts.forEach(function (o) { o.classList.add('disabled'); });
+                fb.textContent = i18n.t('koan05.q3Correct');
+                fb.className = 'outlier-fb outlier-fb--correct';
+                setTimeout(function () {
+                  document.getElementById('insight').classList.add('visible');
+                }, 800);
+              } else {
+                this.classList.add('wrong');
+                fb.textContent = i18n.t('koan05.q3Wrong');
+                fb.className = 'outlier-fb outlier-fb--wrong';
+                var self = this;
+                setTimeout(function () { self.classList.remove('wrong'); }, 600);
+              }
+            });
+          });
+        })();
+      }
+
+      if (window.i18n && window.i18n.t('common.desktopOnly') !== 'common.desktopOnly') {
+        run();
+      } else {
+        window.addEventListener('i18n:ready', run, { once: true });
+      }
+    })();
+  </script>
+  <script src="../js/scroll.js"></script>
+  <script src="../js/music.js"></script>
+  <script src="../js/certificate.js"></script>
+  <script src="../js/progress.js"></script>
+  <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "48917f3aeb9f4b7b9ecf513cf6135ee8"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

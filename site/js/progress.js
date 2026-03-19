@@ -2,43 +2,43 @@
 (function () {
   var NAV_KEYS = [
     'theOpening', 'telemetry', 'threeSignals', 'metric', 'metricTypes',
-    'trace', 'spans', 'log', 'attributes', 'naming', 'resources',
-    'instrumentation', 'export', 'formats', 'collector', 'pipeline',
-    'sampling', 'serviceMap', 'correlation', 'fullPicture',
-    'spanEvents', 'traceContext', 'baggage', 'spanLinks',
-    'logCorrelation', 'exemplars', 'resourceDetectors',
-    'collectorTransforms', 'profiling'
+    'outliers', 'trace', 'spans', 'log', 'attributes', 'resources',
+    'semanticConventions', 'instrumentation', 'exporters', 'otlp',
+    'isItAllOpen', 'collector', 'pipeline', 'processors',
+    'deploymentModes', 'traceContext', 'baggage', 'sampling',
+    'traceAwareRouting', 'spanEvents', 'spanLinks',
+    'correlation', 'theInvestigation', 'profiling'
   ];
   var KOAN_ORDER = [
-    { n: 0,  file: 'index.html',              titleKey: 'nav.theOpening',       fallback: 'The Opening' },
-    { n: 1,  file: 'koans/01-telemetry.html',  titleKey: 'nav.telemetry',       fallback: 'Telemetry' },
-    { n: 2,  file: 'koans/02-three-signals.html', titleKey: 'nav.threeSignals', fallback: 'Core Signals' },
-    { n: 3,  file: 'koans/03-metric.html',     titleKey: 'nav.metric',          fallback: 'Metric' },
-    { n: 4,  file: 'koans/04-metric-types.html', titleKey: 'nav.metricTypes',   fallback: 'Metric Types' },
-    { n: 5,  file: 'koans/05-trace.html',      titleKey: 'nav.trace',           fallback: 'Trace' },
-    { n: 6,  file: 'koans/06-spans.html',      titleKey: 'nav.spans',           fallback: 'Spans' },
-    { n: 7,  file: 'koans/07-log.html',        titleKey: 'nav.log',             fallback: 'Log' },
-    { n: 8,  file: 'koans/08-attributes.html',  titleKey: 'nav.attributes',     fallback: 'Attributes' },
-    { n: 9,  file: 'koans/10-naming.html',     titleKey: 'nav.naming',          fallback: 'Naming' },
-    { n: 10, file: 'koans/09-resources.html',  titleKey: 'nav.resources',       fallback: 'Resources' },
-    { n: 11, file: 'koans/11-instrumentation.html', titleKey: 'nav.instrumentation', fallback: 'Instrumentation' },
-    { n: 12, file: 'koans/12-export.html',     titleKey: 'nav.export',          fallback: 'Export' },
-    { n: 13, file: 'koans/13-formats.html',    titleKey: 'nav.formats',         fallback: 'Formats' },
-    { n: 14, file: 'koans/14-collector.html',   titleKey: 'nav.collector',      fallback: 'Collector' },
-    { n: 15, file: 'koans/15-pipeline.html',   titleKey: 'nav.pipeline',        fallback: 'Pipeline' },
-    { n: 16, file: 'koans/16-sampling.html',   titleKey: 'nav.sampling',        fallback: 'Sampling' },
-    { n: 17, file: 'koans/17-service-map.html', titleKey: 'nav.serviceMap',     fallback: 'Service Map' },
-    { n: 18, file: 'koans/18-correlation.html', titleKey: 'nav.correlation',    fallback: 'Correlation' },
-    { n: 19, file: 'koans/19-full-picture.html', titleKey: 'nav.fullPicture',   fallback: 'Full Picture' },
-    { n: 20, file: 'koans/20-events.html', titleKey: 'nav.spanEvents',    fallback: 'Events' },
-    { n: 21, file: 'koans/21-trace-context.html', titleKey: 'nav.traceContext', fallback: 'Trace Context' },
-    { n: 22, file: 'koans/22-baggage.html',    titleKey: 'nav.baggage',         fallback: 'Baggage' },
-    { n: 23, file: 'koans/23-span-links.html', titleKey: 'nav.spanLinks',       fallback: 'Span Links' },
-    { n: 24, file: 'koans/24-log-correlation.html', titleKey: 'nav.logCorrelation', fallback: 'Log Correlation' },
-    { n: 25, file: 'koans/25-exemplars.html',  titleKey: 'nav.exemplars',       fallback: 'Exemplars' },
-    { n: 26, file: 'koans/26-resource-detectors.html', titleKey: 'nav.resourceDetectors', fallback: 'Resource Detectors' },
-    { n: 27, file: 'koans/27-collector-transforms.html', titleKey: 'nav.collectorTransforms', fallback: 'Collector Transforms' },
-    { n: 28, file: 'koans/28-profiling.html',  titleKey: 'nav.profiling',       fallback: 'Profiling' }
+    { n: 0,  file: 'index.html',                       titleKey: 'nav.theOpening',           fallback: 'The Opening' },
+    { n: 1,  file: 'koans/01-telemetry.html',           titleKey: 'nav.telemetry',           fallback: 'Telemetry' },
+    { n: 2,  file: 'koans/02-three-signals.html',       titleKey: 'nav.threeSignals',        fallback: 'Core Signals' },
+    { n: 3,  file: 'koans/03-metric.html',              titleKey: 'nav.metric',              fallback: 'Metric' },
+    { n: 4,  file: 'koans/04-metric-types.html',        titleKey: 'nav.metricTypes',         fallback: 'Metric Types' },
+    { n: 5,  file: 'koans/05-outliers.html',             titleKey: 'nav.outliers',           fallback: 'Outliers' },
+    { n: 6,  file: 'koans/06-trace.html',               titleKey: 'nav.trace',               fallback: 'Trace' },
+    { n: 7,  file: 'koans/07-spans.html',               titleKey: 'nav.spans',               fallback: 'Spans' },
+    { n: 8,  file: 'koans/08-log.html',                 titleKey: 'nav.log',                 fallback: 'Log' },
+    { n: 9,  file: 'koans/09-attributes.html',          titleKey: 'nav.attributes',          fallback: 'Attributes' },
+    { n: 10, file: 'koans/10-resources.html',            titleKey: 'nav.resources',          fallback: 'Resources' },
+    { n: 11, file: 'koans/11-semantic-conventions.html', titleKey: 'nav.semanticConventions', fallback: 'Semantic Conventions' },
+    { n: 12, file: 'koans/12-instrumentation.html',      titleKey: 'nav.instrumentation',    fallback: 'Instrumentation' },
+    { n: 13, file: 'koans/13-exporters.html',            titleKey: 'nav.exporters',          fallback: 'Exporters' },
+    { n: 14, file: 'koans/14-otlp.html',                titleKey: 'nav.otlp',               fallback: 'OTLP' },
+    { n: 15, file: 'koans/15-is-it-all-open.html',      titleKey: 'nav.isItAllOpen',        fallback: 'Is It All Open?' },
+    { n: 16, file: 'koans/16-collector.html',            titleKey: 'nav.collector',          fallback: 'Collector' },
+    { n: 17, file: 'koans/17-pipeline.html',             titleKey: 'nav.pipeline',           fallback: 'Pipeline' },
+    { n: 18, file: 'koans/18-processors.html',           titleKey: 'nav.processors',         fallback: 'Processors' },
+    { n: 19, file: 'koans/19-deployment-modes.html',     titleKey: 'nav.deploymentModes',    fallback: 'Deployment Modes' },
+    { n: 20, file: 'koans/20-trace-context.html',        titleKey: 'nav.traceContext',       fallback: 'Trace Context' },
+    { n: 21, file: 'koans/21-baggage.html',              titleKey: 'nav.baggage',            fallback: 'Baggage' },
+    { n: 22, file: 'koans/22-sampling.html',             titleKey: 'nav.sampling',           fallback: 'Sampling' },
+    { n: 23, file: 'koans/23-trace-aware-routing.html',  titleKey: 'nav.traceAwareRouting',  fallback: 'Trace-Aware Routing' },
+    { n: 24, file: 'koans/24-events.html',               titleKey: 'nav.spanEvents',         fallback: 'Events' },
+    { n: 25, file: 'koans/25-span-links.html',           titleKey: 'nav.spanLinks',          fallback: 'Span Links' },
+    { n: 26, file: 'koans/26-correlation.html',           titleKey: 'nav.correlation',       fallback: 'Correlation' },
+    { n: 27, file: 'koans/27-the-investigation.html',    titleKey: 'nav.theInvestigation',   fallback: 'The Investigation' },
+    { n: 28, file: 'koans/28-profiling.html',            titleKey: 'nav.profiling',          fallback: 'Profiling' }
   ];
 
   var path = location.pathname;
@@ -81,15 +81,16 @@
     nav.appendChild(prevLink);
   }
 
-  // Dot color groups
+  // Dot color groups (phases matching OTel Primer)
   var DOT_GROUPS = [
-    { start: 0,  end: 2,  color: '#5eead4' },  // Intro (teal)
-    { start: 3,  end: 7,  color: '#4ade80' },  // Signals (green)
-    { start: 8,  end: 10, color: '#60a5fa' },  // Data Model (blue)
-    { start: 11, end: 13, color: '#c084fc' },  // Producing (purple)
-    { start: 14, end: 16, color: '#38bdf8' },  // Managing (sky)
-    { start: 17, end: 19, color: '#34d399' },  // Big Picture (emerald)
-    { start: 20, end: 28, color: '#a78bfa' }   // Extra Credit (violet)
+    { start: 0,  end: 5,  color: '#5eead4' },  // The Three Signals (teal)
+    { start: 6,  end: 11, color: '#4ade80' },  // Adding Meaning (green)
+    { start: 12, end: 15, color: '#c084fc' },  // Producing Telemetry (purple)
+    { start: 16, end: 19, color: '#38bdf8' },  // Collecting & Processing (sky)
+    { start: 20, end: 23, color: '#60a5fa' },  // Crossing Boundaries (blue)
+    { start: 24, end: 25, color: '#34d399' },  // Within Spans (emerald)
+    { start: 26, end: 27, color: '#fbbf24' },  // Connecting Signals (amber)
+    { start: 28, end: 28, color: '#a78bfa' }   // What's Next (violet)
   ];
 
   function getGroupColor(idx) {

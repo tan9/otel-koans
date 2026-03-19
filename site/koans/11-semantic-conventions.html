@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title data-i18n="koan10.pageTitle">Koan 10: Naming Things - OpenTelemetry Koans</title>
+  <title data-i18n="koan11.pageTitle">Koan 10: Naming Things - OpenTelemetry Koans</title>
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon-16x16.png">
@@ -559,22 +559,22 @@
 
   <div class="koan-page">
 
-    <h1 class="koan-title" data-i18n="koan10.title">Naming Things</h1>
+    <h1 class="koan-title" data-i18n="koan11.title">Naming Things</h1>
 
-    <div class="koan-text" data-i18n-html="koan10.zen">
+    <div class="koan-text" data-i18n-html="koan11.zen">
       Attributes let you attach any key to your telemetry.<br>
       But what happens when everyone picks their own?
     </div>
 
     <!-- NEW: "Your turn" - learner names the attribute themselves -->
     <div class="nm-your-turn" id="yourTurn">
-      <div class="nm-your-turn-scenario" data-i18n-html="koan10.scenario">
+      <div class="nm-your-turn-scenario" data-i18n-html="koan11.scenario">
         Your HTTP handler just returned a response. You want to record the status code as an attribute.<br>
         What will you name the key?
       </div>
       <div class="nm-your-turn-row">
-        <input class="nm-your-input" id="yourInput" type="text" placeholder="your_attribute_name" data-i18n-placeholder="koan10.inputPlaceholder" maxlength="40" autocomplete="off" spellcheck="false">
-        <button class="nm-your-btn" id="yourBtn" data-i18n="koan10.setBtn">Set it</button>
+        <input class="nm-your-input" id="yourInput" type="text" placeholder="your_attribute_name" data-i18n-placeholder="koan11.inputPlaceholder" maxlength="40" autocomplete="off" spellcheck="false">
+        <button class="nm-your-btn" id="yourBtn" data-i18n="koan11.setBtn">Set it</button>
       </div>
       <div class="nm-your-echo" id="yourEcho"></div>
     </div>
@@ -582,36 +582,36 @@
     <!-- Three service panels showing inconsistent naming (hidden until learner submits) -->
     <div class="nm-services">
       <div class="nm-svc" id="svcA">
-        <div class="nm-svc-header"><span class="nm-svc-dot"></span> <span data-i18n="koan10.svcAHeader">orders - team a</span></div>
+        <div class="nm-svc-header"><span class="nm-svc-dot"></span> <span data-i18n="koan11.svcAHeader">orders - team a</span></div>
         <div class="nm-svc-body">
-          <div class="nm-svc-label" data-i18n="koan10.telemetryLabel">telemetry emitted</div>
+          <div class="nm-svc-label" data-i18n="koan11.telemetryLabel">telemetry emitted</div>
           <div class="nm-attr"><span class="nm-attr-key">statusCode</span> <span class="nm-attr-eq">=</span> <span class="nm-attr-val">200</span></div>
           <div class="nm-svc-fixed" id="fixA">
-            <div class="nm-svc-fixed-label" data-i18n="koan10.fixedLabel">with shared naming</div>
+            <div class="nm-svc-fixed-label" data-i18n="koan11.fixedLabel">with shared naming</div>
             <div class="nm-attr"><span class="nm-attr-key">http.response.status_code</span> <span class="nm-attr-eq">=</span> <span class="nm-attr-val">200</span></div>
           </div>
         </div>
       </div>
 
       <div class="nm-svc" id="svcB">
-        <div class="nm-svc-header"><span class="nm-svc-dot"></span> <span data-i18n="koan10.svcBHeader">payment - team b</span></div>
+        <div class="nm-svc-header"><span class="nm-svc-dot"></span> <span data-i18n="koan11.svcBHeader">payment - team b</span></div>
         <div class="nm-svc-body">
-          <div class="nm-svc-label" data-i18n="koan10.telemetryLabel">telemetry emitted</div>
+          <div class="nm-svc-label" data-i18n="koan11.telemetryLabel">telemetry emitted</div>
           <div class="nm-attr"><span class="nm-attr-key">response_status</span> <span class="nm-attr-eq">=</span> <span class="nm-attr-val">"200"</span></div>
           <div class="nm-svc-fixed" id="fixB">
-            <div class="nm-svc-fixed-label" data-i18n="koan10.fixedLabel">with shared naming</div>
+            <div class="nm-svc-fixed-label" data-i18n="koan11.fixedLabel">with shared naming</div>
             <div class="nm-attr"><span class="nm-attr-key">http.response.status_code</span> <span class="nm-attr-eq">=</span> <span class="nm-attr-val">200</span></div>
           </div>
         </div>
       </div>
 
       <div class="nm-svc" id="svcC">
-        <div class="nm-svc-header"><span class="nm-svc-dot"></span> <span data-i18n="koan10.svcCHeader">inventory - team c</span></div>
+        <div class="nm-svc-header"><span class="nm-svc-dot"></span> <span data-i18n="koan11.svcCHeader">inventory - team c</span></div>
         <div class="nm-svc-body">
-          <div class="nm-svc-label" data-i18n="koan10.telemetryLabel">telemetry emitted</div>
+          <div class="nm-svc-label" data-i18n="koan11.telemetryLabel">telemetry emitted</div>
           <div class="nm-attr"><span class="nm-attr-key">http_code</span> <span class="nm-attr-eq">=</span> <span class="nm-attr-val">200</span></div>
           <div class="nm-svc-fixed" id="fixC">
-            <div class="nm-svc-fixed-label" data-i18n="koan10.fixedLabel">with shared naming</div>
+            <div class="nm-svc-fixed-label" data-i18n="koan11.fixedLabel">with shared naming</div>
             <div class="nm-attr"><span class="nm-attr-key">http.response.status_code</span> <span class="nm-attr-eq">=</span> <span class="nm-attr-val">200</span></div>
           </div>
         </div>
@@ -622,131 +622,131 @@
     <div class="nm-comparison" id="comparison"></div>
 
     <!-- Task prompt -->
-    <div class="nm-task" id="taskPrompt" data-i18n-html="koan10.taskPrompt">
+    <div class="nm-task" id="taskPrompt" data-i18n-html="koan11.taskPrompt">
       An incident: <strong>500 errors</strong> are spiking across all three services.<br>
       You need to find every request that returned a 500. Try querying for them.
     </div>
 
     <!-- Query builder - the frustrating part -->
     <div class="nm-query-area" id="queryArea">
-      <div class="nm-query-header" data-i18n="koan10.queryHeader">query builder</div>
+      <div class="nm-query-header" data-i18n="koan11.queryHeader">query builder</div>
       <div class="nm-query-body">
         <div class="nm-search-row">
-          <input class="nm-search-box" id="searchBox" type="text" placeholder="e.g. statusCode = 500" data-i18n-placeholder="koan10.searchPlaceholder" readonly>
-          <button class="nm-search-btn" id="searchBtn" data-i18n="koan10.searchBtn">Run query</button>
+          <input class="nm-search-box" id="searchBox" type="text" placeholder="e.g. statusCode = 500" data-i18n-placeholder="koan11.searchPlaceholder" readonly>
+          <button class="nm-search-btn" id="searchBtn" data-i18n="koan11.searchBtn">Run query</button>
         </div>
 
         <div class="nm-results" id="results1">
           <div class="nm-result-line">
-            <span class="nm-result-svc" data-i18n="koan10.teamA">Team A</span>
+            <span class="nm-result-svc" data-i18n="koan11.teamA">Team A</span>
             <span class="nm-result-query">statusCode = 500</span>
-            <span class="nm-result-badge nm-result-badge--hit" data-i18n="koan10.badgeMatch">match</span>
+            <span class="nm-result-badge nm-result-badge--hit" data-i18n="koan11.badgeMatch">match</span>
           </div>
           <div class="nm-result-line">
-            <span class="nm-result-svc" data-i18n="koan10.teamB">Team B</span>
+            <span class="nm-result-svc" data-i18n="koan11.teamB">Team B</span>
             <span class="nm-result-query">statusCode = 500</span>
-            <span class="nm-result-badge nm-result-badge--miss" data-i18n="koan10.badgeMiss">no match</span>
+            <span class="nm-result-badge nm-result-badge--miss" data-i18n="koan11.badgeMiss">no match</span>
           </div>
           <div class="nm-result-line">
-            <span class="nm-result-svc" data-i18n="koan10.teamC">Team C</span>
+            <span class="nm-result-svc" data-i18n="koan11.teamC">Team C</span>
             <span class="nm-result-query">statusCode = 500</span>
-            <span class="nm-result-badge nm-result-badge--miss" data-i18n="koan10.badgeMiss">no match</span>
+            <span class="nm-result-badge nm-result-badge--miss" data-i18n="koan11.badgeMiss">no match</span>
           </div>
-          <div class="nm-result-note" data-i18n="koan10.result1Note">Only 1 of 3 services found. Team B calls it response_status. Team C calls it http_code.</div>
+          <div class="nm-result-note" data-i18n="koan11.result1Note">Only 1 of 3 services found. Team B calls it response_status. Team C calls it http_code.</div>
         </div>
 
         <div class="nm-results" id="results2">
           <div class="nm-result-line">
-            <span class="nm-result-svc" data-i18n="koan10.teamA">Team A</span>
+            <span class="nm-result-svc" data-i18n="koan11.teamA">Team A</span>
             <span class="nm-result-query">response_status = "500"</span>
-            <span class="nm-result-badge nm-result-badge--miss" data-i18n="koan10.badgeMiss">no match</span>
+            <span class="nm-result-badge nm-result-badge--miss" data-i18n="koan11.badgeMiss">no match</span>
           </div>
           <div class="nm-result-line">
-            <span class="nm-result-svc" data-i18n="koan10.teamB">Team B</span>
+            <span class="nm-result-svc" data-i18n="koan11.teamB">Team B</span>
             <span class="nm-result-query">response_status = "500"</span>
-            <span class="nm-result-badge nm-result-badge--hit" data-i18n="koan10.badgeMatch">match</span>
+            <span class="nm-result-badge nm-result-badge--hit" data-i18n="koan11.badgeMatch">match</span>
           </div>
           <div class="nm-result-line">
-            <span class="nm-result-svc" data-i18n="koan10.teamC">Team C</span>
+            <span class="nm-result-svc" data-i18n="koan11.teamC">Team C</span>
             <span class="nm-result-query">response_status = "500"</span>
-            <span class="nm-result-badge nm-result-badge--miss" data-i18n="koan10.badgeMiss">no match</span>
+            <span class="nm-result-badge nm-result-badge--miss" data-i18n="koan11.badgeMiss">no match</span>
           </div>
-          <div class="nm-result-note" data-i18n="koan10.result2Note">Query 2 of 3. Still missing Team C.</div>
+          <div class="nm-result-note" data-i18n="koan11.result2Note">Query 2 of 3. Still missing Team C.</div>
         </div>
 
         <div class="nm-results" id="results3">
           <div class="nm-result-line">
-            <span class="nm-result-svc" data-i18n="koan10.teamA">Team A</span>
+            <span class="nm-result-svc" data-i18n="koan11.teamA">Team A</span>
             <span class="nm-result-query">http_code = 500</span>
-            <span class="nm-result-badge nm-result-badge--miss" data-i18n="koan10.badgeMiss">no match</span>
+            <span class="nm-result-badge nm-result-badge--miss" data-i18n="koan11.badgeMiss">no match</span>
           </div>
           <div class="nm-result-line">
-            <span class="nm-result-svc" data-i18n="koan10.teamB">Team B</span>
+            <span class="nm-result-svc" data-i18n="koan11.teamB">Team B</span>
             <span class="nm-result-query">http_code = 500</span>
-            <span class="nm-result-badge nm-result-badge--miss" data-i18n="koan10.badgeMiss">no match</span>
+            <span class="nm-result-badge nm-result-badge--miss" data-i18n="koan11.badgeMiss">no match</span>
           </div>
           <div class="nm-result-line">
-            <span class="nm-result-svc" data-i18n="koan10.teamC">Team C</span>
+            <span class="nm-result-svc" data-i18n="koan11.teamC">Team C</span>
             <span class="nm-result-query">http_code = 500</span>
-            <span class="nm-result-badge nm-result-badge--hit" data-i18n="koan10.badgeMatch">match</span>
+            <span class="nm-result-badge nm-result-badge--hit" data-i18n="koan11.badgeMatch">match</span>
           </div>
-          <div class="nm-result-note" data-i18n="koan10.result3Note">Three queries to answer one question. During an outage, this costs minutes you don't have.</div>
+          <div class="nm-result-note" data-i18n="koan11.result3Note">Three queries to answer one question. During an outage, this costs minutes you don't have.</div>
         </div>
 
-        <div class="nm-frustration" id="frustration" data-i18n="koan10.frustration">3 queries for 1 answer. Every name is different. Every type is different.</div>
+        <div class="nm-frustration" id="frustration" data-i18n="koan11.frustration">3 queries for 1 answer. Every name is different. Every type is different.</div>
       </div>
     </div>
 
     <!-- Q1: Why is this hard? -->
     <div class="nm-question" id="q1">
-      <p data-i18n-html="koan10.q1">Each developer independently chose a different name for the same thing.<br>Why does this make querying so hard?</p>
+      <p data-i18n-html="koan11.q1">Each developer independently chose a different name for the same thing.<br>Why does this make querying so hard?</p>
       <div class="nm-opts">
-        <button class="nm-opt" data-answer="wrong" data-i18n="koan10.q1OptA">The services are too slow</button>
-        <button class="nm-opt" data-answer="correct" data-i18n="koan10.q1OptB">No single query can match all three names at once</button>
-        <button class="nm-opt" data-answer="wrong" data-i18n="koan10.q1OptC">The data is corrupted</button>
+        <button class="nm-opt" data-answer="wrong" data-i18n="koan11.q1OptA">The services are too slow</button>
+        <button class="nm-opt" data-answer="correct" data-i18n="koan11.q1OptB">No single query can match all three names at once</button>
+        <button class="nm-opt" data-answer="wrong" data-i18n="koan11.q1OptC">The data is corrupted</button>
       </div>
       <div class="nm-fb" id="fb1"></div>
     </div>
 
     <!-- Unified query reveal -->
     <div class="nm-unified-query" id="unifiedQuery">
-      <div class="nm-query-header" style="color: var(--accent-green);" data-i18n="koan10.unifiedHeader">one name, one query, all services</div>
+      <div class="nm-query-header" style="color: var(--accent-green);" data-i18n="koan11.unifiedHeader">one name, one query, all services</div>
       <div class="nm-unified-result">
         <div class="nm-result-line">
-          <span class="nm-result-svc" data-i18n="koan10.teamA">Team A</span>
+          <span class="nm-result-svc" data-i18n="koan11.teamA">Team A</span>
           <span class="nm-result-query">http.response.status_code = 500</span>
-          <span class="nm-result-badge nm-result-badge--hit" data-i18n="koan10.badgeMatch">match</span>
+          <span class="nm-result-badge nm-result-badge--hit" data-i18n="koan11.badgeMatch">match</span>
         </div>
         <div class="nm-result-line">
-          <span class="nm-result-svc" data-i18n="koan10.teamB">Team B</span>
+          <span class="nm-result-svc" data-i18n="koan11.teamB">Team B</span>
           <span class="nm-result-query">http.response.status_code = 500</span>
-          <span class="nm-result-badge nm-result-badge--hit" data-i18n="koan10.badgeMatch">match</span>
+          <span class="nm-result-badge nm-result-badge--hit" data-i18n="koan11.badgeMatch">match</span>
         </div>
         <div class="nm-result-line">
-          <span class="nm-result-svc" data-i18n="koan10.teamC">Team C</span>
+          <span class="nm-result-svc" data-i18n="koan11.teamC">Team C</span>
           <span class="nm-result-query">http.response.status_code = 500</span>
-          <span class="nm-result-badge nm-result-badge--hit" data-i18n="koan10.badgeMatch">match</span>
+          <span class="nm-result-badge nm-result-badge--hit" data-i18n="koan11.badgeMatch">match</span>
         </div>
-        <div class="nm-result-note nm-result-note--good" data-i18n="koan10.unifiedNote">One query. All three services. Same name, same type, same meaning.</div>
+        <div class="nm-result-note nm-result-note--good" data-i18n="koan11.unifiedNote">One query. All three services. Same name, same type, same meaning.</div>
       </div>
     </div>
 
     <!-- Q2: Application - Team D -->
     <div class="nm-question" id="q2">
-      <p data-i18n-html="koan10.q2">Team D joins. They need to record the HTTP request method.<br>Following the same naming pattern (dotted namespaces), what should they call it?</p>
+      <p data-i18n-html="koan11.q2">Team D joins. They need to record the HTTP request method.<br>Following the same naming pattern (dotted namespaces), what should they call it?</p>
       <div class="nm-opts">
-        <button class="nm-opt" data-answer="wrong" data-i18n="koan10.q2OptA">method</button>
-        <button class="nm-opt" data-answer="wrong" data-i18n="koan10.q2OptB">httpMethod</button>
-        <button class="nm-opt" data-answer="correct" data-i18n="koan10.q2OptC">http.request.method</button>
+        <button class="nm-opt" data-answer="wrong" data-i18n="koan11.q2OptA">method</button>
+        <button class="nm-opt" data-answer="wrong" data-i18n="koan11.q2OptB">httpMethod</button>
+        <button class="nm-opt" data-answer="correct" data-i18n="koan11.q2OptC">http.request.method</button>
       </div>
       <div class="nm-fb" id="fb2"></div>
     </div>
 
     <!-- Insight -->
     <div class="nm-insight" id="insight">
-      <p data-i18n-html="koan10.insightP1">These shared naming rules are called <strong>semantic conventions</strong>.</p>
-      <p data-i18n="koan10.insightP2">When everyone speaks the same language, one query finds everything.</p>
-      <a href="09-resources.html" data-i18n="common.continue">Continue &rarr;</a>
+      <p data-i18n-html="koan11.insightP1">These shared naming rules are called <strong>semantic conventions</strong>.</p>
+      <p data-i18n="koan11.insightP2">When everyone speaks the same language, one query finds everything.</p>
+      <a href="12-instrumentation.html" data-i18n="common.continue">Continue &rarr;</a>
     </div>
   </div>
 
@@ -779,7 +779,7 @@
         /* Lock input */
         yourInput.disabled = true;
         yourBtn.disabled = true;
-        yourEcho.textContent = i18n.t('koan10.echoPrefix') + learnerName;
+        yourEcho.textContent = i18n.t('koan11.echoPrefix') + learnerName;
 
         /* Now reveal the three team panels */
         var svcs = ['svcA', 'svcB', 'svcC'];
@@ -800,9 +800,9 @@
             }
           }
           if (matchedTeam) {
-            comp.textContent = i18n.t('koan10.comparisonMatched').replace('{team}', matchedTeam);
+            comp.textContent = i18n.t('koan11.comparisonMatched').replace('{team}', matchedTeam);
           } else {
-            comp.textContent = i18n.t('koan10.comparisonUnmatched');
+            comp.textContent = i18n.t('koan11.comparisonUnmatched');
           }
           comp.classList.add('visible');
         }, 1800);
@@ -850,13 +850,13 @@
         queryStep++;
 
         if (queryStep < queries.length) {
-          searchBtn.textContent = i18n.t('koan10.searchBtnNext');
+          searchBtn.textContent = i18n.t('koan11.searchBtnNext');
           setTimeout(function () {
             searchBox.value = queries[queryStep].input;
           }, 800);
         } else {
           searchBtn.disabled = true;
-          searchBtn.textContent = i18n.t('koan10.searchBtnDone');
+          searchBtn.textContent = i18n.t('koan11.searchBtnDone');
 
           setTimeout(function () {
             document.getElementById('frustration').classList.add('visible');
@@ -876,9 +876,9 @@
         var attempts = 0;
 
         var scaffolding = [
-          i18n.t('koan10.q1Scaffold1'),
-          i18n.t('koan10.q1Scaffold2'),
-          i18n.t('koan10.q1Scaffold3')
+          i18n.t('koan11.q1Scaffold1'),
+          i18n.t('koan11.q1Scaffold2'),
+          i18n.t('koan11.q1Scaffold3')
         ];
 
         opts.forEach(function (opt) {
@@ -886,7 +886,7 @@
             if (this.dataset.answer === 'correct') {
               this.classList.add('correct');
               opts.forEach(function (o) { o.classList.add('disabled'); });
-              fb.textContent = i18n.t('koan10.q1Correct');
+              fb.textContent = i18n.t('koan11.q1Correct');
               fb.className = 'nm-fb nm-fb--correct';
 
               /* Reveal the fix: show unified naming on each service panel */
@@ -930,7 +930,7 @@
             if (this.dataset.answer === 'correct') {
               this.classList.add('correct');
               opts.forEach(function (o) { o.classList.add('disabled'); });
-              fb.textContent = i18n.t('koan10.q2Correct');
+              fb.textContent = i18n.t('koan11.q2Correct');
               fb.className = 'nm-fb nm-fb--correct';
 
               setTimeout(function () {
@@ -938,7 +938,7 @@
               }, 800);
             } else {
               this.classList.add('wrong');
-              fb.textContent = i18n.t('koan10.q2Wrong');
+              fb.textContent = i18n.t('koan11.q2Wrong');
               fb.className = 'nm-fb nm-fb--wrong';
               var self = this;
               setTimeout(function () { self.classList.remove('wrong'); }, 600);

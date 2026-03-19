@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="koan23.pageTitle">Koan 23: Trace-Aware Routing - OpenTelemetry Koans</title>
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../img/apple-touch-icon.png">
+  <link rel="manifest" href="../site.webmanifest">
+  <meta name="theme-color" content="#0a0e14">
+  <link rel="stylesheet" href="../css/shared.css">
+  <script src="../js/i18n.js"></script>
+  <style>
+    /* Routing diagram container */
+    .routing-scene {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: 1em;
+      overflow: hidden;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow-inset);
+    }
+
+    .routing-scene-header {
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .routing-mode-label {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--accent-orange);
+      transition: color 0.3s var(--ease-smooth);
+    }
+
+    .routing-scene-body {
+      padding: 1.5rem;
+    }
+
+    /* SVG diagram */
+    .routing-svg {
+      width: 100%;
+      max-width: 700px;
+      margin: 0 auto;
+      display: block;
+    }
+
+    /* Node styles inside SVG */
+    .r-node-agent {
+      fill: var(--bg-tertiary);
+      stroke: var(--border-subtle);
+      stroke-width: 1.5;
+    }
+
+    .r-node-gateway {
+      fill: var(--bg-tertiary);
+      stroke: var(--border-subtle);
+      stroke-width: 1.5;
+    }
+
+    .r-node-sampler {
+      fill: var(--bg-tertiary);
+      stroke: rgba(188, 140, 255, 0.35);
+      stroke-width: 1.5;
+    }
+
+    .r-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      fill: var(--text-secondary);
+      text-anchor: middle;
+      dominant-baseline: central;
+    }
+
+    .r-label-small {
+      font-family: var(--font-mono);
+      font-size: 8px;
+      fill: var(--text-muted);
+      text-anchor: middle;
+      dominant-baseline: central;
+    }
+
+    .r-section-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      fill: var(--text-muted);
+      text-anchor: middle;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* Span particles */
+    .span-dot {
+      r: 5;
+      opacity: 0;
+    }
+
+    .span-dot--a { fill: var(--accent-blue); }
+    .span-dot--b { fill: var(--accent-green); }
+    .span-dot--c { fill: var(--accent-orange); }
+
+    /* Routing paths */
+    .route-path {
+      fill: none;
+      stroke-width: 1.5;
+      opacity: 0;
+    }
+
+    .route-path--scattered {
+      stroke: var(--text-muted);
+      stroke-dasharray: 4 3;
+    }
+
+    .route-path--focused {
+      stroke: var(--accent-green);
+      stroke-dasharray: 4 3;
+    }
+
+    /* Gateway highlight */
+    .gw-highlight {
+      fill: none;
+      stroke: var(--accent-green);
+      stroke-width: 2;
+      opacity: 0;
+      transition: opacity 0.6s var(--ease-smooth);
+    }
+
+    .gw-highlight.active {
+      opacity: 1;
+    }
+
+    /* Trace inventory in each gateway */
+    .gw-inventory {
+      font-family: var(--font-mono);
+      font-size: 7.5px;
+      fill: var(--text-muted);
+      text-anchor: middle;
+    }
+
+    .gw-inventory.has-full-trace {
+      fill: var(--accent-green);
+    }
+
+    .gw-inventory.has-partial-trace {
+      fill: var(--accent-red);
+    }
+
+    /* Explanation text */
+    .routing-explanation {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      text-align: center;
+      min-height: 2em;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    /* Controls */
+    .routing-controls {
+      text-align: center;
+    }
+
+    .routing-controls-label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+
+    .routing-strategies {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .routing-strategy-btn {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      padding: 0.55rem 1.35rem;
+      border: 1px solid var(--border);
+      border-radius: 0.5em;
+      background: var(--bg-glass);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.3s var(--ease-spring);
+    }
+
+    .routing-strategy-btn:hover {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .routing-strategy-btn.active {
+      border-color: rgba(188, 140, 255, 0.4);
+      background: rgba(188, 140, 255, 0.08);
+      color: var(--accent-purple);
+      box-shadow: 0 0 12px rgba(188, 140, 255, 0.1);
+    }
+
+    .routing-strategy-btn.tried {
+      position: relative;
+    }
+
+    .routing-strategy-btn.tried::after {
+      content: '';
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      box-shadow: 0 0 6px rgba(63, 185, 80, 0.4);
+    }
+
+    /* Question section */
+    .routing-question {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: 1em;
+      padding: 1.25rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      box-shadow: var(--shadow-inset);
+      transition: opacity 0.6s var(--ease-smooth), max-height 0.6s, padding 0.6s, margin-bottom 0.6s;
+    }
+
+    .routing-question.visible {
+      opacity: 1;
+      max-height: 20rem;
+      padding: 1.25rem;
+    }
+
+    .routing-question p {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .routing-opts {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .routing-opt {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      padding: 0.6rem 1.35rem;
+      border: 1px solid var(--border);
+      border-radius: 0.5em;
+      background: var(--bg-glass);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.3s var(--ease-spring);
+    }
+
+    .routing-opt:hover {
+      border-color: var(--accent-blue);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .routing-opt.correct {
+      border-color: rgba(63, 185, 80, 0.4);
+      background: rgba(63, 185, 80, 0.08);
+      color: var(--accent-green);
+      box-shadow: 0 0 16px rgba(63, 185, 80, 0.15);
+    }
+
+    .routing-opt.wrong {
+      border-color: rgba(248, 81, 73, 0.4);
+      color: var(--accent-red);
+      box-shadow: 0 0 16px rgba(248, 81, 73, 0.15);
+    }
+
+    .routing-opt.disabled { pointer-events: none; opacity: 0.4; }
+
+    .routing-fb {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      min-height: 1.5em;
+      margin-top: 0.5rem;
+    }
+
+    .routing-fb--correct { color: var(--accent-green); }
+    .routing-fb--wrong { color: var(--accent-red); }
+
+    /* Animation keyframes */
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-gate">
+    <svg class="mobile-gate-anim" viewBox="0 0 180 140">
+      <path class="mg-edge" d="M 50,30 Q 70,25 90,45" />
+      <path class="mg-edge" d="M 50,30 Q 75,55 90,75" />
+      <path class="mg-edge" d="M 90,45 Q 90,60 90,75" />
+      <path class="mg-edge" d="M 90,75 Q 70,95 55,110" />
+      <path class="mg-edge" d="M 90,75 Q 110,95 125,110" />
+      <path class="mg-edge" d="M 55,110 Q 105,100 140,75" />
+      <path class="mg-edge" d="M 125,110 Q 135,95 140,75" />
+      <circle class="mg-particle--green" r="1.5" opacity="0"><animateMotion dur="3s" repeatCount="indefinite" begin="0s"><mpath href="#mgp1"/></animateMotion><animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.1;0.9;1" dur="3s" repeatCount="indefinite" begin="0s"/></circle>
+      <circle class="mg-particle--green" r="1.5" opacity="0"><animateMotion dur="3.5s" repeatCount="indefinite" begin="1.2s"><mpath href="#mgp2"/></animateMotion><animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.1;0.9;1" dur="3.5s" repeatCount="indefinite" begin="1.2s"/></circle>
+      <circle class="mg-particle--orange" r="1.5" opacity="0"><animateMotion dur="2.8s" repeatCount="indefinite" begin="0.5s"><mpath href="#mgp3"/></animateMotion><animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.1;0.9;1" dur="2.8s" repeatCount="indefinite" begin="0.5s"/></circle>
+      <circle class="mg-particle--purple" r="1.5" opacity="0"><animateMotion dur="3.2s" repeatCount="indefinite" begin="1.8s"><mpath href="#mgp4"/></animateMotion><animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.1;0.9;1" dur="3.2s" repeatCount="indefinite" begin="1.8s"/></circle>
+      <circle class="mg-particle--green" r="1.5" opacity="0"><animateMotion dur="2.6s" repeatCount="indefinite" begin="0.8s"><mpath href="#mgp5"/></animateMotion><animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.1;0.9;1" dur="2.6s" repeatCount="indefinite" begin="0.8s"/></circle>
+      <defs>
+        <path id="mgp1" d="M 50,30 Q 70,25 90,45" />
+        <path id="mgp2" d="M 50,30 Q 75,55 90,75" />
+        <path id="mgp3" d="M 90,75 Q 70,95 55,110" />
+        <path id="mgp4" d="M 55,110 Q 105,100 140,75" />
+        <path id="mgp5" d="M 125,110 Q 135,95 140,75" />
+      </defs>
+      <circle class="mg-node" cx="50" cy="30" r="12" />
+      <text class="mg-label" x="50" y="33">gw</text>
+      <circle class="mg-node" cx="90" cy="45" r="10" />
+      <text class="mg-label" x="90" y="48">auth</text>
+      <circle class="mg-node" cx="90" cy="75" r="13" />
+      <text class="mg-label" x="90" y="78">api</text>
+      <circle class="mg-node" cx="55" cy="110" r="10" />
+      <text class="mg-label" x="55" y="113">ord</text>
+      <circle class="mg-node" cx="125" cy="110" r="10" />
+      <text class="mg-label" x="125" y="113">inv</text>
+      <circle class="mg-node" cx="140" cy="75" r="11" />
+      <text class="mg-label" x="140" y="78">db</text>
+    </svg>
+    <div class="mobile-gate-text" data-i18n-html="common.desktopOnlyText">Some paths require a wider view.<br>Return on a larger screen.</div>
+  </div>
+
+  <div class="koan-page">
+
+    <h1 class="koan-title" data-i18n="koan23.title">Trace-Aware Routing</h1>
+
+    <div class="koan-text" data-i18n-html="koan23.zen">
+      Twelve fragments of a single story arrive at three doors.<br>
+      Only the door that receives all twelve can understand the whole.
+    </div>
+
+    <div class="koan-instruction" data-i18n="koan23.instruction">
+      You learned that tail sampling needs the complete trace. But when multiple agents export spans from the same trace, a load balancer scatters them. Watch what happens.
+    </div>
+
+    <!-- Routing diagram -->
+    <div class="routing-scene">
+      <div class="routing-scene-header">
+        <span data-i18n="koan23.sceneHeader">span routing</span>
+        <span class="routing-mode-label" id="modeLabel" data-i18n="koan23.modeRoundRobin">mode: round-robin</span>
+      </div>
+      <div class="routing-scene-body">
+
+        <!-- SVG Diagram -->
+        <svg class="routing-svg" id="routingSvg" viewBox="0 0 700 340">
+          <!-- Section labels -->
+          <text class="r-section-label" x="100" y="20" data-i18n="koan23.labelAgents">AGENTS (DaemonSets)</text>
+          <text class="r-section-label" x="350" y="20" data-i18n="koan23.labelLoadBalancer">LOAD BALANCER</text>
+          <text class="r-section-label" x="580" y="20" data-i18n="koan23.labelGateways">GATEWAY REPLICAS</text>
+
+          <!-- Agent nodes -->
+          <rect class="r-node-agent" x="40" y="60" width="120" height="50" rx="8" />
+          <text class="r-label" x="100" y="82" data-i18n="koan23.agent1">agent-1</text>
+          <text class="r-label-small" x="100" y="98" data-i18n="koan23.agent1Spans">spans: A, B, C, D</text>
+
+          <rect class="r-node-agent" x="40" y="150" width="120" height="50" rx="8" />
+          <text class="r-label" x="100" y="172" data-i18n="koan23.agent2">agent-2</text>
+          <text class="r-label-small" x="100" y="188" data-i18n="koan23.agent2Spans">spans: E, F, G, H</text>
+
+          <rect class="r-node-agent" x="40" y="240" width="120" height="50" rx="8" />
+          <text class="r-label" x="100" y="262" data-i18n="koan23.agent3">agent-3</text>
+          <text class="r-label-small" x="100" y="278" data-i18n="koan23.agent3Spans">spans: I, J, K, L</text>
+
+          <!-- Load balancer -->
+          <rect class="r-node-gateway" x="300" y="130" width="100" height="80" rx="8" id="lbNode" />
+          <text class="r-label" x="350" y="165" data-i18n="koan23.loadBalancer">LB</text>
+          <text class="r-label-small" x="350" y="182" id="lbMethod" data-i18n="koan23.lbRoundRobin">round-robin</text>
+
+          <!-- Gateway replicas -->
+          <rect class="r-node-sampler" x="510" y="40" width="140" height="60" rx="8" />
+          <text class="r-label" x="580" y="62" data-i18n="koan23.gw1">gateway-1</text>
+          <text class="r-label-small gw-inventory" id="gw1Inv" x="580" y="82">&#8212;</text>
+
+          <rect class="r-node-sampler" x="510" y="140" width="140" height="60" rx="8" />
+          <text class="r-label" x="580" y="162" data-i18n="koan23.gw2">gateway-2</text>
+          <text class="r-label-small gw-inventory" id="gw2Inv" x="580" y="182">&#8212;</text>
+
+          <rect class="r-node-sampler" x="510" y="240" width="140" height="60" rx="8" />
+          <text class="r-label" x="580" y="262" data-i18n="koan23.gw3">gateway-3</text>
+          <text class="r-label-small gw-inventory" id="gw3Inv" x="580" y="282">&#8212;</text>
+
+          <!-- Gateway highlight rings (for consistent hashing mode) -->
+          <rect class="gw-highlight" id="gwHighlight1" x="507" y="37" width="146" height="66" rx="10" />
+          <rect class="gw-highlight" id="gwHighlight2" x="507" y="137" width="146" height="66" rx="10" />
+          <rect class="gw-highlight" id="gwHighlight3" x="507" y="237" width="146" height="66" rx="10" />
+
+          <!-- Routing paths: agent -> LB -->
+          <path class="route-path" id="pathA1toLB" d="M 160,85 Q 230,85 300,170" />
+          <path class="route-path" id="pathA2toLB" d="M 160,175 L 300,170" />
+          <path class="route-path" id="pathA3toLB" d="M 160,265 Q 230,265 300,170" />
+
+          <!-- Scattered routing paths: LB -> gateways (round-robin) -->
+          <path class="route-path route-path--scattered" id="pathLBtoGW1" d="M 400,150 Q 450,100 510,70" />
+          <path class="route-path route-path--scattered" id="pathLBtoGW2" d="M 400,170 L 510,170" />
+          <path class="route-path route-path--scattered" id="pathLBtoGW3" d="M 400,190 Q 450,240 510,270" />
+
+          <!-- Focused routing paths: LB -> single gateway (consistent hashing) -->
+          <path class="route-path route-path--focused" id="pathLBtoGW2focused" d="M 400,170 L 510,170" />
+
+          <!-- Span dots (animated by JS) -->
+          <!-- Agent 1 spans -->
+          <circle class="span-dot span-dot--a" id="spanA" cx="160" cy="75" />
+          <circle class="span-dot span-dot--a" id="spanB" cx="160" cy="80" />
+          <circle class="span-dot span-dot--a" id="spanC" cx="160" cy="90" />
+          <circle class="span-dot span-dot--a" id="spanD" cx="160" cy="95" />
+
+          <!-- Agent 2 spans -->
+          <circle class="span-dot span-dot--b" id="spanE" cx="160" cy="165" />
+          <circle class="span-dot span-dot--b" id="spanF" cx="160" cy="170" />
+          <circle class="span-dot span-dot--b" id="spanG" cx="160" cy="180" />
+          <circle class="span-dot span-dot--b" id="spanH" cx="160" cy="185" />
+
+          <!-- Agent 3 spans -->
+          <circle class="span-dot span-dot--c" id="spanI" cx="160" cy="255" />
+          <circle class="span-dot span-dot--c" id="spanJ" cx="160" cy="260" />
+          <circle class="span-dot span-dot--c" id="spanK" cx="160" cy="270" />
+          <circle class="span-dot span-dot--c" id="spanL" cx="160" cy="275" />
+
+          <!-- Sampler verdict labels -->
+          <text class="r-label-small" id="samplerVerdict1" x="580" y="108" style="opacity:0"></text>
+          <text class="r-label-small" id="samplerVerdict2" x="580" y="208" style="opacity:0"></text>
+          <text class="r-label-small" id="samplerVerdict3" x="580" y="308" style="opacity:0"></text>
+        </svg>
+
+        <div class="routing-explanation" id="explanation" data-i18n="koan23.explanationInitial">
+          12 spans from one trace. 3 agents. Watch the load balancer distribute them.
+        </div>
+
+        <div class="routing-controls">
+          <div class="routing-controls-label" data-i18n="koan23.controlsLabel">Routing strategy</div>
+          <div class="routing-strategies">
+            <button class="routing-strategy-btn active" id="stratScatter" data-strategy="scatter" data-i18n="koan23.strategyScatter">Round-robin</button>
+            <button class="routing-strategy-btn" id="stratHash" data-strategy="hash" data-i18n="koan23.strategyHash">Consistent hashing (trace ID)</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q1: After seeing scattered routing -->
+    <div class="routing-question" id="question1">
+      <p data-i18n="koan23.q1">Can any single gateway replica make a tail sampling decision?</p>
+      <div class="routing-opts">
+        <button class="routing-opt" data-answer="wrong" data-i18n="koan23.q1OptYes">Yes &mdash; each replica samples its portion</button>
+        <button class="routing-opt" data-answer="correct" data-i18n="koan23.q1OptNo">No &mdash; each only sees part of the trace</button>
+      </div>
+      <div class="routing-fb" id="fb1"></div>
+    </div>
+
+    <!-- Q2: After seeing consistent hashing -->
+    <div class="routing-question" id="question2">
+      <p data-i18n="koan23.q2">What does consistent hashing of trace IDs achieve?</p>
+      <div class="routing-opts">
+        <button class="routing-opt" data-answer="wrong" data-why="faster" data-i18n="koan23.q2OptFaster">It makes span export faster</button>
+        <button class="routing-opt" data-answer="correct" data-i18n="koan23.q2OptSame">All spans from one trace reach the same gateway replica</button>
+        <button class="routing-opt" data-answer="wrong" data-why="less" data-i18n="koan23.q2OptLess">It reduces the number of spans exported</button>
+      </div>
+      <div class="routing-fb" id="fb2"></div>
+    </div>
+
+    <!-- Insight -->
+    <div class="routing-insight" id="insight">
+      <div class="insight-label" data-i18n="koan23.insightLabel">Trace-Aware Routing</div>
+      <p data-i18n="koan23.insightP1">Trace-aware routing ensures tail sampling sees the complete picture.</p>
+      <p data-i18n="koan23.insightP2">Without it, spans scatter across replicas and the sampler is blind.</p>
+      <a href="24-events.html" data-i18n="common.continue">Continue &rarr;</a>
+    </div>
+  </div>
+
+  <div class="koan-progress">
+    <div class="koan-progress-fill" style="width: 82%"></div>
+  </div>
+
+  <script>
+    (function () {
+      function run() {
+
+      /* ── Span definitions ──────────────────────────────── */
+      /* All 12 spans share the same trace_id */
+      var spans = [
+        { id: 'A', agent: 1 }, { id: 'B', agent: 1 },
+        { id: 'C', agent: 1 }, { id: 'D', agent: 1 },
+        { id: 'E', agent: 2 }, { id: 'F', agent: 2 },
+        { id: 'G', agent: 2 }, { id: 'H', agent: 2 },
+        { id: 'I', agent: 3 }, { id: 'J', agent: 3 },
+        { id: 'K', agent: 3 }, { id: 'L', agent: 3 }
+      ];
+
+      /* Round-robin assignment: agent1->gw1, agent2->gw2, agent3->gw3 */
+      var scatteredAssignment = {
+        A: 1, B: 2, C: 3, D: 1,
+        E: 2, F: 3, G: 1, H: 2,
+        I: 3, J: 1, K: 2, L: 3
+      };
+
+      /* Consistent hashing: all go to gw2 */
+      var hashedAssignment = {
+        A: 2, B: 2, C: 2, D: 2,
+        E: 2, F: 2, G: 2, H: 2,
+        I: 2, J: 2, K: 2, L: 2
+      };
+
+      /* DOM refs */
+      var modeLabel   = document.getElementById('modeLabel');
+      var lbMethod    = document.getElementById('lbMethod');
+      var explanation = document.getElementById('explanation');
+      var question1   = document.getElementById('question1');
+      var question2   = document.getElementById('question2');
+      var fb1         = document.getElementById('fb1');
+      var fb2         = document.getElementById('fb2');
+      var insight     = document.getElementById('insight');
+
+      var gw1Inv = document.getElementById('gw1Inv');
+      var gw2Inv = document.getElementById('gw2Inv');
+      var gw3Inv = document.getElementById('gw3Inv');
+
+      var gwHighlight1 = document.getElementById('gwHighlight1');
+      var gwHighlight2 = document.getElementById('gwHighlight2');
+      var gwHighlight3 = document.getElementById('gwHighlight3');
+
+      var samplerVerdict1 = document.getElementById('samplerVerdict1');
+      var samplerVerdict2 = document.getElementById('samplerVerdict2');
+      var samplerVerdict3 = document.getElementById('samplerVerdict3');
+
+      var stratScatter = document.getElementById('stratScatter');
+      var stratHash    = document.getElementById('stratHash');
+      var stratButtons = [stratScatter, stratHash];
+
+      var triedStrategies = { scatter: true, hash: false };
+      var currentStrategy = 'scatter';
+      var animating = false;
+      var q1Answered = false;
+      var animTimers = [];
+
+      /* ── Gateway target positions ──────────────────────── */
+      var gwPositions = {
+        1: { x: 520, y: 70 },
+        2: { x: 520, y: 170 },
+        3: { x: 520, y: 270 }
+      };
+
+      /* Agent starting positions */
+      var agentPositions = {
+        1: { x: 160, y: 85 },
+        2: { x: 160, y: 175 },
+        3: { x: 160, y: 265 }
+      };
+
+      /* LB position */
+      var lbPos = { x: 350, y: 170 };
+
+      /* ── Helpers ────────────────────────────────────────── */
+
+      function clearTimers() {
+        animTimers.forEach(function (t) { clearTimeout(t); });
+        animTimers = [];
+      }
+
+      function resetSpanDots() {
+        spans.forEach(function (s) {
+          var el = document.getElementById('span' + s.id);
+          if (el) {
+            var startPos = agentPositions[s.agent];
+            el.setAttribute('cx', startPos.x);
+            el.setAttribute('cy', startPos.y + (spans.filter(function(sp) { return sp.agent === s.agent; }).indexOf(s)) * 8 - 12);
+            el.style.opacity = '0';
+            el.style.transition = 'none';
+          }
+        });
+      }
+
+      function resetPaths() {
+        var paths = document.querySelectorAll('.route-path');
+        paths.forEach(function (p) { p.style.opacity = '0'; });
+      }
+
+      function resetGateways() {
+        gw1Inv.textContent = '\u2014';
+        gw2Inv.textContent = '\u2014';
+        gw3Inv.textContent = '\u2014';
+        gw1Inv.classList.remove('has-full-trace', 'has-partial-trace');
+        gw2Inv.classList.remove('has-full-trace', 'has-partial-trace');
+        gw3Inv.classList.remove('has-full-trace', 'has-partial-trace');
+        gwHighlight1.classList.remove('active');
+        gwHighlight2.classList.remove('active');
+        gwHighlight3.classList.remove('active');
+        samplerVerdict1.style.opacity = '0';
+        samplerVerdict2.style.opacity = '0';
+        samplerVerdict3.style.opacity = '0';
+      }
+
+      function showPaths(strategy) {
+        if (strategy === 'scatter') {
+          ['pathA1toLB', 'pathA2toLB', 'pathA3toLB', 'pathLBtoGW1', 'pathLBtoGW2', 'pathLBtoGW3'].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (el) el.style.opacity = '0.4';
+          });
+        } else {
+          ['pathA1toLB', 'pathA2toLB', 'pathA3toLB', 'pathLBtoGW2focused'].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (el) el.style.opacity = '0.5';
+          });
+        }
+      }
+
+      /* ── Animation ─────────────────────────────────────── */
+
+      function animateStrategy(strategy) {
+        if (animating) return;
+        animating = true;
+        currentStrategy = strategy;
+
+        clearTimers();
+        resetSpanDots();
+        resetPaths();
+        resetGateways();
+
+        /* Mark tried */
+        triedStrategies[strategy] = true;
+
+        /* Update buttons */
+        stratButtons.forEach(function (btn) {
+          btn.classList.remove('active');
+          if (triedStrategies[btn.dataset.strategy]) {
+            btn.classList.add('tried');
+          }
+        });
+        var activeBtn = document.querySelector('[data-strategy="' + strategy + '"]');
+        activeBtn.classList.add('active');
+
+        /* Update labels */
+        if (strategy === 'scatter') {
+          modeLabel.textContent = i18n.t('koan23.modeRoundRobin');
+          modeLabel.style.color = 'var(--accent-orange)';
+          lbMethod.textContent = i18n.t('koan23.lbRoundRobin');
+        } else {
+          modeLabel.textContent = i18n.t('koan23.modeConsistentHash');
+          modeLabel.style.color = 'var(--accent-green)';
+          lbMethod.textContent = i18n.t('koan23.lbConsistentHash');
+        }
+
+        var assignment = strategy === 'scatter' ? scatteredAssignment : hashedAssignment;
+        var gwContents = { 1: [], 2: [], 3: [] };
+        var stagger = 180;
+        var moveDuration = 600;
+
+        /* Show paths */
+        animTimers.push(setTimeout(function () {
+          showPaths(strategy);
+        }, 100));
+
+        /* Animate each span: start -> LB -> gateway */
+        spans.forEach(function (s, i) {
+          var el = document.getElementById('span' + s.id);
+          if (!el) return;
+
+          var startPos = agentPositions[s.agent];
+          var agentSpans = spans.filter(function (sp) { return sp.agent === s.agent; });
+          var indexInAgent = agentSpans.indexOf(s);
+          var startY = startPos.y + indexInAgent * 8 - 12;
+
+          el.setAttribute('cx', startPos.x);
+          el.setAttribute('cy', startY);
+
+          var delay = i * stagger;
+
+          /* Phase 1: appear and move to LB */
+          animTimers.push(setTimeout(function () {
+            el.style.transition = 'cx ' + moveDuration + 'ms ease-in-out, cy ' + moveDuration + 'ms ease-in-out, opacity 0.2s';
+            el.style.opacity = '0.9';
+            el.setAttribute('cx', lbPos.x);
+            el.setAttribute('cy', lbPos.y);
+          }, delay));
+
+          /* Phase 2: move from LB to assigned gateway */
+          animTimers.push(setTimeout(function () {
+            var gw = assignment[s.id];
+            var gwPos = gwPositions[gw];
+            var jitter = (Math.random() - 0.5) * 20;
+            el.style.transition = 'cx ' + moveDuration + 'ms ease-in-out, cy ' + moveDuration + 'ms ease-in-out';
+            el.setAttribute('cx', gwPos.x + 40 + gwContents[gw].length * 6);
+            el.setAttribute('cy', gwPos.y + jitter);
+            gwContents[gw].push(s.id);
+          }, delay + moveDuration + 80));
+        });
+
+        /* Final state: update gateway inventories */
+        var totalTime = (spans.length * stagger) + moveDuration * 2 + 400;
+
+        animTimers.push(setTimeout(function () {
+          /* Update gateway inventory labels */
+          var invRefs = { 1: gw1Inv, 2: gw2Inv, 3: gw3Inv };
+          var verdictRefs = { 1: samplerVerdict1, 2: samplerVerdict2, 3: samplerVerdict3 };
+          var highlightRefs = { 1: gwHighlight1, 2: gwHighlight2, 3: gwHighlight3 };
+
+          [1, 2, 3].forEach(function (gw) {
+            var spanIds = gwContents[gw];
+            if (spanIds.length === 0) {
+              invRefs[gw].textContent = i18n.t('koan23.gwEmpty');
+            } else {
+              invRefs[gw].textContent = spanIds.join(', ') + ' (' + spanIds.length + '/12)';
+            }
+
+            if (spanIds.length === 12) {
+              invRefs[gw].classList.add('has-full-trace');
+              highlightRefs[gw].classList.add('active');
+              verdictRefs[gw].textContent = i18n.t('koan23.canSample');
+              verdictRefs[gw].style.fill = 'var(--accent-green)';
+              verdictRefs[gw].style.opacity = '1';
+            } else if (spanIds.length > 0) {
+              invRefs[gw].classList.add('has-partial-trace');
+              verdictRefs[gw].textContent = i18n.t('koan23.cannotSample');
+              verdictRefs[gw].style.fill = 'var(--accent-red)';
+              verdictRefs[gw].style.opacity = '1';
+            }
+          });
+
+          /* Update explanation */
+          if (strategy === 'scatter') {
+            explanation.innerHTML = i18n.t('koan23.explanationScattered');
+          } else {
+            explanation.innerHTML = i18n.t('koan23.explanationHashed');
+          }
+
+          animating = false;
+
+          /* Show appropriate question */
+          if (strategy === 'scatter' && !q1Answered) {
+            animTimers.push(setTimeout(function () {
+              question1.classList.add('visible');
+            }, 600));
+          }
+          if (strategy === 'hash' && q1Answered) {
+            animTimers.push(setTimeout(function () {
+              question2.classList.add('visible');
+            }, 600));
+          }
+        }, totalTime));
+      }
+
+      /* ── Wire up strategy buttons ──────────────────────── */
+
+      stratButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          if (animating) return;
+          animateStrategy(this.dataset.strategy);
+        });
+      });
+
+      /* ── Q1 logic ──────────────────────────────────────── */
+
+      (function () {
+        var opts = question1.querySelectorAll('.routing-opt');
+        opts.forEach(function (opt) {
+          opt.addEventListener('click', function () {
+            if (this.dataset.answer === 'correct') {
+              this.classList.add('correct');
+              opts.forEach(function (o) { o.classList.add('disabled'); });
+              fb1.textContent = i18n.t('koan23.q1Correct');
+              fb1.className = 'routing-fb routing-fb--correct';
+              q1Answered = true;
+              /* Prompt them to try consistent hashing */
+              animTimers.push(setTimeout(function () {
+                explanation.innerHTML = i18n.t('koan23.explanationTryHash');
+              }, 800));
+            } else {
+              this.classList.add('wrong');
+              fb1.textContent = i18n.t('koan23.q1Wrong');
+              fb1.className = 'routing-fb routing-fb--wrong';
+              var self = this;
+              setTimeout(function () { self.classList.remove('wrong'); }, 500);
+            }
+          });
+        });
+      })();
+
+      /* ── Q2 logic ──────────────────────────────────────── */
+
+      (function () {
+        var opts = question2.querySelectorAll('.routing-opt');
+        opts.forEach(function (opt) {
+          opt.addEventListener('click', function () {
+            if (this.dataset.answer === 'correct') {
+              this.classList.add('correct');
+              opts.forEach(function (o) { o.classList.add('disabled'); });
+              fb2.textContent = i18n.t('koan23.q2Correct');
+              fb2.className = 'routing-fb routing-fb--correct';
+              animTimers.push(setTimeout(function () {
+                insight.classList.add('visible');
+              }, 800));
+            } else {
+              this.classList.add('wrong');
+              if (this.dataset.why === 'faster') {
+                fb2.textContent = i18n.t('koan23.q2WrongFaster');
+              } else {
+                fb2.textContent = i18n.t('koan23.q2WrongLess');
+              }
+              fb2.className = 'routing-fb routing-fb--wrong';
+              var self = this;
+              setTimeout(function () { self.classList.remove('wrong'); }, 500);
+            }
+          });
+        });
+      })();
+
+      /* ── Initial animation ─────────────────────────────── */
+      setTimeout(function () {
+        animateStrategy('scatter');
+      }, 400);
+
+      }
+      if (window.i18n && window.i18n.t('common.desktopOnly') !== 'common.desktopOnly') { run(); }
+      else { window.addEventListener('i18n:ready', run, { once: true }); }
+    })();
+  </script>
+  <script src="../js/scroll.js"></script>
+  <script src="../js/music.js"></script>
+  <script src="../js/certificate.js"></script>
+<script src="../js/progress.js"></script>
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "48917f3aeb9f4b7b9ecf513cf6135ee8"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title data-i18n="koan16.pageTitle">Koan 16: Sampling - OpenTelemetry Koans</title>
+  <title data-i18n="koan22.pageTitle">Koan 16: Sampling - OpenTelemetry Koans</title>
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon-16x16.png">
@@ -391,66 +391,66 @@
 
   <div class="koan-page">
 
-    <h1 class="koan-title" data-i18n="koan16.title">Sampling</h1>
+    <h1 class="koan-title" data-i18n="koan22.title">Sampling</h1>
 
-    <div class="koan-text" data-i18n-html="koan16.zen">
+    <div class="koan-text" data-i18n-html="koan22.zen">
       To see everything is to see nothing.<br>
       The master does not watch every raindrop.<br>
       They watch the ones that change the river's course.
     </div>
 
-    <div class="koan-instruction" data-i18n="koan16.instruction">
+    <div class="koan-instruction" data-i18n="koan22.instruction">
       In the pipeline you just configured, a processor sits between receiving and exporting. Sampling is one such processor. It decides what to keep.
     </div>
 
     <div class="sampling-scene">
       <div class="sampling-scene-header">
-        <span data-i18n="koan16.sceneHeader">trace pipeline</span>
-        <span class="sampling-counter" id="counter" data-i18n="koan16.counterInitial">20 / 20 kept</span>
+        <span data-i18n="koan22.sceneHeader">trace pipeline</span>
+        <span class="sampling-counter" id="counter" data-i18n="koan22.counterInitial">20 / 20 kept</span>
       </div>
       <div class="sampling-scene-body">
         <div class="sampling-pipeline" id="pipeline">
           <div class="sampling-track"></div>
-          <div class="sampling-stage sampling-stage--source" data-i18n="koan16.stageSource">source</div>
-          <div class="sampling-stage sampling-stage--sampler" id="samplerLabel" data-i18n="koan16.stageSamplerOff">sampler: off</div>
-          <div class="sampling-stage sampling-stage--storage" data-i18n="koan16.stageStorage">storage</div>
+          <div class="sampling-stage sampling-stage--source" data-i18n="koan22.stageSource">source</div>
+          <div class="sampling-stage sampling-stage--sampler" id="samplerLabel" data-i18n="koan22.stageSamplerOff">sampler: off</div>
+          <div class="sampling-stage sampling-stage--storage" data-i18n="koan22.stageStorage">storage</div>
           <!-- Trace pills are created by JS -->
         </div>
 
-        <div class="sampling-explanation" id="explanation" data-i18n="koan16.explanationAll">
+        <div class="sampling-explanation" id="explanation" data-i18n="koan22.explanationAll">
           20/20 traces kept.
         </div>
 
         <div class="sampling-controls">
-          <div class="sampling-controls-label" data-i18n="koan16.controlsLabel">Apply sampling strategy</div>
+          <div class="sampling-controls-label" data-i18n="koan22.controlsLabel">Apply sampling strategy</div>
           <div class="sampling-strategies">
-            <button class="sampling-strategy-btn active" id="stratAll" data-strategy="all" data-i18n="koan16.strategyAll">Keep everything</button>
-            <button class="sampling-strategy-btn" id="stratRandom" data-strategy="random" data-i18n="koan16.strategyRandom">Keep 50% randomly</button>
-            <button class="sampling-strategy-btn" id="stratSmart" data-strategy="smart" data-i18n="koan16.strategySmart">Keep only slow or error traces</button>
+            <button class="sampling-strategy-btn active" id="stratAll" data-strategy="all" data-i18n="koan22.strategyAll">Keep everything</button>
+            <button class="sampling-strategy-btn" id="stratRandom" data-strategy="random" data-i18n="koan22.strategyRandom">Keep 50% randomly</button>
+            <button class="sampling-strategy-btn" id="stratSmart" data-strategy="smart" data-i18n="koan22.strategySmart">Keep only slow or error traces</button>
           </div>
         </div>
       </div>
     </div>
 
     <div class="sampling-question" id="quizQuestion">
-      <p data-i18n="koan16.q1">Which sampling strategy kept the most useful data with the least volume?</p>
+      <p data-i18n="koan22.q1">Which sampling strategy kept the most useful data with the least volume?</p>
       <div class="sampling-opts">
-        <button class="sampling-opt" data-answer="wrong" data-why="expensive" data-i18n="koan16.q1OptAll">Keep everything</button>
-        <button class="sampling-opt" data-answer="wrong" data-why="random" data-i18n="koan16.q1OptRandom">Keep 50% randomly</button>
-        <button class="sampling-opt" data-answer="correct" data-i18n="koan16.q1OptSmart">Keep only slow or error traces</button>
+        <button class="sampling-opt" data-answer="wrong" data-why="expensive" data-i18n="koan22.q1OptAll">Keep everything</button>
+        <button class="sampling-opt" data-answer="wrong" data-why="random" data-i18n="koan22.q1OptRandom">Keep 50% randomly</button>
+        <button class="sampling-opt" data-answer="correct" data-i18n="koan22.q1OptSmart">Keep only slow or error traces</button>
       </div>
       <div class="sampling-fb" id="fb1"></div>
     </div>
 
     <div class="sampling-insight" id="insight">
-      <p data-i18n="koan16.insightLine1">At low traffic you can keep everything. At scale, you can't.</p>
-      <p data-i18n="koan16.insightLine2">Sampling is the art of choosing what to keep when you can't keep it all.</p>
-      <a href="17-service-map.html" data-i18n="common.continue">Continue &rarr;</a>
+      <p data-i18n="koan22.insightLine1">At low traffic you can keep everything. At scale, you can't.</p>
+      <p data-i18n="koan22.insightLine2">Sampling is the art of choosing what to keep when you can't keep it all.</p>
+      <a href="23-trace-aware-routing.html" data-i18n="common.continue">Continue &rarr;</a>
     </div>
   </div>
 
   <div class="koan-progress">
-    <div class="koan-progress-fill" style="width: 57%"></div>
+    <div class="koan-progress-fill" style="width: 79%"></div>
   </div>
 
   <script>
@@ -575,15 +575,15 @@
         activeBtn.classList.add('active');
 
         /* Update sampler label */
-        if (strategy === 'all') samplerLabel.textContent = i18n.t('koan16.samplerOff');
-        else if (strategy === 'random') samplerLabel.textContent = i18n.t('koan16.samplerRandom');
-        else samplerLabel.textContent = i18n.t('koan16.samplerTail');
+        if (strategy === 'all') samplerLabel.textContent = i18n.t('koan22.samplerOff');
+        else if (strategy === 'random') samplerLabel.textContent = i18n.t('koan22.samplerRandom');
+        else samplerLabel.textContent = i18n.t('koan22.samplerTail');
 
         /* Reset pills */
         buildPills();
 
         var kept = countKept(strategy);
-        counter.textContent = i18n.t('koan16.counterLoading');
+        counter.textContent = i18n.t('koan22.counterLoading');
 
         /* Animate each pill */
         var stagger = 120;
@@ -632,11 +632,11 @@
         var totalTime = (traces.length * stagger) + animDuration + 200;
 
         setTimeout(function () {
-          counter.textContent = i18n.t('koan16.counterTemplate').replace('{kept}', kept);
+          counter.textContent = i18n.t('koan22.counterTemplate').replace('{kept}', kept);
 
           if (strategy === 'all') {
             counter.style.color = 'var(--accent-red)';
-            explanation.innerHTML = i18n.t('koan16.explanationAll');
+            explanation.innerHTML = i18n.t('koan22.explanationAll');
           } else if (strategy === 'random') {
             counter.style.color = 'var(--accent-orange)';
             /* Count how many error traces survived the random sample */
@@ -648,10 +648,10 @@
                 if (isKept(t, 'random')) errKept++;
               }
             });
-            explanation.innerHTML = i18n.t('koan16.explanationRandom').replace('{kept}', kept).replace('{errKept}', errKept).replace('{errTotal}', errTotal);
+            explanation.innerHTML = i18n.t('koan22.explanationRandom').replace('{kept}', kept).replace('{errKept}', errKept).replace('{errTotal}', errTotal);
           } else {
             counter.style.color = 'var(--accent-green)';
-            explanation.innerHTML = i18n.t('koan16.explanationSmart').replace('{kept}', kept);
+            explanation.innerHTML = i18n.t('koan22.explanationSmart').replace('{kept}', kept);
           }
 
           animating = false;
@@ -683,7 +683,7 @@
           if (this.dataset.answer === 'correct') {
             this.classList.add('correct');
             quizOpts.forEach(function (o) { o.classList.add('disabled'); });
-            fb1.textContent = i18n.t('koan16.q1Correct');
+            fb1.textContent = i18n.t('koan22.q1Correct');
             fb1.className = 'sampling-fb sampling-fb--correct';
             setTimeout(function () {
               insight.classList.add('visible');
@@ -692,9 +692,9 @@
             wrongAttempts++;
             this.classList.add('wrong');
             if (wrongAttempts === 1) {
-              fb1.textContent = i18n.t('koan16.q1Wrong1');
+              fb1.textContent = i18n.t('koan22.q1Wrong1');
             } else {
-              fb1.textContent = i18n.t('koan16.q1Wrong2');
+              fb1.textContent = i18n.t('koan22.q1Wrong2');
             }
             fb1.className = 'sampling-fb sampling-fb--wrong';
             var self = this;

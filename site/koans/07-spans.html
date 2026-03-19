@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title data-i18n="koan06.pageTitle">Koan 6: Steps in a Trace - OpenTelemetry Koans</title>
+  <title data-i18n="koan07.pageTitle">Koan 6: Steps in a Trace - OpenTelemetry Koans</title>
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon-16x16.png">
@@ -343,9 +343,9 @@
 
   <div class="koan-page">
 
-    <h1 class="koan-title" data-i18n="koan06.title">The Steps Within</h1>
+    <h1 class="koan-title" data-i18n="koan07.title">The Steps Within</h1>
 
-    <div class="koan-text" data-i18n-html="koan06.zen">
+    <div class="koan-text" data-i18n-html="koan07.zen">
       The trace showed the path. But the path has steps.<br>
       Each step has a story.
     </div>
@@ -353,15 +353,15 @@
     <!-- Waterfall visualization - no mention of "span" anywhere -->
     <div class="wf-scene">
       <div class="wf-scene-header">
-        <span data-i18n="koan06.sceneHeader">trace: order #8842</span>
-        <span data-i18n="koan06.sceneTraceId">trace_id: a1b2c3d4e5f6</span>
+        <span data-i18n="koan07.sceneHeader">trace: order #8842</span>
+        <span data-i18n="koan07.sceneTraceId">trace_id: a1b2c3d4e5f6</span>
       </div>
       <div class="wf-scene-body">
         <div class="waterfall">
           <div class="waterfall-header">
-            <span data-i18n="koan06.colOperation">Operation</span>
-            <span data-i18n="koan06.colTimeline">Timeline</span>
-            <span data-i18n="koan06.colDuration">Duration</span>
+            <span data-i18n="koan07.colOperation">Operation</span>
+            <span data-i18n="koan07.colTimeline">Timeline</span>
+            <span data-i18n="koan07.colDuration">Duration</span>
           </div>
 
           <!-- Row 0: gateway (root) - full width, 0-210ms -->
@@ -435,67 +435,67 @@
           </div>
         </div>
 
-        <div class="wf-total" id="totalLine"><span data-i18n="koan06.totalLine">Total trace duration: </span><strong data-i18n="koan06.totalValue">210ms</strong></div>
+        <div class="wf-total" id="totalLine"><span data-i18n="koan07.totalLine">Total trace duration: </span><strong data-i18n="koan07.totalValue">210ms</strong></div>
       </div>
     </div>
 
     <div class="wf-controls">
-      <button class="koan-btn koan-btn--primary" id="revealBtn" data-i18n="koan06.revealBtn">Examine this trace</button>
+      <button class="koan-btn koan-btn--primary" id="revealBtn" data-i18n="koan07.revealBtn">Examine this trace</button>
       <div class="wf-status" id="status"></div>
     </div>
 
     <!-- Q1: Count the operations - requires looking at the visual -->
     <div class="wf-question" id="q1">
-      <p data-i18n="koan06.q1">This trace crossed four services. Look at the bars above. How many individual operations can you count?</p>
+      <p data-i18n="koan07.q1">This trace crossed four services. Look at the bars above. How many individual operations can you count?</p>
       <div class="wf-opts">
-        <button class="wf-opt" data-answer="wrong" data-i18n="koan06.q1OptA">3</button>
-        <button class="wf-opt" data-answer="correct" data-i18n="koan06.q1OptB">4</button>
-        <button class="wf-opt" data-answer="wrong" data-i18n="koan06.q1OptC">1</button>
+        <button class="wf-opt" data-answer="wrong" data-i18n="koan07.q1OptA">3</button>
+        <button class="wf-opt" data-answer="correct" data-i18n="koan07.q1OptB">4</button>
+        <button class="wf-opt" data-answer="wrong" data-i18n="koan07.q1OptC">1</button>
       </div>
       <div class="wf-fb" id="fb1"></div>
     </div>
 
     <!-- Mid-insight after Q1 -->
-    <div class="wf-mid-insight" id="mid1" data-i18n="koan06.mid1">
+    <div class="wf-mid-insight" id="mid1" data-i18n="koan07.mid1">
       Each of those bars represents one step: one unit of work within the trace.
     </div>
 
     <!-- Q2: Reason about what individual bars mean - diagnostic value -->
     <div class="wf-question" id="q2">
-      <p data-i18n="koan06.q2">The database bar took 180ms out of the total 210ms. What does this tell you?</p>
+      <p data-i18n="koan07.q2">The database bar took 180ms out of the total 210ms. What does this tell you?</p>
       <div class="wf-opts">
-        <button class="wf-opt" data-answer="correct" data-i18n="koan06.q2OptA">The database is the bottleneck</button>
-        <button class="wf-opt" data-answer="wrong" data-i18n="koan06.q2OptB">All services are equally slow</button>
-        <button class="wf-opt" data-answer="wrong" data-i18n="koan06.q2OptC">The trace is broken</button>
+        <button class="wf-opt" data-answer="correct" data-i18n="koan07.q2OptA">The database is the bottleneck</button>
+        <button class="wf-opt" data-answer="wrong" data-i18n="koan07.q2OptB">All services are equally slow</button>
+        <button class="wf-opt" data-answer="wrong" data-i18n="koan07.q2OptC">The trace is broken</button>
       </div>
       <div class="wf-fb" id="fb2"></div>
     </div>
 
     <!-- Mid-insight after Q2 -->
-    <div class="wf-mid-insight" id="mid2" data-i18n="koan06.mid2">
+    <div class="wf-mid-insight" id="mid2" data-i18n="koan07.mid2">
       By breaking a trace into its individual steps, you can see exactly where time is spent.
     </div>
 
     <!-- Q3: Vocabulary - comes AFTER conceptual understanding -->
     <div class="wf-question" id="q3">
-      <p data-i18n="koan06.q3">Each of these individual steps in a trace has a name in OpenTelemetry. What is it called?</p>
+      <p data-i18n="koan07.q3">Each of these individual steps in a trace has a name in OpenTelemetry. What is it called?</p>
       <div class="wf-opts">
-        <button class="wf-opt" data-answer="wrong" data-i18n="koan06.q3OptA">A segment</button>
-        <button class="wf-opt" data-answer="correct" data-i18n="koan06.q3OptB">A span</button>
-        <button class="wf-opt" data-answer="wrong" data-i18n="koan06.q3OptC">A frame</button>
+        <button class="wf-opt" data-answer="wrong" data-i18n="koan07.q3OptA">A segment</button>
+        <button class="wf-opt" data-answer="correct" data-i18n="koan07.q3OptB">A span</button>
+        <button class="wf-opt" data-answer="wrong" data-i18n="koan07.q3OptC">A frame</button>
       </div>
       <div class="wf-fb" id="fb3"></div>
     </div>
 
     <div class="wf-insight" id="insight">
-      <p data-i18n="koan06.insightP1">A span is one step in a trace. Each span has a start, an end, and tells you what happened during that step.</p>
-      <p data-i18n="koan06.insightP2">The waterfall shows how spans nest inside each other, revealing where time is spent.</p>
-      <a href="07-log.html" data-i18n="common.continue">Continue &rarr;</a>
+      <p data-i18n="koan07.insightP1">A span is one step in a trace. Each span has a start, an end, and tells you what happened during that step.</p>
+      <p data-i18n="koan07.insightP2">The waterfall shows how spans nest inside each other, revealing where time is spent.</p>
+      <a href="08-log.html" data-i18n="common.continue">Continue &rarr;</a>
     </div>
   </div>
 
   <div class="koan-progress">
-    <div class="koan-progress-fill" style="width: 21%"></div>
+    <div class="koan-progress-fill" style="width: 25%"></div>
   </div>
 
   <script>
@@ -517,7 +517,7 @@
           started = true;
           revealBtn.style.opacity = '0';
           revealBtn.style.pointerEvents = 'none';
-          status.textContent = i18n.t('koan06.statusLoading');
+          status.textContent = i18n.t('koan07.statusLoading');
 
           // Reveal rows one at a time with a cascade
           rows.forEach(function (row, i) {
@@ -529,7 +529,7 @@
           // Show total line
           setTimeout(function () {
             document.getElementById('totalLine').classList.add('visible');
-            status.textContent = i18n.t('koan06.statusLoaded');
+            status.textContent = i18n.t('koan07.statusLoaded');
           }, 2000);
 
           // Highlight the database row to draw attention to it
@@ -578,20 +578,20 @@
 
         setupQuiz(
           'q1', 'fb1', ['mid1', 'q2'],
-          i18n.t('koan06.q1Correct'),
-          i18n.t('koan06.q1Wrong')
+          i18n.t('koan07.q1Correct'),
+          i18n.t('koan07.q1Wrong')
         );
 
         setupQuiz(
           'q2', 'fb2', ['mid2', 'q3'],
-          i18n.t('koan06.q2Correct'),
-          i18n.t('koan06.q2Wrong')
+          i18n.t('koan07.q2Correct'),
+          i18n.t('koan07.q2Wrong')
         );
 
         setupQuiz(
           'q3', 'fb3', ['insight'],
-          i18n.t('koan06.q3Correct'),
-          i18n.t('koan06.q3Wrong')
+          i18n.t('koan07.q3Correct'),
+          i18n.t('koan07.q3Wrong')
         );
       }
 

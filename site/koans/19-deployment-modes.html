@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="koan19.pageTitle">Koan 19: Where the Collector Runs - OpenTelemetry Koans</title>
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../img/apple-touch-icon.png">
+  <link rel="manifest" href="../site.webmanifest">
+  <meta name="theme-color" content="#0a0e14">
+  <link rel="stylesheet" href="../css/shared.css">
+  <script src="../js/i18n.js"></script>
+  <style>
+    /* ── K8s terminology visual ── */
+    .k8s-scene {
+      background: var(--bg-glass);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1em;
+      overflow: hidden;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow-inset);
+    }
+
+    .k8s-scene-header {
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .k8s-scene-body {
+      padding: 1.75rem 2rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .k8s-scene-body svg {
+      width: 100%;
+      max-width: 620px;
+    }
+
+    /* ── Deployment mode panels (side by side) ── */
+    .deploy-modes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .deploy-mode-card {
+      background: var(--bg-glass);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1em;
+      overflow: hidden;
+      box-shadow: var(--shadow-inset);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.6s var(--ease-smooth), transform 0.6s var(--ease-smooth);
+    }
+
+    .deploy-mode-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .deploy-mode-header {
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .deploy-mode-header .mode-tag {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 2em;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    .mode-tag-agent {
+      color: var(--accent-green);
+      border: 1px solid rgba(63, 185, 80, 0.3);
+      background: rgba(63, 185, 80, 0.06);
+    }
+
+    .mode-tag-gateway {
+      color: var(--accent-blue);
+      border: 1px solid rgba(88, 166, 255, 0.3);
+      background: rgba(88, 166, 255, 0.06);
+    }
+
+    .deploy-mode-body {
+      padding: 1.25rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 280px;
+    }
+
+    .deploy-mode-body svg {
+      width: 100%;
+      max-width: 300px;
+      margin-bottom: 1rem;
+    }
+
+    .deploy-mode-desc {
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .deploy-mode-desc strong {
+      color: var(--text-primary);
+    }
+
+    /* ── Question blocks (reusing cq pattern from koan 16) ── */
+    .dq {
+      background: var(--bg-glass);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1em;
+      padding: 0;
+      text-align: center;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow-inset);
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 0.6s var(--ease-smooth), max-height 0.8s var(--ease-smooth), padding 0.6s var(--ease-smooth), margin-bottom 0.6s var(--ease-smooth);
+    }
+
+    .dq.visible {
+      opacity: 1;
+      max-height: 28rem;
+      padding: 1.25rem;
+    }
+
+    .dq p {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+      line-height: 1.6;
+    }
+
+    .dq-opts {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .dq-opt {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      padding: 0.6rem 1.35rem;
+      border: 1px solid var(--border);
+      border-radius: 0.5em;
+      background: var(--bg-glass);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.3s var(--ease-spring);
+      min-width: 100px;
+    }
+
+    .dq-opt:hover {
+      border-color: var(--accent-blue);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      background: var(--bg-glass-hover);
+    }
+
+    .dq-opt.correct {
+      border-color: transparent;
+      background: rgba(63, 185, 80, 0.08);
+      color: var(--accent-green);
+      box-shadow: 0 0 16px rgba(63, 185, 80, 0.12);
+      pointer-events: none;
+    }
+
+    .dq-opt.wrong {
+      border-color: transparent;
+      color: var(--accent-red);
+      box-shadow: 0 0 16px rgba(248, 81, 73, 0.12);
+    }
+
+    .dq-opt.disabled { pointer-events: none; opacity: 0.35; }
+
+    .dq-fb {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      min-height: 1.5em;
+      margin-top: 0.5rem;
+      line-height: 1.5;
+    }
+
+    .dq-fb--correct { color: var(--accent-green); }
+    .dq-fb--wrong { color: var(--accent-red); }
+
+    /* ── Layered architecture diagram ── */
+    .layered-scene {
+      background: var(--bg-glass);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1em;
+      overflow: hidden;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow-inset);
+      opacity: 0;
+      max-height: 0;
+      transition: opacity 0.6s var(--ease-smooth), max-height 0.8s var(--ease-smooth), padding 0.6s var(--ease-smooth);
+    }
+
+    .layered-scene.visible {
+      opacity: 1;
+      max-height: 40rem;
+    }
+
+    .layered-scene-header {
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .layered-scene-body {
+      padding: 1.75rem 2rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .layered-scene-body svg {
+      width: 100%;
+      max-width: 660px;
+    }
+
+    /* ── Narrative text blocks ── */
+    .dm-narrative {
+      background: var(--bg-glass);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1em;
+      padding: 0;
+      text-align: center;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow-inset);
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 0.6s var(--ease-smooth), max-height 0.8s var(--ease-smooth), padding 0.6s var(--ease-smooth), margin-bottom 0.6s var(--ease-smooth);
+    }
+
+    .dm-narrative.visible {
+      opacity: 1;
+      max-height: 20rem;
+      padding: 1rem 1.25rem;
+    }
+
+    .dm-narrative p {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 0.35rem;
+    }
+
+    .dm-narrative p:last-child { margin-bottom: 0; }
+
+    .dm-narrative strong { color: var(--text-primary); }
+
+    /* SVG text styles */
+    .svg-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      fill: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .svg-box-text {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      fill: var(--text-primary);
+    }
+
+    .svg-box-text-sm {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      fill: var(--text-secondary);
+    }
+
+    .svg-accent-green { fill: var(--accent-green); }
+    .svg-accent-blue { fill: var(--accent-blue); }
+    .svg-accent-orange { fill: var(--accent-orange); }
+    .svg-accent-purple { fill: var(--accent-purple); }
+  </style>
+</head>
+<body>
+  <div class="mobile-gate">
+    <svg class="mobile-gate-anim" viewBox="0 0 180 140">
+      <path class="mg-edge" d="M 50,30 Q 70,25 90,45" />
+      <path class="mg-edge" d="M 50,30 Q 75,55 90,75" />
+      <path class="mg-edge" d="M 90,45 Q 90,60 90,75" />
+      <path class="mg-edge" d="M 90,75 Q 70,95 55,110" />
+      <path class="mg-edge" d="M 90,75 Q 110,95 125,110" />
+      <path class="mg-edge" d="M 55,110 Q 105,100 140,75" />
+      <path class="mg-edge" d="M 125,110 Q 135,95 140,75" />
+      <circle class="mg-particle--green" r="1.5" opacity="0"><animateMotion dur="3s" repeatCount="indefinite" begin="0s"><mpath href="#mgp1"/></animateMotion><animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.1;0.9;1" dur="3s" repeatCount="indefinite" begin="0s"/></circle>
+      <circle class="mg-particle--green" r="1.5" opacity="0"><animateMotion dur="3.5s" repeatCount="indefinite" begin="1.2s"><mpath href="#mgp2"/></animateMotion><animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.1;0.9;1" dur="3.5s" repeatCount="indefinite" begin="1.2s"/></circle>
+      <circle class="mg-particle--orange" r="1.5" opacity="0"><animateMotion dur="2.8s" repeatCount="indefinite" begin="0.5s"><mpath href="#mgp3"/></animateMotion><animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.1;0.9;1" dur="2.8s" repeatCount="indefinite" begin="0.5s"/></circle>
+      <circle class="mg-particle--purple" r="1.5" opacity="0"><animateMotion dur="3.2s" repeatCount="indefinite" begin="1.8s"><mpath href="#mgp4"/></animateMotion><animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.1;0.9;1" dur="3.2s" repeatCount="indefinite" begin="1.8s"/></circle>
+      <circle class="mg-particle--green" r="1.5" opacity="0"><animateMotion dur="2.6s" repeatCount="indefinite" begin="0.8s"><mpath href="#mgp5"/></animateMotion><animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.1;0.9;1" dur="2.6s" repeatCount="indefinite" begin="0.8s"/></circle>
+      <defs>
+        <path id="mgp1" d="M 50,30 Q 70,25 90,45" />
+        <path id="mgp2" d="M 50,30 Q 75,55 90,75" />
+        <path id="mgp3" d="M 90,75 Q 70,95 55,110" />
+        <path id="mgp4" d="M 55,110 Q 105,100 140,75" />
+        <path id="mgp5" d="M 125,110 Q 135,95 140,75" />
+      </defs>
+      <circle class="mg-node" cx="50" cy="30" r="12" />
+      <text class="mg-label" x="50" y="33">gw</text>
+      <circle class="mg-node" cx="90" cy="45" r="10" />
+      <text class="mg-label" x="90" y="48">auth</text>
+      <circle class="mg-node" cx="90" cy="75" r="13" />
+      <text class="mg-label" x="90" y="78">api</text>
+      <circle class="mg-node" cx="55" cy="110" r="10" />
+      <text class="mg-label" x="55" y="113">ord</text>
+      <circle class="mg-node" cx="125" cy="110" r="10" />
+      <text class="mg-label" x="125" y="113">inv</text>
+      <circle class="mg-node" cx="140" cy="75" r="11" />
+      <text class="mg-label" x="140" y="78">db</text>
+    </svg>
+    <div class="mobile-gate-text" data-i18n-html="common.desktopOnlyText">Some paths require a wider view.<br>Return on a larger screen.</div>
+  </div>
+
+  <div class="koan-page">
+
+    <h1 class="koan-title" data-i18n="koan19.title">Where the Collector Runs</h1>
+
+    <div class="koan-text" data-i18n-html="koan19.zen">
+      The river must flow somewhere. Close to the source, or gathered at the mouth.<br>Each position serves a different purpose.
+    </div>
+
+    <!-- ═══ K8s terminology visual ═══ -->
+    <div class="k8s-scene">
+      <div class="k8s-scene-header" data-i18n="koan19.k8sHeader">kubernetes concepts</div>
+      <div class="k8s-scene-body">
+        <svg viewBox="0 0 620 200" xmlns="http://www.w3.org/2000/svg">
+          <!-- Node 1 -->
+          <rect x="10" y="30" width="290" height="160" rx="12" fill="none" stroke="var(--border-subtle)" stroke-width="1" stroke-dasharray="4 3" />
+          <text x="155" y="22" text-anchor="middle" class="svg-label" data-i18n="koan19.svgNode1">Node 1 (machine)</text>
+
+          <!-- Pod A in Node 1 -->
+          <rect x="30" y="55" width="120" height="70" rx="8" fill="var(--bg-tertiary)" stroke="var(--border-subtle)" stroke-width="1" />
+          <text x="90" y="75" text-anchor="middle" class="svg-box-text-sm" data-i18n="koan19.svgPodA">Pod</text>
+          <rect x="42" y="82" width="96" height="28" rx="5" fill="var(--bg-glass)" stroke="rgba(63, 185, 80, 0.3)" stroke-width="1" />
+          <text x="90" y="101" text-anchor="middle" class="svg-box-text" style="font-size: 10px;">api-svc</text>
+
+          <!-- Pod B in Node 1 -->
+          <rect x="170" y="55" width="120" height="70" rx="8" fill="var(--bg-tertiary)" stroke="var(--border-subtle)" stroke-width="1" />
+          <text x="230" y="75" text-anchor="middle" class="svg-box-text-sm" data-i18n="koan19.svgPodB">Pod</text>
+          <rect x="182" y="82" width="96" height="28" rx="5" fill="var(--bg-glass)" stroke="rgba(63, 185, 80, 0.3)" stroke-width="1" />
+          <text x="230" y="101" text-anchor="middle" class="svg-box-text" style="font-size: 10px;">orders-svc</text>
+
+          <!-- Sidecar example in Node 1 Pod B (small collector next to app) -->
+          <rect x="170" y="130" width="120" height="50" rx="8" fill="var(--bg-tertiary)" stroke="rgba(88, 166, 255, 0.2)" stroke-width="1" />
+          <text x="230" y="148" text-anchor="middle" class="svg-box-text-sm" data-i18n="koan19.svgSidecarPod">Pod (with sidecar)</text>
+          <rect x="178" y="155" width="50" height="20" rx="4" fill="var(--bg-glass)" stroke="rgba(63, 185, 80, 0.3)" stroke-width="1" />
+          <text x="203" y="169" text-anchor="middle" style="font-family: var(--font-mono); font-size: 8px; fill: var(--text-secondary);">app</text>
+          <rect x="234" y="155" width="50" height="20" rx="4" fill="var(--bg-glass)" stroke="rgba(88, 166, 255, 0.3)" stroke-width="1" />
+          <text x="259" y="169" text-anchor="middle" style="font-family: var(--font-mono); font-size: 7px; fill: var(--accent-blue);">collector</text>
+
+          <!-- Node 2 -->
+          <rect x="320" y="30" width="290" height="160" rx="12" fill="none" stroke="var(--border-subtle)" stroke-width="1" stroke-dasharray="4 3" />
+          <text x="465" y="22" text-anchor="middle" class="svg-label" data-i18n="koan19.svgNode2">Node 2 (machine)</text>
+
+          <!-- Pod C in Node 2 -->
+          <rect x="340" y="55" width="120" height="70" rx="8" fill="var(--bg-tertiary)" stroke="var(--border-subtle)" stroke-width="1" />
+          <text x="400" y="75" text-anchor="middle" class="svg-box-text-sm" data-i18n="koan19.svgPodC">Pod</text>
+          <rect x="352" y="82" width="96" height="28" rx="5" fill="var(--bg-glass)" stroke="rgba(63, 185, 80, 0.3)" stroke-width="1" />
+          <text x="400" y="101" text-anchor="middle" class="svg-box-text" style="font-size: 10px;">payment-svc</text>
+
+          <!-- Pod D in Node 2 -->
+          <rect x="480" y="55" width="120" height="70" rx="8" fill="var(--bg-tertiary)" stroke="var(--border-subtle)" stroke-width="1" />
+          <text x="540" y="75" text-anchor="middle" class="svg-box-text-sm" data-i18n="koan19.svgPodD">Pod</text>
+          <rect x="492" y="82" width="96" height="28" rx="5" fill="var(--bg-glass)" stroke="rgba(63, 185, 80, 0.3)" stroke-width="1" />
+          <text x="540" y="101" text-anchor="middle" class="svg-box-text" style="font-size: 10px;">inventory-svc</text>
+
+          <!-- Legend -->
+          <rect x="30" y="145" width="8" height="8" rx="2" fill="var(--bg-tertiary)" stroke="var(--border-subtle)" stroke-width="0.5" />
+          <text x="44" y="153" style="font-family: var(--font-mono); font-size: 8px; fill: var(--text-muted);" data-i18n="koan19.svgLegendPod">Pod = containers running together</text>
+
+          <line x1="340" y1="149" x2="370" y2="149" stroke="var(--border-subtle)" stroke-width="1" stroke-dasharray="4 3" />
+          <text x="378" y="153" style="font-family: var(--font-mono); font-size: 8px; fill: var(--text-muted);" data-i18n="koan19.svgLegendNode">Node = machine running pods</text>
+
+          <rect x="340" y="165" width="8" height="8" rx="2" fill="var(--bg-glass)" stroke="rgba(88, 166, 255, 0.3)" stroke-width="0.5" />
+          <text x="354" y="173" style="font-family: var(--font-mono); font-size: 8px; fill: var(--text-muted);" data-i18n="koan19.svgLegendSidecar">Sidecar = extra container in same pod</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- ═══ Two deployment modes side by side ═══ -->
+    <div class="deploy-modes">
+      <!-- Agent Mode -->
+      <div class="deploy-mode-card" id="agentCard">
+        <div class="deploy-mode-header">
+          <span data-i18n="koan19.agentHeader">Agent Mode</span>
+          <span class="mode-tag mode-tag-agent" data-i18n="koan19.agentTag">per node / per pod</span>
+        </div>
+        <div class="deploy-mode-body">
+          <svg viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg">
+            <!-- Node boundary -->
+            <rect x="10" y="10" width="260" height="200" rx="10" fill="none" stroke="var(--border-subtle)" stroke-width="1" stroke-dasharray="4 3" />
+            <text x="140" y="28" text-anchor="middle" class="svg-label" data-i18n="koan19.svgAgentNode">Node</text>
+
+            <!-- App pods -->
+            <rect x="30" y="42" width="90" height="36" rx="6" fill="var(--bg-tertiary)" stroke="rgba(63, 185, 80, 0.3)" stroke-width="1" />
+            <text x="75" y="65" text-anchor="middle" class="svg-box-text" style="font-size: 10px;">api-svc</text>
+
+            <rect x="160" y="42" width="90" height="36" rx="6" fill="var(--bg-tertiary)" stroke="rgba(63, 185, 80, 0.3)" stroke-width="1" />
+            <text x="205" y="65" text-anchor="middle" class="svg-box-text" style="font-size: 10px;">orders-svc</text>
+
+            <!-- Arrows from apps to agent collector -->
+            <line x1="75" y1="78" x2="115" y2="112" stroke="var(--accent-green)" stroke-width="1" stroke-dasharray="4 3" opacity="0.5" />
+            <line x1="205" y1="78" x2="165" y2="112" stroke="var(--accent-green)" stroke-width="1" stroke-dasharray="4 3" opacity="0.5" />
+
+            <!-- Agent collector on the node -->
+            <rect x="80" y="100" width="120" height="40" rx="8" fill="rgba(88, 166, 255, 0.06)" stroke="rgba(88, 166, 255, 0.4)" stroke-width="1.5" />
+            <text x="140" y="116" text-anchor="middle" style="font-family: var(--font-mono); font-size: 10px; fill: var(--accent-blue); font-weight: 600;">Collector</text>
+            <text x="140" y="132" text-anchor="middle" style="font-family: var(--font-mono); font-size: 8px; fill: var(--text-muted);" data-i18n="koan19.svgAgentLabel">(agent)</text>
+
+            <!-- localhost label -->
+            <text x="140" y="96" text-anchor="middle" style="font-family: var(--font-mono); font-size: 8px; fill: var(--text-muted);" data-i18n="koan19.svgLocalhost">localhost:4317</text>
+
+            <!-- Arrow out -->
+            <line x1="140" y1="140" x2="140" y2="170" stroke="var(--accent-blue)" stroke-width="1.5" opacity="0.5" />
+            <polygon points="134,167 140,177 146,167" fill="var(--accent-blue)" opacity="0.5" />
+
+            <text x="140" y="192" text-anchor="middle" style="font-family: var(--font-mono); font-size: 9px; fill: var(--text-muted);" data-i18n="koan19.svgForward">forwards to gateway</text>
+          </svg>
+          <div class="deploy-mode-desc" data-i18n-html="koan19.agentDesc">One collector <strong>per node</strong> (DaemonSet) or <strong>per pod</strong> (sidecar). Apps send to <strong>localhost</strong>. Lightweight processing.</div>
+        </div>
+      </div>
+
+      <!-- Gateway Mode -->
+      <div class="deploy-mode-card" id="gatewayCard">
+        <div class="deploy-mode-header">
+          <span data-i18n="koan19.gatewayHeader">Gateway Mode</span>
+          <span class="mode-tag mode-tag-gateway" data-i18n="koan19.gatewayTag">centralized</span>
+        </div>
+        <div class="deploy-mode-body">
+          <svg viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg">
+            <!-- Multiple agents sending in -->
+            <rect x="20" y="15" width="72" height="30" rx="5" fill="var(--bg-tertiary)" stroke="rgba(63, 185, 80, 0.3)" stroke-width="1" />
+            <text x="56" y="34" text-anchor="middle" style="font-family: var(--font-mono); font-size: 8px; fill: var(--text-secondary);" data-i18n="koan19.svgGwAgent1">Agent (Node 1)</text>
+
+            <rect x="188" y="15" width="72" height="30" rx="5" fill="var(--bg-tertiary)" stroke="rgba(63, 185, 80, 0.3)" stroke-width="1" />
+            <text x="224" y="34" text-anchor="middle" style="font-family: var(--font-mono); font-size: 8px; fill: var(--text-secondary);" data-i18n="koan19.svgGwAgent2">Agent (Node 2)</text>
+
+            <rect x="104" y="15" width="72" height="30" rx="5" fill="var(--bg-tertiary)" stroke="rgba(63, 185, 80, 0.3)" stroke-width="1" />
+            <text x="140" y="34" text-anchor="middle" style="font-family: var(--font-mono); font-size: 8px; fill: var(--text-secondary);" data-i18n="koan19.svgGwAgent3">Agent (Node 3)</text>
+
+            <!-- Arrows down to load balancer -->
+            <line x1="56" y1="45" x2="120" y2="72" stroke="var(--accent-green)" stroke-width="1" stroke-dasharray="4 3" opacity="0.4" />
+            <line x1="140" y1="45" x2="140" y2="72" stroke="var(--accent-green)" stroke-width="1" stroke-dasharray="4 3" opacity="0.4" />
+            <line x1="224" y1="45" x2="160" y2="72" stroke="var(--accent-green)" stroke-width="1" stroke-dasharray="4 3" opacity="0.4" />
+
+            <!-- Load balancer -->
+            <rect x="90" y="72" width="100" height="24" rx="5" fill="var(--bg-tertiary)" stroke="rgba(210, 153, 34, 0.3)" stroke-width="1" />
+            <text x="140" y="88" text-anchor="middle" style="font-family: var(--font-mono); font-size: 9px; fill: var(--accent-orange);" data-i18n="koan19.svgLoadBalancer">Load Balancer</text>
+
+            <!-- Arrows to gateway replicas -->
+            <line x1="120" y1="96" x2="80" y2="118" stroke="var(--accent-orange)" stroke-width="1" stroke-dasharray="4 3" opacity="0.4" />
+            <line x1="160" y1="96" x2="200" y2="118" stroke="var(--accent-orange)" stroke-width="1" stroke-dasharray="4 3" opacity="0.4" />
+
+            <!-- Gateway replicas -->
+            <rect x="30" y="115" width="100" height="40" rx="8" fill="rgba(88, 166, 255, 0.06)" stroke="rgba(88, 166, 255, 0.4)" stroke-width="1.5" />
+            <text x="80" y="133" text-anchor="middle" style="font-family: var(--font-mono); font-size: 10px; fill: var(--accent-blue); font-weight: 600;">Collector</text>
+            <text x="80" y="148" text-anchor="middle" style="font-family: var(--font-mono); font-size: 8px; fill: var(--text-muted);" data-i18n="koan19.svgReplica1">(gateway replica 1)</text>
+
+            <rect x="150" y="115" width="100" height="40" rx="8" fill="rgba(88, 166, 255, 0.06)" stroke="rgba(88, 166, 255, 0.4)" stroke-width="1.5" />
+            <text x="200" y="133" text-anchor="middle" style="font-family: var(--font-mono); font-size: 10px; fill: var(--accent-blue); font-weight: 600;">Collector</text>
+            <text x="200" y="148" text-anchor="middle" style="font-family: var(--font-mono); font-size: 8px; fill: var(--text-muted);" data-i18n="koan19.svgReplica2">(gateway replica 2)</text>
+
+            <!-- Arrows to backends -->
+            <line x1="80" y1="155" x2="100" y2="180" stroke="var(--accent-blue)" stroke-width="1.5" opacity="0.4" />
+            <line x1="200" y1="155" x2="180" y2="180" stroke="var(--accent-blue)" stroke-width="1.5" opacity="0.4" />
+
+            <!-- Backend -->
+            <rect x="70" y="180" width="140" height="28" rx="6" fill="var(--bg-tertiary)" stroke="rgba(188, 140, 255, 0.3)" stroke-width="1" />
+            <text x="140" y="199" text-anchor="middle" style="font-family: var(--font-mono); font-size: 9px; fill: var(--accent-purple);" data-i18n="koan19.svgBackends">Backends (Jaeger, Prometheus...)</text>
+          </svg>
+          <div class="deploy-mode-desc" data-i18n-html="koan19.gatewayDesc"><strong>Centralized</strong> collector deployment. Multiple replicas behind a <strong>load balancer</strong>. Heavy processing that needs data from many services.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ Q1: Lightweight batching ═══ -->
+    <div class="dq" id="q1">
+      <p data-i18n="koan19.q1">Your team needs lightweight batching close to each application. Which deployment mode?</p>
+      <div class="dq-opts">
+        <button class="dq-opt" data-answer="correct" id="q1a" data-i18n="koan19.q1OptAgent">Agent</button>
+        <button class="dq-opt" data-answer="wrong" id="q1b" data-i18n="koan19.q1OptGateway">Gateway</button>
+      </div>
+      <div class="dq-fb" id="fb1"></div>
+    </div>
+
+    <!-- ═══ Narrative: agent rationale ═══ -->
+    <div class="dm-narrative" id="narr1">
+      <p data-i18n-html="koan19.narr1">Agent mode puts a collector <strong>right next to your apps</strong>. Batching, basic enrichment, and retry logic happen at the source &mdash; lightweight work that does not need a global view.</p>
+    </div>
+
+    <!-- ═══ Q2: Cross-service sampling ═══ -->
+    <div class="dq" id="q2">
+      <p data-i18n="koan19.q2">You need to sample traces that span 12 different services. Which deployment mode?</p>
+      <div class="dq-opts">
+        <button class="dq-opt" data-answer="wrong" id="q2a" data-i18n="koan19.q2OptAgent">Agent</button>
+        <button class="dq-opt" data-answer="correct" id="q2b" data-i18n="koan19.q2OptGateway">Gateway</button>
+      </div>
+      <div class="dq-fb" id="fb2"></div>
+    </div>
+
+    <!-- ═══ Narrative: gateway rationale ═══ -->
+    <div class="dm-narrative" id="narr2">
+      <p data-i18n-html="koan19.narr2">To sample a complete trace, you need to see <strong>all of its spans</strong>. An agent on a single node only sees local spans. A gateway sees spans from every service &mdash; it can make sampling decisions with the full picture.</p>
+    </div>
+
+    <!-- ═══ Layered architecture: apps → agents → gateway → backend ═══ -->
+    <div class="layered-scene" id="layeredScene">
+      <div class="layered-scene-header" data-i18n="koan19.layeredHeader">the layered pattern</div>
+      <div class="layered-scene-body">
+        <svg viewBox="0 0 660 260" xmlns="http://www.w3.org/2000/svg">
+          <!-- Column labels -->
+          <text x="80" y="20" text-anchor="middle" class="svg-label" data-i18n="koan19.svgColApps">Applications</text>
+          <text x="260" y="20" text-anchor="middle" class="svg-label" data-i18n="koan19.svgColAgents">Agent Collectors</text>
+          <text x="440" y="20" text-anchor="middle" class="svg-label" data-i18n="koan19.svgColGateway">Gateway Collector</text>
+          <text x="600" y="20" text-anchor="middle" class="svg-label" data-i18n="koan19.svgColBackend">Backends</text>
+
+          <!-- Apps (left column) -->
+          <rect x="20" y="40" width="120" height="32" rx="6" fill="var(--bg-tertiary)" stroke="rgba(63, 185, 80, 0.3)" stroke-width="1" />
+          <text x="80" y="60" text-anchor="middle" class="svg-box-text" style="font-size: 10px;">api-svc</text>
+
+          <rect x="20" y="84" width="120" height="32" rx="6" fill="var(--bg-tertiary)" stroke="rgba(63, 185, 80, 0.3)" stroke-width="1" />
+          <text x="80" y="104" text-anchor="middle" class="svg-box-text" style="font-size: 10px;">orders-svc</text>
+
+          <rect x="20" y="128" width="120" height="32" rx="6" fill="var(--bg-tertiary)" stroke="rgba(63, 185, 80, 0.3)" stroke-width="1" />
+          <text x="80" y="148" text-anchor="middle" class="svg-box-text" style="font-size: 10px;">payment-svc</text>
+
+          <rect x="20" y="172" width="120" height="32" rx="6" fill="var(--bg-tertiary)" stroke="rgba(63, 185, 80, 0.3)" stroke-width="1" />
+          <text x="80" y="192" text-anchor="middle" class="svg-box-text" style="font-size: 10px;">inventory-svc</text>
+
+          <!-- Arrows: apps → agents -->
+          <line x1="140" y1="56" x2="195" y2="68" stroke="var(--accent-green)" stroke-width="1" stroke-dasharray="4 3" opacity="0.4" />
+          <line x1="140" y1="100" x2="195" y2="88" stroke="var(--accent-green)" stroke-width="1" stroke-dasharray="4 3" opacity="0.4" />
+          <line x1="140" y1="144" x2="195" y2="168" stroke="var(--accent-green)" stroke-width="1" stroke-dasharray="4 3" opacity="0.4" />
+          <line x1="140" y1="188" x2="195" y2="188" stroke="var(--accent-green)" stroke-width="1" stroke-dasharray="4 3" opacity="0.4" />
+
+          <!-- Agent collectors (middle column) -->
+          <rect x="195" y="45" width="130" height="58" rx="8" fill="rgba(63, 185, 80, 0.04)" stroke="rgba(63, 185, 80, 0.3)" stroke-width="1" />
+          <text x="260" y="70" text-anchor="middle" style="font-family: var(--font-mono); font-size: 10px; fill: var(--accent-green); font-weight: 600;" data-i18n="koan19.svgAgent1">Agent (Node 1)</text>
+          <text x="260" y="88" text-anchor="middle" style="font-family: var(--font-mono); font-size: 8px; fill: var(--text-muted);" data-i18n="koan19.svgAgentWork1">batch, enrich</text>
+
+          <rect x="195" y="148" width="130" height="58" rx="8" fill="rgba(63, 185, 80, 0.04)" stroke="rgba(63, 185, 80, 0.3)" stroke-width="1" />
+          <text x="260" y="173" text-anchor="middle" style="font-family: var(--font-mono); font-size: 10px; fill: var(--accent-green); font-weight: 600;" data-i18n="koan19.svgAgent2">Agent (Node 2)</text>
+          <text x="260" y="191" text-anchor="middle" style="font-family: var(--font-mono); font-size: 8px; fill: var(--text-muted);" data-i18n="koan19.svgAgentWork2">batch, enrich</text>
+
+          <!-- Arrows: agents → gateway -->
+          <line x1="325" y1="74" x2="380" y2="115" stroke="var(--accent-blue)" stroke-width="1.5" stroke-dasharray="5 3" opacity="0.5" />
+          <line x1="325" y1="177" x2="380" y2="140" stroke="var(--accent-blue)" stroke-width="1.5" stroke-dasharray="5 3" opacity="0.5" />
+
+          <!-- Gateway collector -->
+          <rect x="380" y="85" width="130" height="80" rx="10" fill="rgba(88, 166, 255, 0.06)" stroke="rgba(88, 166, 255, 0.4)" stroke-width="1.5" />
+          <text x="445" y="115" text-anchor="middle" style="font-family: var(--font-mono); font-size: 11px; fill: var(--accent-blue); font-weight: 600;" data-i18n="koan19.svgGateway">Gateway</text>
+          <text x="445" y="133" text-anchor="middle" style="font-family: var(--font-mono); font-size: 8px; fill: var(--text-muted);" data-i18n="koan19.svgGatewayWork">sample, route, aggregate</text>
+          <text x="445" y="155" text-anchor="middle" style="font-family: var(--font-mono); font-size: 8px; fill: var(--text-muted);" data-i18n="koan19.svgGatewayView">(full trace view)</text>
+
+          <!-- Arrows: gateway → backends -->
+          <line x1="510" y1="105" x2="555" y2="65" stroke="var(--accent-purple)" stroke-width="1.5" stroke-dasharray="5 3" opacity="0.4" />
+          <line x1="510" y1="125" x2="555" y2="125" stroke="var(--accent-purple)" stroke-width="1.5" stroke-dasharray="5 3" opacity="0.4" />
+          <line x1="510" y1="145" x2="555" y2="185" stroke="var(--accent-purple)" stroke-width="1.5" stroke-dasharray="5 3" opacity="0.4" />
+
+          <!-- Backends (right column) -->
+          <rect x="555" y="45" width="90" height="32" rx="6" fill="var(--bg-tertiary)" stroke="rgba(188, 140, 255, 0.3)" stroke-width="1" />
+          <text x="600" y="65" text-anchor="middle" style="font-family: var(--font-mono); font-size: 9px; fill: var(--accent-purple);">Jaeger</text>
+
+          <rect x="555" y="109" width="90" height="32" rx="6" fill="var(--bg-tertiary)" stroke="rgba(188, 140, 255, 0.3)" stroke-width="1" />
+          <text x="600" y="129" text-anchor="middle" style="font-family: var(--font-mono); font-size: 9px; fill: var(--accent-purple);">Prometheus</text>
+
+          <rect x="555" y="169" width="90" height="32" rx="6" fill="var(--bg-tertiary)" stroke="rgba(188, 140, 255, 0.3)" stroke-width="1" />
+          <text x="600" y="189" text-anchor="middle" style="font-family: var(--font-mono); font-size: 9px; fill: var(--accent-purple);">Loki</text>
+
+          <!-- Flow labels along the bottom -->
+          <text x="170" y="240" text-anchor="middle" style="font-family: var(--font-mono); font-size: 9px; fill: var(--text-muted);" data-i18n="koan19.svgFlowLocal">local (localhost)</text>
+          <text x="350" y="240" text-anchor="middle" style="font-family: var(--font-mono); font-size: 9px; fill: var(--text-muted);" data-i18n="koan19.svgFlowNetwork">network</text>
+          <text x="530" y="240" text-anchor="middle" style="font-family: var(--font-mono); font-size: 9px; fill: var(--text-muted);" data-i18n="koan19.svgFlowExport">export</text>
+
+          <!-- Flow arrows along bottom -->
+          <line x1="80" y1="225" x2="610" y2="225" stroke="var(--border-subtle)" stroke-width="1" opacity="0.3" />
+          <polygon points="604,222 614,225 604,228" fill="var(--border-subtle)" opacity="0.3" />
+        </svg>
+      </div>
+    </div>
+
+    <!-- ═══ Insight ═══ -->
+    <div class="deploy-insight" id="insight">
+      <p data-i18n="koan19.insightLine1">Agent mode handles the lightweight work close to the source. Gateway mode handles the heavy processing that requires seeing the whole picture.</p>
+      <p data-i18n="koan19.insightLine2">In practice, agents forward to gateways. Each position in the flow serves its purpose.</p>
+      <a href="20-trace-context.html" data-i18n="common.continue">Continue &rarr;</a>
+    </div>
+  </div>
+
+  <div class="koan-progress">
+    <div class="koan-progress-fill" style="width: 68%"></div>
+  </div>
+
+  <script>
+    (function () {
+      function run() {
+        /* ── Show deployment mode cards ── */
+        var agentCard = document.getElementById('agentCard');
+        var gatewayCard = document.getElementById('gatewayCard');
+
+        setTimeout(function () {
+          agentCard.classList.add('visible');
+        }, 600);
+
+        setTimeout(function () {
+          gatewayCard.classList.add('visible');
+        }, 1000);
+
+        /* ── Show Q1 ── */
+        setTimeout(function () {
+          document.getElementById('q1').classList.add('visible');
+        }, 1800);
+
+        /* ── Question handler helper ── */
+        function setupQuestion(qId, fbId, correctMsg, wrongMsg, onCorrect) {
+          var q = document.getElementById(qId);
+          var fb = document.getElementById(fbId);
+          var opts = q.querySelectorAll('.dq-opt');
+
+          opts.forEach(function (opt) {
+            opt.addEventListener('click', function () {
+              if (this.dataset.answer === 'correct') {
+                this.classList.add('correct');
+                opts.forEach(function (o) { o.classList.add('disabled'); });
+                fb.textContent = i18n.t(correctMsg);
+                fb.className = 'dq-fb dq-fb--correct';
+                if (onCorrect) setTimeout(onCorrect, 800);
+              } else {
+                this.classList.add('wrong');
+                fb.textContent = i18n.t(wrongMsg);
+                fb.className = 'dq-fb dq-fb--wrong';
+                var self = this;
+                setTimeout(function () { self.classList.remove('wrong'); }, 600);
+              }
+            });
+          });
+        }
+
+        /* ── Q1: Lightweight batching → Agent ── */
+        setupQuestion('q1', 'fb1', 'koan19.q1Correct', 'koan19.q1Wrong', function () {
+          document.getElementById('narr1').classList.add('visible');
+
+          setTimeout(function () {
+            document.getElementById('q2').classList.add('visible');
+          }, 1200);
+        });
+
+        /* ── Q2: Cross-service sampling → Gateway ── */
+        setupQuestion('q2', 'fb2', 'koan19.q2Correct', 'koan19.q2Wrong', function () {
+          document.getElementById('narr2').classList.add('visible');
+
+          setTimeout(function () {
+            document.getElementById('layeredScene').classList.add('visible');
+          }, 1200);
+
+          setTimeout(function () {
+            document.getElementById('insight').classList.add('visible');
+          }, 2400);
+        });
+      }
+
+      if (window.i18n && window.i18n.t('common.desktopOnly') !== 'common.desktopOnly') { run(); }
+      else { window.addEventListener('i18n:ready', run, { once: true }); }
+    })();
+  </script>
+  <script src="../js/scroll.js"></script>
+  <script src="../js/music.js"></script>
+  <script src="../js/certificate.js"></script>
+<script src="../js/progress.js"></script>
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "48917f3aeb9f4b7b9ecf513cf6135ee8"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

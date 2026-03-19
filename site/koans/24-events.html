@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title data-i18n="koan20.pageTitle">Koan 20: Events - OpenTelemetry Koans</title>
+  <title data-i18n="koan24.pageTitle">Koan 20: Events - OpenTelemetry Koans</title>
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon-16x16.png">
@@ -367,17 +367,17 @@
 
   <div class="koan-page">
 
-    <h1 class="koan-title" data-i18n="koan20.title">Moments Within</h1>
+    <h1 class="koan-title" data-i18n="koan24.title">Moments Within</h1>
 
-    <div class="koan-text" data-i18n-html="koan20.zen">
+    <div class="koan-text" data-i18n-html="koan24.zen">
       A span tells the story of an operation.<br>
       But within that story, some moments deserve their own name.
     </div>
 
     <!-- Scenario -->
     <div class="scenario-panel" id="scenario">
-      <div class="scenario-header" data-i18n="koan20.scenarioHeader">observation</div>
-      <div class="scenario-body" data-i18n-html="koan20.scenarioBody">
+      <div class="scenario-header" data-i18n="koan24.scenarioHeader">observation</div>
+      <div class="scenario-body" data-i18n-html="koan24.scenarioBody">
         A checkout span takes 800ms. Inside it, a <strong>cache miss</strong> happens at +50ms and a <strong>retry</strong> at +400ms.<br>
         Should you create child spans for these, or is there a lighter way?
       </div>
@@ -385,7 +385,7 @@
 
     <!-- Approach A: child spans (cluttered) -->
     <div class="se-scene" id="sceneA">
-      <div class="se-scene-header" data-i18n="koan20.approachAHeader">approach a: child spans</div>
+      <div class="se-scene-header" data-i18n="koan24.approachAHeader">approach a: child spans</div>
       <div class="se-scene-body">
         <div class="se-timeline">
           <!-- Parent checkout bar -->
@@ -435,26 +435,26 @@
         </div>
 
         <div class="se-verdict" id="verdictA">
-          <div class="se-verdict-badge se-verdict-badge--cluttered" data-i18n="koan20.verdictCluttered">4 spans</div>
-          <div class="se-verdict-text" data-i18n="koan20.verdictAText">Three child spans added to describe two brief moments. The trace becomes noisy.</div>
+          <div class="se-verdict-badge se-verdict-badge--cluttered" data-i18n="koan24.verdictCluttered">4 spans</div>
+          <div class="se-verdict-text" data-i18n="koan24.verdictAText">Three child spans added to describe two brief moments. The trace becomes noisy.</div>
         </div>
       </div>
     </div>
 
     <!-- Q1: asked before showing approach B -->
     <div class="trace-question" id="q1">
-      <p data-i18n="koan20.q1">Three child spans for two brief moments feels heavy. Is there a lighter way to record what happened?</p>
+      <p data-i18n="koan24.q1">Three child spans for two brief moments feels heavy. Is there a lighter way to record what happened?</p>
       <div class="trace-opts">
-        <button class="trace-opt" data-answer="wrong" data-fb="wrong-child" data-i18n="koan20.q1OptA">Add more detail to the child spans</button>
-        <button class="trace-opt" data-answer="correct" data-fb="correct" data-i18n="koan20.q1OptB">Annotate the parent span with timestamped notes</button>
-        <button class="trace-opt" data-answer="wrong" data-fb="wrong-log" data-i18n="koan20.q1OptC">Log them outside the trace</button>
+        <button class="trace-opt" data-answer="wrong" data-fb="wrong-child" data-i18n="koan24.q1OptA">Add more detail to the child spans</button>
+        <button class="trace-opt" data-answer="correct" data-fb="correct" data-i18n="koan24.q1OptB">Annotate the parent span with timestamped notes</button>
+        <button class="trace-opt" data-answer="wrong" data-fb="wrong-log" data-i18n="koan24.q1OptC">Log them outside the trace</button>
       </div>
       <div class="trace-fb" id="fb1"></div>
     </div>
 
     <!-- Approach B: revealed after Q1 correct -->
     <div class="se-scene" id="sceneB">
-      <div class="se-scene-header" data-i18n="koan20.approachBHeader">approach b</div>
+      <div class="se-scene-header" data-i18n="koan24.approachBHeader">approach b</div>
       <div class="se-scene-body">
         <div class="se-timeline">
           <!-- Parent checkout bar with diamond markers -->
@@ -470,8 +470,8 @@
 
           <!-- Annotation labels below -->
           <div class="se-event-labels" id="evtLabels">
-            <div class="se-event-label se-event-label--cache" id="lblCache" style="left: 6.25%;" data-i18n="koan20.evtCacheLabel">cache_miss +50ms</div>
-            <div class="se-event-label se-event-label--retry" id="lblRetry" style="left: 50%;" data-i18n="koan20.evtRetryLabel">retry +400ms</div>
+            <div class="se-event-label se-event-label--cache" id="lblCache" style="left: 6.25%;" data-i18n="koan24.evtCacheLabel">cache_miss +50ms</div>
+            <div class="se-event-label se-event-label--retry" id="lblRetry" style="left: 50%;" data-i18n="koan24.evtRetryLabel">retry +400ms</div>
           </div>
 
           <!-- Time axis -->
@@ -485,32 +485,32 @@
         </div>
 
         <div class="se-verdict" id="verdictB">
-          <div class="se-verdict-badge se-verdict-badge--clean" data-i18n="koan20.verdictClean">1 span</div>
-          <div class="se-verdict-text" data-i18n="koan20.verdictBText">Two lightweight annotations mark when each moment occurred. The trace stays clean.</div>
+          <div class="se-verdict-badge se-verdict-badge--clean" data-i18n="koan24.verdictClean">1 span</div>
+          <div class="se-verdict-text" data-i18n="koan24.verdictBText">Two lightweight annotations mark when each moment occurred. The trace stays clean.</div>
         </div>
       </div>
     </div>
 
     <!-- Q2: What are these called? -->
     <div class="trace-question" id="q2">
-      <p data-i18n="koan20.q2">These timestamped annotations on a span are called...</p>
+      <p data-i18n="koan24.q2">These timestamped annotations on a span are called...</p>
       <div class="trace-opts">
-        <button class="trace-opt" data-answer="wrong" data-fb="wrong-attr" data-i18n="koan20.q2OptA">Attributes</button>
-        <button class="trace-opt" data-answer="correct" data-fb="correct" data-i18n="koan20.q2OptB">Events</button>
-        <button class="trace-opt" data-answer="wrong" data-fb="wrong-child2" data-i18n="koan20.q2OptC">Child spans</button>
+        <button class="trace-opt" data-answer="wrong" data-fb="wrong-attr" data-i18n="koan24.q2OptA">Attributes</button>
+        <button class="trace-opt" data-answer="correct" data-fb="correct" data-i18n="koan24.q2OptB">Events</button>
+        <button class="trace-opt" data-answer="wrong" data-fb="wrong-child2" data-i18n="koan24.q2OptC">Child spans</button>
       </div>
       <div class="trace-fb" id="fb2"></div>
     </div>
 
     <div class="se-insight" id="insight">
-      <p data-i18n="koan20.insightLine1">Not every moment needs its own span.</p>
-      <p data-i18n="koan20.insightLine2">An event marks what happened and when &mdash; a lightweight annotation that keeps your traces clean.</p>
-      <a href="21-trace-context.html" data-i18n="common.continue">Continue &rarr;</a>
+      <p data-i18n="koan24.insightLine1">Not every moment needs its own span.</p>
+      <p data-i18n="koan24.insightLine2">An event marks what happened and when &mdash; a lightweight annotation that keeps your traces clean.</p>
+      <a href="25-span-links.html" data-i18n="common.continue">Continue &rarr;</a>
     </div>
   </div>
 
   <div class="koan-progress">
-    <div class="koan-progress-fill" style="width: 71%"></div>
+    <div class="koan-progress-fill" style="width: 86%"></div>
   </div>
 
   <script>
@@ -556,7 +556,7 @@
             if (this.dataset.answer === 'correct') {
               this.classList.add('correct');
               q1Opts.forEach(function (o) { o.classList.add('disabled'); });
-              fb1.textContent = i18n.t('koan20.q1Correct');
+              fb1.textContent = i18n.t('koan24.q1Correct');
               fb1.className = 'trace-fb trace-fb--correct';
 
               // Reveal approach B
@@ -589,9 +589,9 @@
               this.classList.add('wrong');
               var fbType = this.dataset.fb;
               if (fbType === 'wrong-child') {
-                fb1.textContent = i18n.t('koan20.q1WrongChild');
+                fb1.textContent = i18n.t('koan24.q1WrongChild');
               } else {
-                fb1.textContent = i18n.t('koan20.q1WrongLog');
+                fb1.textContent = i18n.t('koan24.q1WrongLog');
               }
               fb1.className = 'trace-fb trace-fb--wrong';
               var self = this;
@@ -609,7 +609,7 @@
             if (this.dataset.answer === 'correct') {
               this.classList.add('correct');
               q2Opts.forEach(function (o) { o.classList.add('disabled'); });
-              fb2.textContent = i18n.t('koan20.q2Correct');
+              fb2.textContent = i18n.t('koan24.q2Correct');
               fb2.className = 'trace-fb trace-fb--correct';
 
               setTimeout(function () {
@@ -619,9 +619,9 @@
               this.classList.add('wrong');
               var fbType = this.dataset.fb;
               if (fbType === 'wrong-attr') {
-                fb2.textContent = i18n.t('koan20.q2WrongAttr');
+                fb2.textContent = i18n.t('koan24.q2WrongAttr');
               } else {
-                fb2.textContent = i18n.t('koan20.q2WrongChild');
+                fb2.textContent = i18n.t('koan24.q2WrongChild');
               }
               fb2.className = 'trace-fb trace-fb--wrong';
               var self = this;

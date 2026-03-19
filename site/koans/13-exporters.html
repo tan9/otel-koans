@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title data-i18n="koan12.pageTitle">Koan 12: What Gets Exported - OpenTelemetry Koans</title>
+  <title data-i18n="koan13.pageTitle">Koan 12: What Gets Exported - OpenTelemetry Koans</title>
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon-16x16.png">
@@ -354,9 +354,9 @@
 
   <div class="koan-page">
 
-    <h1 class="koan-title" data-i18n="koan12.title">What Gets Exported</h1>
+    <h1 class="koan-title" data-i18n="koan13.title">What Gets Exported</h1>
 
-    <div class="koan-text" data-i18n-html="koan12.zen">
+    <div class="koan-text" data-i18n-html="koan13.zen">
       The code speaks. But in what language?<br>
       Instrumentation creates telemetry inside the program.<br>
       To leave the program, it must become structured data.<br>
@@ -364,12 +364,12 @@
     </div>
 
     <div class="export-scene">
-      <div class="export-scene-header" data-i18n="koan12.sceneHeader">read the code, fill in the blanks</div>
+      <div class="export-scene-header" data-i18n="koan13.sceneHeader">read the code, fill in the blanks</div>
       <div class="export-scene-body">
         <div class="export-flow">
           <!-- Left: instrumented code -->
           <div class="export-code-panel">
-            <div class="export-panel-title" data-i18n="koan12.panelCode">instrumented code</div>
+            <div class="export-panel-title" data-i18n="koan13.panelCode">instrumented code</div>
             <div class="export-code">
               <span id="code-line-name"><span class="kw">let</span> span = <span class="fn">tracer.startSpan</span>(<span class="str">"checkout"</span>)</span><br>
               <span id="code-line-attr1">span.<span class="fn">setAttribute</span>(<span class="str">"order.id"</span>, <span class="str">"8842"</span>)</span><br>
@@ -381,13 +381,13 @@
 
           <!-- Right: data template with blanks -->
           <div class="export-data-panel">
-            <div class="export-panel-title export-panel-title--green" data-i18n="koan12.panelExported">exported telemetry</div>
+            <div class="export-panel-title export-panel-title--green" data-i18n="koan13.panelExported">exported telemetry</div>
             <div class="export-json">
               <span class="jb">{</span><br>
 
               &nbsp;&nbsp;<span class="jk">"name"</span>:
               <select class="blank-select" id="blank-name" data-correct="checkout">
-                <option value="" disabled selected data-i18n="koan12.blankDefault">[ ??? ]</option>
+                <option value="" disabled selected data-i18n="koan13.blankDefault">[ ??? ]</option>
                 <option value="checkout">"checkout"</option>
                 <option value="tracer">"tracer"</option>
                 <option value="span">"span"</option>
@@ -401,14 +401,14 @@
               &nbsp;&nbsp;<span class="jk">"attributes"</span>: <span class="jb">{</span><br>
 
               &nbsp;&nbsp;&nbsp;&nbsp;<select class="blank-select" id="blank-attr1" data-correct="order.id">
-                <option value="" disabled selected data-i18n="koan12.blankDefault">[ ??? ]</option>
+                <option value="" disabled selected data-i18n="koan13.blankDefault">[ ??? ]</option>
                 <option value="order.id">"order.id"</option>
                 <option value="span.id">"span.id"</option>
                 <option value="name">"name"</option>
               </select>: <span class="jv">"8842"</span>,<br>
 
               &nbsp;&nbsp;&nbsp;&nbsp;<select class="blank-select" id="blank-attr2" data-correct="http.request.method">
-                <option value="" disabled selected data-i18n="koan12.blankDefault">[ ??? ]</option>
+                <option value="" disabled selected data-i18n="koan13.blankDefault">[ ??? ]</option>
                 <option value="http.request.method">"http.request.method"</option>
                 <option value="method">"method"</option>
                 <option value="request">"request"</option>
@@ -420,17 +420,17 @@
           </div>
         </div>
 
-        <div class="export-hint-row" data-i18n-html="koan12.hintRow">
+        <div class="export-hint-row" data-i18n-html="koan13.hintRow">
           read the code on the left &nbsp;&rarr;&nbsp; fill the dropdowns on the right
         </div>
 
         <div class="export-controls">
-          <button class="koan-btn koan-btn--primary" id="checkBtn" data-i18n="koan12.checkBtn">Check my answers</button>
+          <button class="koan-btn koan-btn--primary" id="checkBtn" data-i18n="koan13.checkBtn">Check my answers</button>
           <div class="export-status" id="status"></div>
           <div class="export-blank-hint" id="blankHint"></div>
         </div>
 
-        <div class="export-callout" id="callout" data-i18n="koan12.callout">
+        <div class="export-callout" id="callout" data-i18n="koan13.callout">
           This structured format is called <strong>OTLP</strong>, OpenTelemetry Protocol.
           The code created telemetry. OTLP is how it leaves the program as structured data.
         </div>
@@ -438,24 +438,24 @@
     </div>
 
     <div class="export-question" id="q1">
-      <p data-i18n="koan12.q1">Why does telemetry need a standard format like OTLP?</p>
+      <p data-i18n="koan13.q1">Why does telemetry need a standard format like OTLP?</p>
       <div class="export-opts">
-        <button class="export-opt" data-answer="wrong" data-i18n="koan12.q1OptA">So it looks pretty</button>
-        <button class="export-opt" data-answer="correct" data-i18n="koan12.q1OptB">So any compatible tool can receive and understand it</button>
-        <button class="export-opt" data-answer="wrong" data-i18n="koan12.q1OptC">Because JSON is required by law</button>
+        <button class="export-opt" data-answer="wrong" data-i18n="koan13.q1OptA">So it looks pretty</button>
+        <button class="export-opt" data-answer="correct" data-i18n="koan13.q1OptB">So any compatible tool can receive and understand it</button>
+        <button class="export-opt" data-answer="wrong" data-i18n="koan13.q1OptC">Because JSON is required by law</button>
       </div>
       <div class="export-fb" id="fb1"></div>
     </div>
 
     <div class="export-insight" id="insight">
-      <p data-i18n="koan12.insightLine1">You read the code and constructed the output yourself.</p>
-      <p data-i18n="koan12.insightLine2">Instrumentation creates telemetry. OTLP gives it a universal shape, so any tool can understand it.</p>
-      <a href="13-formats.html" data-i18n="common.continue">Continue &rarr;</a>
+      <p data-i18n="koan13.insightLine1">You read the code and constructed the output yourself.</p>
+      <p data-i18n="koan13.insightLine2">Instrumentation creates telemetry. OTLP gives it a universal shape, so any tool can understand it.</p>
+      <a href="14-otlp.html" data-i18n="common.continue">Continue &rarr;</a>
     </div>
   </div>
 
   <div class="koan-progress">
-    <div class="koan-progress-fill" style="width: 43%"></div>
+    <div class="koan-progress-fill" style="width: 46%"></div>
   </div>
 
   <script>
@@ -474,9 +474,9 @@
 
       /* Per-blank wrong attempt counters and corresponding code line ids */
       var blankMeta = {
-        'blank-name':  { wrongCount: 0, codeLine: 'code-line-name',  hint1Key: 'koan12.hintName1', hint2Key: 'koan12.hintName2', hint3Key: 'koan12.hintName3' },
-        'blank-attr1': { wrongCount: 0, codeLine: 'code-line-attr1', hint1Key: 'koan12.hintAttr1L1', hint2Key: 'koan12.hintAttr1L2', hint3Key: 'koan12.hintAttr1L3' },
-        'blank-attr2': { wrongCount: 0, codeLine: 'code-line-attr2', hint1Key: 'koan12.hintAttr2L1', hint2Key: 'koan12.hintAttr2L2', hint3Key: 'koan12.hintAttr2L3' }
+        'blank-name':  { wrongCount: 0, codeLine: 'code-line-name',  hint1Key: 'koan13.hintName1', hint2Key: 'koan13.hintName2', hint3Key: 'koan13.hintName3' },
+        'blank-attr1': { wrongCount: 0, codeLine: 'code-line-attr1', hint1Key: 'koan13.hintAttr1L1', hint2Key: 'koan13.hintAttr1L2', hint3Key: 'koan13.hintAttr1L3' },
+        'blank-attr2': { wrongCount: 0, codeLine: 'code-line-attr2', hint1Key: 'koan13.hintAttr2L1', hint2Key: 'koan13.hintAttr2L2', hint3Key: 'koan13.hintAttr2L3' }
       };
 
       /* Clear previous code line highlights */
@@ -529,7 +529,7 @@
         });
 
         if (unanswered > 0) {
-          status.textContent = i18n.t('koan12.statusFillAll');
+          status.textContent = i18n.t('koan13.statusFillAll');
           status.className = 'export-status export-status--error';
           return;
         }
@@ -556,7 +556,7 @@
             }
           });
 
-          status.textContent = i18n.t('koan12.statusWrongCount').replace('{count}', wrongCount);
+          status.textContent = i18n.t('koan13.statusWrongCount').replace('{count}', wrongCount);
           status.className = 'export-status export-status--error';
 
           /* Show the first wrong blank's hint (most actionable) */
@@ -581,7 +581,7 @@
         clearCodeHighlights();
         blankHint.textContent = '';
         blankHint.classList.remove('visible');
-        status.textContent = i18n.t('koan12.statusAllCorrect');
+        status.textContent = i18n.t('koan13.statusAllCorrect');
         status.className = 'export-status export-status--success';
         checkBtn.style.opacity = '0.4';
         checkBtn.style.pointerEvents = 'none';
@@ -599,12 +599,12 @@
           if (this.dataset.answer === 'correct') {
             this.classList.add('correct');
             opts.forEach(function (o) { o.classList.add('disabled'); });
-            fb1.textContent = i18n.t('koan12.q1Correct');
+            fb1.textContent = i18n.t('koan13.q1Correct');
             fb1.className = 'export-fb export-fb--correct';
             setTimeout(function () { document.getElementById('insight').classList.add('visible'); }, 800);
           } else {
             this.classList.add('wrong');
-            fb1.textContent = i18n.t('koan12.q1Wrong');
+            fb1.textContent = i18n.t('koan13.q1Wrong');
             fb1.className = 'export-fb export-fb--wrong';
             var self = this;
             setTimeout(function () { self.classList.remove('wrong'); }, 500);

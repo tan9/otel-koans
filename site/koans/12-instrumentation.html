@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title data-i18n="koan11.pageTitle">Koan 11: Making Code Speak - OpenTelemetry Koans</title>
+  <title data-i18n="koan12.pageTitle">Koan 11: Making Code Speak - OpenTelemetry Koans</title>
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon-16x16.png">
@@ -358,16 +358,16 @@
 
   <div class="koan-page">
 
-    <h1 class="koan-title" data-i18n="koan11.title">Silent Code</h1>
+    <h1 class="koan-title" data-i18n="koan12.title">Silent Code</h1>
 
-    <div class="koan-text" data-i18n-html="koan11.zen">
+    <div class="koan-text" data-i18n-html="koan12.zen">
       The code runs. It works.<br>
       But it says nothing about how it works.<br>
       Someone must teach it to speak.
     </div>
 
     <!-- Problem statement -->
-    <div class="inst-problem" id="problem" data-i18n="koan11.problemText">
+    <div class="inst-problem" id="problem" data-i18n="koan12.problemText">
       This function handles checkout in production. A customer reports their checkout took 30 seconds. You look for data, timing, order details, anything, but there is none. The code works, but it tells you nothing.
     </div>
 
@@ -376,7 +376,7 @@
       <!-- Left: the code and its telemetry output -->
       <div>
         <div class="inst-code-panel">
-          <div class="inst-panel-header" data-i18n="koan11.codePanelHeader">checkout.js</div>
+          <div class="inst-panel-header" data-i18n="koan12.codePanelHeader">checkout.js</div>
           <div class="inst-panel-body">
             <div class="inst-code" id="codeBlock">
               <span class="kw">function</span> <span class="fn">checkout</span>(order) {<br>
@@ -391,12 +391,12 @@
               }
             </div>
             <div class="inst-output">
-              <div class="inst-output-title" data-i18n="koan11.outputTitle">telemetry output</div>
-              <div class="inst-output-none" id="outputNone" data-i18n="koan11.outputNone">nothing - the code is silent</div>
-              <div class="inst-output-line" id="outSpan"><span style="color:var(--accent-green)">span:</span> <span data-i18n="koan11.outputSpan">checkout - started</span></div>
-              <div class="inst-output-line" id="outAttr"><span style="color:var(--accent-green)">span:</span> <span data-i18n="koan11.outputAttr">checkout (order.id=8842)</span></div>
-              <div class="inst-output-line" id="outMetric"><span style="color:var(--accent-orange)">metric:</span> <span data-i18n="koan11.outputMetric">order.total = 49.99</span></div>
-              <div class="inst-output-line" id="outEnd"><span style="color:var(--accent-green)">span:</span> <span data-i18n="koan11.outputEnd">checkout (order.id=8842) 142ms - complete</span></div>
+              <div class="inst-output-title" data-i18n="koan12.outputTitle">telemetry output</div>
+              <div class="inst-output-none" id="outputNone" data-i18n="koan12.outputNone">nothing - the code is silent</div>
+              <div class="inst-output-line" id="outSpan"><span style="color:var(--accent-green)">span:</span> <span data-i18n="koan12.outputSpan">checkout - started</span></div>
+              <div class="inst-output-line" id="outAttr"><span style="color:var(--accent-green)">span:</span> <span data-i18n="koan12.outputAttr">checkout (order.id=8842)</span></div>
+              <div class="inst-output-line" id="outMetric"><span style="color:var(--accent-orange)">metric:</span> <span data-i18n="koan12.outputMetric">order.total = 49.99</span></div>
+              <div class="inst-output-line" id="outEnd"><span style="color:var(--accent-green)">span:</span> <span data-i18n="koan12.outputEnd">checkout (order.id=8842) 142ms - complete</span></div>
             </div>
           </div>
         </div>
@@ -405,7 +405,7 @@
       <!-- Right: toolbox of lines to add -->
       <div>
         <div class="inst-toolbox">
-          <div class="inst-panel-header" data-i18n="koan11.toolboxHeader">Choose lines to add</div>
+          <div class="inst-panel-header" data-i18n="koan12.toolboxHeader">Choose lines to add</div>
           <div class="inst-toolbox-items" id="toolbox">
             <button class="inst-tool" data-tool="startSpan">
               <span class="tool-icon"></span>
@@ -433,29 +433,29 @@
       </div>
     </div>
 
-    <div class="inst-status" id="status" data-i18n="koan11.statusInitial">Add each line in order, starting from the top of the function.</div>
+    <div class="inst-status" id="status" data-i18n="koan12.statusInitial">Add each line in order, starting from the top of the function.</div>
 
     <!-- Question: name the act (only appears after all lines are placed) -->
     <div class="inst-question" id="q1">
-      <p data-i18n="koan11.q1">You just made silent code emit structured telemetry. This act, adding code that makes a program produce telemetry, is called...</p>
+      <p data-i18n="koan12.q1">You just made silent code emit structured telemetry. This act, adding code that makes a program produce telemetry, is called...</p>
       <div class="inst-opts">
-        <button class="inst-opt" data-answer="wrong" data-wrong-key="koan11.q1WrongA" data-wrong-msg="Debugging is finding and fixing errors. What you did was add new code to produce telemetry, not fix a bug." data-i18n="koan11.q1OptA">Debugging</button>
-        <button class="inst-opt" data-answer="correct" data-i18n="koan11.q1OptB">Instrumentation</button>
-        <button class="inst-opt" data-answer="wrong" data-wrong-key="koan11.q1WrongC" data-wrong-msg="Compiling translates source code to machine code. You added telemetry-producing code to the function." data-i18n="koan11.q1OptC">Compiling</button>
+        <button class="inst-opt" data-answer="wrong" data-wrong-key="koan12.q1WrongA" data-wrong-msg="Debugging is finding and fixing errors. What you did was add new code to produce telemetry, not fix a bug." data-i18n="koan12.q1OptA">Debugging</button>
+        <button class="inst-opt" data-answer="correct" data-i18n="koan12.q1OptB">Instrumentation</button>
+        <button class="inst-opt" data-answer="wrong" data-wrong-key="koan12.q1WrongC" data-wrong-msg="Compiling translates source code to machine code. You added telemetry-producing code to the function." data-i18n="koan12.q1OptC">Compiling</button>
       </div>
       <div class="inst-fb" id="fb1"></div>
     </div>
 
     <!-- Insight: appears after correct answer -->
     <div class="inst-insight" id="insight">
-      <p data-i18n="koan11.insightLine1">Instrumentation is the bridge between code and observability.</p>
-      <p data-i18n="koan11.insightLine2">Without it, code runs in the dark. With it, every function can describe what it did, how long it took, and what it touched.</p>
-      <a href="12-export.html" data-i18n="common.continue">Continue &rarr;</a>
+      <p data-i18n="koan12.insightLine1">Instrumentation is the bridge between code and observability.</p>
+      <p data-i18n="koan12.insightLine2">Without it, code runs in the dark. With it, every function can describe what it did, how long it took, and what it touched.</p>
+      <a href="13-exporters.html" data-i18n="common.continue">Continue &rarr;</a>
     </div>
   </div>
 
   <div class="koan-progress">
-    <div class="koan-progress-fill" style="width: 39%"></div>
+    <div class="koan-progress-fill" style="width: 43%"></div>
   </div>
 
   <script>
@@ -467,28 +467,28 @@
           slot: 'slot0',
           html: '&nbsp;&nbsp;<span class="kw">let</span> span = <span class="fn">tracer.startSpan</span>(<span class="str">"checkout"</span>)',
           output: 'outSpan',
-          feedbackKey: 'koan11.fbStartSpan',
+          feedbackKey: 'koan12.fbStartSpan',
           order: 0
         },
         setAttribute: {
           slot: 'slot1',
           html: '&nbsp;&nbsp;span.<span class="fn">setAttribute</span>(<span class="str">"order.id"</span>, order.id)',
           output: 'outAttr',
-          feedbackKey: 'koan11.fbSetAttribute',
+          feedbackKey: 'koan12.fbSetAttribute',
           order: 1
         },
         meterRecord: {
           slot: 'slot2',
           html: '&nbsp;&nbsp;<span class="fn">meter.record</span>(<span class="str">"order.total"</span>, total)',
           output: 'outMetric',
-          feedbackKey: 'koan11.fbMeterRecord',
+          feedbackKey: 'koan12.fbMeterRecord',
           order: 2
         },
         spanEnd: {
           slot: 'slot3',
           html: '&nbsp;&nbsp;span.<span class="fn">end</span>()',
           output: 'outEnd',
-          feedbackKey: 'koan11.fbSpanEnd',
+          feedbackKey: 'koan12.fbSpanEnd',
           order: 3
         }
       };
@@ -527,7 +527,7 @@
           if (toolName === 'console') {
             btn.classList.add('rejected');
             btn.querySelector('.tool-icon').textContent = '';
-            toolFeedback.textContent = i18n.t('koan11.fbConsole');
+            toolFeedback.textContent = i18n.t('koan12.fbConsole');
             toolFeedback.className = 'inst-tool-feedback bad';
             setTimeout(function () {
               toolFeedback.textContent = '';
@@ -541,7 +541,7 @@
 
           // Enforce order: must add lines top-to-bottom
           if (tool.order !== nextOrder) {
-            toolFeedback.textContent = i18n.t('koan11.fbWrongOrder');
+            toolFeedback.textContent = i18n.t('koan12.fbWrongOrder');
             toolFeedback.className = 'inst-tool-feedback bad';
             setTimeout(function () {
               toolFeedback.textContent = '';
@@ -581,12 +581,12 @@
 
           // Update status
           if (correctCount < totalCorrect) {
-            status.textContent = i18n.t('koan11.statusProgress').replace('{count}', correctCount).replace('{total}', totalCorrect);
+            status.textContent = i18n.t('koan12.statusProgress').replace('{count}', correctCount).replace('{total}', totalCorrect);
           }
 
           // All correct lines placed
           if (correctCount === totalCorrect) {
-            status.textContent = i18n.t('koan11.statusComplete');
+            status.textContent = i18n.t('koan12.statusComplete');
             setTimeout(function () {
               toolFeedback.textContent = '';
               toolFeedback.className = 'inst-tool-feedback';
@@ -608,7 +608,7 @@
           if (opt.dataset.answer === 'correct') {
             opt.classList.add('correct');
             q1opts.forEach(function (o) { o.classList.add('disabled'); });
-            fb1.textContent = i18n.t('koan11.q1Correct');
+            fb1.textContent = i18n.t('koan12.q1Correct');
             fb1.className = 'inst-fb inst-fb--correct';
             setTimeout(function () {
               document.getElementById('insight').classList.add('visible');
@@ -616,7 +616,7 @@
           } else {
             opt.classList.add('wrong');
             var wrongKey = opt.dataset.wrongKey;
-            fb1.textContent = wrongKey ? i18n.t(wrongKey) : i18n.t('koan11.q1WrongFallback');
+            fb1.textContent = wrongKey ? i18n.t(wrongKey) : i18n.t('koan12.q1WrongFallback');
             fb1.className = 'inst-fb inst-fb--wrong';
             setTimeout(function () {
               opt.classList.remove('wrong');

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title data-i18n="koan19.pageTitle">Koan 19: The Full Picture - OpenTelemetry Koans</title>
+  <title data-i18n="koan27.pageTitle">Koan 19: The Full Picture - OpenTelemetry Koans</title>
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon-16x16.png">
@@ -787,9 +787,9 @@
 
   <div class="koan-page">
 
-    <h1 class="koan-title" data-i18n="koan19.title">The Full Picture</h1>
+    <h1 class="koan-title" data-i18n="koan27.title">The Full Picture</h1>
 
-    <div class="koan-text" data-i18n-html="koan19.zen">
+    <div class="koan-text" data-i18n-html="koan27.zen">
       The system failed on a Tuesday.<br>
       But this time, the developer did not ask "When did this begin?"<br>
       They opened three windows and found the answer themselves.
@@ -799,41 +799,41 @@
     <div class="alert-banner" id="alertBanner">
       <div class="alert-icon">!</div>
       <div class="alert-body">
-        <div class="alert-title" data-i18n="koan19.alertTitle">PRODUCTION ALERT: orders error rate > 5%</div>
-        <div class="alert-detail" data-i18n="koan19.alertDetail">orders &middot; error_rate = 12.4% &middot; threshold = 5%</div>
+        <div class="alert-title" data-i18n="koan27.alertTitle">PRODUCTION ALERT: orders error rate > 5%</div>
+        <div class="alert-detail" data-i18n="koan27.alertDetail">orders &middot; error_rate = 12.4% &middot; threshold = 5%</div>
       </div>
-      <div class="alert-time" data-i18n="koan19.alertTime">14:37 UTC</div>
+      <div class="alert-time" data-i18n="koan27.alertTime">14:37 UTC</div>
     </div>
 
-    <div class="fp-narrative visible" id="narr0" style="opacity:1;" data-i18n-html="koan19.narr0">
+    <div class="fp-narrative visible" id="narr0" style="opacity:1;" data-i18n-html="koan27.narr0">
       An alert fires. Something is wrong. You have three tools at your disposal.<br>
       <strong>Where do you start?</strong>
     </div>
 
     <!-- ═══ First choice: pick any signal ═══ -->
     <div class="fp-chooser visible" id="chooser1" style="opacity:1;max-height:12rem;">
-      <p data-i18n="koan19.chooserPrompt1">Choose your first investigation step.</p>
-      <div class="fp-chooser-hint" data-i18n="koan19.chooserHint1">There is no wrong answer. Each reveals a different piece.</div>
+      <p data-i18n="koan27.chooserPrompt1">Choose your first investigation step.</p>
+      <div class="fp-chooser-hint" data-i18n="koan27.chooserHint1">There is no wrong answer. Each reveals a different piece.</div>
       <div class="fp-choice-btns" id="choice1Btns">
-        <button class="fp-choice-btn metric-btn" data-signal="metric" data-i18n="koan19.btnMetric">Check metrics dashboard</button>
-        <button class="fp-choice-btn trace-btn" data-signal="trace" data-i18n="koan19.btnTrace">Search traces</button>
-        <button class="fp-choice-btn log-btn" data-signal="log" data-i18n="koan19.btnLog">Search logs</button>
+        <button class="fp-choice-btn metric-btn" data-signal="metric" data-i18n="koan27.btnMetric">Check metrics dashboard</button>
+        <button class="fp-choice-btn trace-btn" data-signal="trace" data-i18n="koan27.btnTrace">Search traces</button>
+        <button class="fp-choice-btn log-btn" data-signal="log" data-i18n="koan27.btnLog">Search logs</button>
       </div>
     </div>
 
     <!-- ═══ Metric panel ═══ -->
     <div class="fp-panel" id="metricPanel">
       <div class="fp-panel-header">
-        <span data-i18n="koan19.metricPanelHeader">metrics dashboard - orders service</span>
-        <span class="fp-badge fp-badge--metric" data-i18n="koan19.metricPanelBadge">metric</span>
+        <span data-i18n="koan27.metricPanelHeader">metrics dashboard - orders service</span>
+        <span class="fp-badge fp-badge--metric" data-i18n="koan27.metricPanelBadge">metric</span>
       </div>
       <div class="fp-panel-body">
         <div class="fp-metric-chart">
-          <div class="fp-metric-chart-title" data-i18n="koan19.metricChartTitle">http.server.errors / http.server.requests - orders</div>
+          <div class="fp-metric-chart-title" data-i18n="koan27.metricChartTitle">http.server.errors / http.server.requests - orders</div>
           <svg class="fp-chart-svg" viewBox="0 0 500 100" preserveAspectRatio="none">
             <line x1="0" y1="80" x2="500" y2="80" stroke="var(--border)" stroke-width="0.5" />
             <line x1="0" y1="50" x2="500" y2="50" stroke="var(--accent-red)" stroke-width="1" stroke-dasharray="6,4" opacity="0.5" />
-            <text x="505" y="53" font-family="var(--font-mono)" font-size="8" fill="var(--accent-red)" opacity="0.5" data-i18n="koan19.metricChartThreshold">5%</text>
+            <text x="505" y="53" font-family="var(--font-mono)" font-size="8" fill="var(--accent-red)" opacity="0.5" data-i18n="koan27.metricChartThreshold">5%</text>
             <polyline
               points="0,78 50,77 100,79 150,78 200,77 250,78 280,76 300,70 320,55 340,38 360,28 380,22 400,20 420,22 440,21 460,23 480,22 500,24"
               fill="none"
@@ -851,13 +851,13 @@
             <span>14:55</span>
           </div>
         </div>
-        <div class="fp-metric-finding" data-i18n-html="koan19.metricFinding">
+        <div class="fp-metric-finding" data-i18n-html="koan27.metricFinding">
           <span class="key">resource.service.name</span> = <span class="val">orders</span><br>
           <span class="key">error_rate</span> = <span class="val">12.4%</span>
           &nbsp;&middot;&nbsp; <span class="key">p99_latency</span> = <span class="val">3,200ms</span>
           &nbsp;&middot;&nbsp; <span class="key">window</span> = <span class="val">14:30 &ndash; 14:40 UTC</span>
         </div>
-        <div class="fp-partial-clue" data-i18n="koan19.metricPartialClue">
+        <div class="fp-partial-clue" data-i18n="koan27.metricPartialClue">
           You know THAT something is wrong with orders, and WHEN it started. But not WHAT is failing or WHY.
         </div>
       </div>
@@ -866,12 +866,12 @@
     <!-- ═══ Trace panel ═══ -->
     <div class="fp-panel" id="tracePanel">
       <div class="fp-panel-header">
-        <span data-i18n="koan19.tracePanelHeader">trace search - orders service - errors only</span>
-        <span class="fp-badge fp-badge--trace" data-i18n="koan19.tracePanelBadge">trace</span>
+        <span data-i18n="koan27.tracePanelHeader">trace search - orders service - errors only</span>
+        <span class="fp-badge fp-badge--trace" data-i18n="koan27.tracePanelBadge">trace</span>
       </div>
       <div class="fp-panel-body">
         <div class="fp-trace-waterfall">
-          <div class="fp-trace-title" data-i18n="koan19.traceTitle">Trace f7a2c9e1 &middot; 14:37:22 UTC &middot; status: ERROR</div>
+          <div class="fp-trace-title" data-i18n="koan27.traceTitle">Trace f7a2c9e1 &middot; 14:37:22 UTC &middot; status: ERROR</div>
           <div class="fp-span-row">
             <div class="fp-span-name">gateway</div>
             <div class="fp-span-bar-wrap">
@@ -900,11 +900,11 @@
             </div>
             <div class="fp-span-dur err-text">2560ms ERR</div>
           </div>
-          <div class="fp-trace-id" data-i18n="koan19.traceIdLine">
+          <div class="fp-trace-id" data-i18n="koan27.traceIdLine">
             trace_id: f7a2c9e1...3b8d &middot; root: gateway &middot; error at: database span
           </div>
         </div>
-        <div class="fp-partial-clue" data-i18n="koan19.tracePartialClue">
+        <div class="fp-partial-clue" data-i18n="koan27.tracePartialClue">
           You can see WHERE the error happens, the database span. But the trace doesn't say WHY the database call failed.
         </div>
       </div>
@@ -913,12 +913,12 @@
     <!-- ═══ Log panel ═══ -->
     <div class="fp-panel" id="logPanel">
       <div class="fp-panel-header">
-        <span data-i18n="koan19.logPanelHeader">log search - severity >= WARN - 14:30 to 14:40</span>
-        <span class="fp-badge fp-badge--log" data-i18n="koan19.logPanelBadge">log</span>
+        <span data-i18n="koan27.logPanelHeader">log search - severity >= WARN - 14:30 to 14:40</span>
+        <span class="fp-badge fp-badge--log" data-i18n="koan27.logPanelBadge">log</span>
       </div>
       <div class="fp-panel-body">
         <div class="fp-log-block">
-          <div class="fp-log-title" data-i18n="koan19.logTitle">Recent error logs (multiple services)</div>
+          <div class="fp-log-title" data-i18n="koan27.logTitle">Recent error logs (multiple services)</div>
           <div class="fp-log-line">
             <span class="ts">14:36:58</span> <span class="svc">gateway</span> <span class="sev-warn">WARN</span> <span class="msg">upstream timeout</span> <span class="attr-k">target</span>=<span class="attr-v">api</span>
           </div>
@@ -938,49 +938,49 @@
             <span class="ts">14:37:14</span> <span class="svc">gateway</span> <span class="sev-err">ERROR</span> <span class="msg">502 bad gateway</span> <span class="attr-k">route</span>=<span class="attr-v">/checkout</span>
           </div>
         </div>
-        <div class="fp-partial-clue" data-i18n="koan19.logPartialClue">
+        <div class="fp-partial-clue" data-i18n="koan27.logPartialClue">
           Errors are scattered across six services. Without knowing the request path, it is hard to tell which error is the cause and which is a symptom.
         </div>
       </div>
     </div>
 
     <!-- ═══ After first signal: narrative + second chooser ═══ -->
-    <div class="fp-narrative" id="narr1" data-i18n-html="koan19.narr1">
+    <div class="fp-narrative" id="narr1" data-i18n-html="koan27.narr1">
       One signal gave you a piece. Not the whole answer.
       What do you check next?
     </div>
 
     <div class="fp-chooser" id="chooser2">
-      <p data-i18n="koan19.chooserPrompt2">Choose your second signal.</p>
-      <div class="fp-chooser-hint" data-i18n="koan19.chooserHint2">You need at least two signals to narrow down the problem.</div>
+      <p data-i18n="koan27.chooserPrompt2">Choose your second signal.</p>
+      <div class="fp-chooser-hint" data-i18n="koan27.chooserHint2">You need at least two signals to narrow down the problem.</div>
       <div class="fp-choice-btns" id="choice2Btns">
         <!-- Populated dynamically: only the two remaining signals -->
       </div>
     </div>
 
     <!-- ═══ After second signal: narrative + final chooser ═══ -->
-    <div class="fp-narrative" id="narr2" data-i18n-html="koan19.narr2">
+    <div class="fp-narrative" id="narr2" data-i18n-html="koan27.narr2">
       Two signals, two perspectives. One showed the shape, the other added context.
       The last signal will complete the picture.
     </div>
 
     <div class="fp-chooser" id="chooser3">
-      <p data-i18n="koan19.chooserPrompt3">Check the final signal.</p>
-      <div class="fp-chooser-hint" data-i18n="koan19.chooserHint3">You know what is left.</div>
+      <p data-i18n="koan27.chooserPrompt3">Check the final signal.</p>
+      <div class="fp-chooser-hint" data-i18n="koan27.chooserHint3">You know what is left.</div>
       <div class="fp-choice-btns" id="choice3Btns">
         <!-- Populated dynamically: the one remaining signal -->
       </div>
     </div>
 
     <!-- ═══ After all three: service map question ═══ -->
-    <div class="fp-narrative" id="narr3" data-i18n-html="koan19.narr3">
+    <div class="fp-narrative" id="narr3" data-i18n-html="koan27.narr3">
       You have checked all three signals. Errors appear in gateway, api, and orders. Logs mention payment and inventory too.
       But which service is the actual root cause?
     </div>
 
     <div class="fp-service-map" id="serviceMap">
-      <div class="fp-smap-prompt" data-i18n="koan19.serviceMapPrompt">Click the service where the failure originates.</div>
-      <div class="fp-smap-hint" data-i18n="koan19.serviceMapHint">Think about what the trace showed you.</div>
+      <div class="fp-smap-prompt" data-i18n="koan27.serviceMapPrompt">Click the service where the failure originates.</div>
+      <div class="fp-smap-hint" data-i18n="koan27.serviceMapHint">Think about what the trace showed you.</div>
       <svg class="fp-smap-svg" viewBox="0 0 580 200" id="smapSvg">
         <!-- Edges -->
         <line x1="90" y1="50" x2="170" y2="50" stroke="var(--border)" stroke-width="1.5" />
@@ -1028,20 +1028,20 @@
 
     <!-- ═══ Root cause ═══ -->
     <div class="fp-root-cause" id="rootCause">
-      <div class="fp-root-cause-label" data-i18n="koan19.rootCauseLabel">Root cause identified</div>
-      <p data-i18n-html="koan19.rootCauseText">
+      <div class="fp-root-cause-label" data-i18n="koan27.rootCauseLabel">Root cause identified</div>
+      <p data-i18n-html="koan27.rootCauseText">
         The database connection pool is exhausted.
         Every service above it in the call chain, orders, api, gateway, fails as a consequence.
         The log warnings from payment and inventory are symptoms of the same bottleneck.
       </p>
-      <div class="fp-root-detail" data-i18n="koan19.rootCauseDetail">
+      <div class="fp-root-detail" data-i18n="koan27.rootCauseDetail">
         pool=orders &middot; max_connections=10 &middot; active=10 &middot; waiting=34
       </div>
     </div>
 
     <!-- ═══ Your investigation journey ═══ -->
     <div class="fp-journey" id="journey">
-      <div class="fp-journey-title" data-i18n="koan19.journeyTitle">Your investigation path</div>
+      <div class="fp-journey-title" data-i18n="koan27.journeyTitle">Your investigation path</div>
       <div class="fp-journey-steps" id="journeySteps">
         <!-- Filled dynamically based on the order the learner chose -->
       </div>
@@ -1049,7 +1049,7 @@
 
     <!-- ═══ Callback to Koan 0: the same system diagram ═══ -->
     <div class="fp-system-callback" id="systemCallback">
-      <div class="fp-callback-label" data-i18n="koan19.rememberThis">Remember this?</div>
+      <div class="fp-callback-label" data-i18n="koan27.rememberThis">Remember this?</div>
       <svg class="fp-callback-svg" viewBox="0 0 700 400" id="callbackDiagram">
         <!-- Edges (same topology as index.html Koan 0) -->
         <g>
@@ -1103,19 +1103,19 @@
 
     <!-- ═══ Completion ═══ -->
     <div class="fp-completion" id="completion">
-      <div class="fp-completion-line" data-i18n="koan19.completionLine1">You have walked the path of 19 koans.</div>
-      <div class="fp-completion-line" data-i18n="koan19.completionLine2">From a silent system to one that speaks in metrics, traces, and logs.</div>
+      <div class="fp-completion-line" data-i18n="koan27.completionLine1">You have walked the path of 19 koans.</div>
+      <div class="fp-completion-line" data-i18n="koan27.completionLine2">From a silent system to one that speaks in metrics, traces, and logs.</div>
       <div class="fp-completion-divider"></div>
-      <div class="fp-completion-line hl" data-i18n="koan19.completionLine3">You began with silence.</div>
-      <div class="fp-completion-line hl" data-i18n="koan19.completionLine4">Now you can see.</div>
+      <div class="fp-completion-line hl" data-i18n="koan27.completionLine3">You began with silence.</div>
+      <div class="fp-completion-line hl" data-i18n="koan27.completionLine4">Now you can see.</div>
       <div class="fp-completion-divider"></div>
-      <div class="fp-completion-line" data-i18n="koan19.completionLine5">The three golden signals &mdash; metrics, traces, and logs &mdash; are the foundation. What follows goes deeper: the mechanics beneath them, the bridges between them, and a question none of them can answer.</div>
-      <a class="fp-completion-link" href="20-events.html" data-i18n="koan19.goDeeper">The path continues for those who wish to look closer &rarr;</a>
+      <div class="fp-completion-line" data-i18n="koan27.completionLine5">The three golden signals &mdash; metrics, traces, and logs &mdash; are the foundation. What follows goes deeper: the mechanics beneath them, the bridges between them, and a question none of them can answer.</div>
+      <a class="fp-completion-link" href="28-profiling.html" data-i18n="koan27.goDeeper">The path continues for those who wish to look closer &rarr;</a>
     </div>
   </div>
 
   <div class="koan-progress">
-    <div class="koan-progress-fill" style="width: 68%"></div>
+    <div class="koan-progress-fill" style="width: 96%"></div>
   </div>
 
   <script>
@@ -1132,9 +1132,9 @@
       };
 
       var signalLabels = {
-        metric: i18n.t('koan19.journeyMetric'),
-        trace: i18n.t('koan19.journeyTrace'),
-        log: i18n.t('koan19.journeyLog')
+        metric: i18n.t('koan27.journeyMetric'),
+        trace: i18n.t('koan27.journeyTrace'),
+        log: i18n.t('koan27.journeyLog')
       };
 
       var signalColors = {
@@ -1144,9 +1144,9 @@
       };
 
       var signalFindings = {
-        metric: { found: i18n.t('koan19.journeyMetricFound'), detail: i18n.t('koan19.journeyMetricDetail') },
-        trace:  { found: i18n.t('koan19.journeyTraceFound'), detail: i18n.t('koan19.journeyTraceDetail') },
-        log:    { found: i18n.t('koan19.journeyLogFound'), detail: i18n.t('koan19.journeyLogDetail') }
+        metric: { found: i18n.t('koan27.journeyMetricFound'), detail: i18n.t('koan27.journeyMetricDetail') },
+        trace:  { found: i18n.t('koan27.journeyTraceFound'), detail: i18n.t('koan27.journeyTraceDetail') },
+        log:    { found: i18n.t('koan27.journeyLogFound'), detail: i18n.t('koan27.journeyLogDetail') }
       };
 
       /* ═══ Utility ═══ */
@@ -1168,7 +1168,7 @@
         var cssClass = signal === 'metric' ? 'metric-btn' : signal === 'trace' ? 'trace-btn' : 'log-btn';
         btn.className = 'fp-choice-btn ' + cssClass;
         btn.dataset.signal = signal;
-        var labels = { metric: i18n.t('koan19.btnMetric'), trace: i18n.t('koan19.btnTrace'), log: i18n.t('koan19.btnLog') };
+        var labels = { metric: i18n.t('koan27.btnMetric'), trace: i18n.t('koan27.btnTrace'), log: i18n.t('koan27.btnLog') };
         btn.textContent = labels[signal];
         return btn;
       }
@@ -1250,7 +1250,7 @@
             smapNodes.forEach(function (n) {
               if (n.dataset.svc !== 'database') n.classList.add('disabled');
             });
-            smapFb.textContent = i18n.t('koan19.serviceMapCorrect');
+            smapFb.textContent = i18n.t('koan27.serviceMapCorrect');
             smapFb.className = 'fp-smap-fb correct';
 
             /* Cascade: root cause -> journey -> koan 0 callback -> completion */
@@ -1258,13 +1258,13 @@
           } else {
             this.classList.add('wrong');
             var msgs = {
-              gateway: i18n.t('koan19.serviceMapWrongGateway'),
-              api: i18n.t('koan19.serviceMapWrongApi'),
-              orders: i18n.t('koan19.serviceMapWrongOrders'),
-              payment: i18n.t('koan19.serviceMapWrongPayment'),
-              inventory: i18n.t('koan19.serviceMapWrongInventory')
+              gateway: i18n.t('koan27.serviceMapWrongGateway'),
+              api: i18n.t('koan27.serviceMapWrongApi'),
+              orders: i18n.t('koan27.serviceMapWrongOrders'),
+              payment: i18n.t('koan27.serviceMapWrongPayment'),
+              inventory: i18n.t('koan27.serviceMapWrongInventory')
             };
-            smapFb.textContent = msgs[svc] || i18n.t('koan19.serviceMapWrongFallback');
+            smapFb.textContent = msgs[svc] || i18n.t('koan27.serviceMapWrongFallback');
             smapFb.className = 'fp-smap-fb wrong';
             var self = this;
             setTimeout(function () { self.classList.remove('wrong'); }, 800);
@@ -1310,9 +1310,9 @@
         finalStep.className = 'fp-journey-step';
         finalStep.id = 'jstep-final';
         finalStep.innerHTML =
-          '<div class="step-signal" style="color:var(--accent-red);">' + i18n.t('koan19.journeyRootCause') + '</div>' +
-          '<div class="step-found">' + i18n.t('koan19.journeyRootCauseFound') + '</div>' +
-          '<div class="step-detail">' + i18n.t('koan19.journeyRootCauseDetail') + '</div>';
+          '<div class="step-signal" style="color:var(--accent-red);">' + i18n.t('koan27.journeyRootCause') + '</div>' +
+          '<div class="step-found">' + i18n.t('koan27.journeyRootCauseFound') + '</div>' +
+          '<div class="step-detail">' + i18n.t('koan27.journeyRootCauseDetail') + '</div>';
         container.appendChild(finalStep);
 
         reveal('journey', 0);

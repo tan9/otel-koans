@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title data-i18n="koan21.pageTitle">Koan 21: The Invisible Thread - OpenTelemetry Koans</title>
+  <title data-i18n="koan20.pageTitle">Koan 21: The Invisible Thread - OpenTelemetry Koans</title>
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon-16x16.png">
@@ -560,9 +560,9 @@
 
   <div class="koan-page">
 
-    <h1 class="koan-title" data-i18n="koan21.title">The Invisible Thread</h1>
+    <h1 class="koan-title" data-i18n="koan20.title">The Invisible Thread</h1>
 
-    <div class="koan-text" data-i18n-html="koan21.zen">
+    <div class="koan-text" data-i18n-html="koan20.zen">
       A request crosses a boundary. The next service must continue the story.<br>
       But how does it know where the story began?
     </div>
@@ -576,8 +576,8 @@
 
     <div class="tc-waterfall-panel">
       <div class="tc-panel-header">
-        <span data-i18n="koan21.waterfallHeader">distributed trace</span>
-        <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-green);" data-i18n="koan21.waterfallBadge">trace</span>
+        <span data-i18n="koan20.waterfallHeader">distributed trace</span>
+        <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-green);" data-i18n="koan20.waterfallBadge">trace</span>
       </div>
       <div class="tc-panel-body">
         <div class="tc-waterfall">
@@ -596,24 +596,24 @@
             <div class="tc-wf-time">270ms</div>
           </div>
         </div>
-        <div class="tc-trace-id" data-i18n-html="koan21.traceIdLine">
+        <div class="tc-trace-id" data-i18n-html="koan20.traceIdLine">
           trace_id: <span class="highlight">4bf92f3577b58681a65c3c24e8d2d7ac</span>
         </div>
       </div>
     </div>
 
     <!-- Narrative 1: the puzzle -->
-    <div class="tc-narrative visible" id="narrative1" style="opacity: 1;" data-i18n-html="koan21.narrative1">
+    <div class="tc-narrative visible" id="narrative1" style="opacity: 1;" data-i18n-html="koan20.narrative1">
       Both spans share the same <strong>trace_id</strong>. The trace appears connected. But gateway and api are separate processes, separate machines. How does api know it belongs to the same trace?
     </div>
 
     <!-- ═══ Question 1: asked before revealing the answer ═══ -->
     <div class="trace-question" id="q1">
-      <p data-i18n="koan21.q1">What carries trace context between services?</p>
+      <p data-i18n="koan20.q1">What carries trace context between services?</p>
       <div class="trace-opts">
-        <button class="trace-opt" data-answer="wrong" data-fb-key="koan21.q1FbDb" data-i18n="koan21.q1OptDb">The database</button>
-        <button class="trace-opt" data-answer="correct" data-fb-key="koan21.q1FbHeader" data-i18n="koan21.q1OptHeader">An HTTP header</button>
-        <button class="trace-opt" data-answer="wrong" data-fb-key="koan21.q1FbLog" data-i18n="koan21.q1OptLog">The log file</button>
+        <button class="trace-opt" data-answer="wrong" data-fb-key="koan20.q1FbDb" data-i18n="koan20.q1OptDb">The database</button>
+        <button class="trace-opt" data-answer="correct" data-fb-key="koan20.q1FbHeader" data-i18n="koan20.q1OptHeader">An HTTP header</button>
+        <button class="trace-opt" data-answer="wrong" data-fb-key="koan20.q1FbLog" data-i18n="koan20.q1OptLog">The log file</button>
       </div>
       <div class="trace-fb" id="fb1"></div>
     </div>
@@ -622,13 +622,13 @@
     <div class="tc-arrow-down" id="arrowReveal">
       <div class="tc-arrow-line"></div>
       <div class="tc-arrow-head">&darr;</div>
-      <div class="tc-arrow-label" data-i18n="koan21.arrowLabel">HTTP header</div>
+      <div class="tc-arrow-label" data-i18n="koan20.arrowLabel">HTTP header</div>
     </div>
 
     <!-- ═══ Header reveal panel ═══ -->
     <div class="tc-header-panel" id="headerPanel">
       <div class="tc-panel-header">
-        <span data-i18n="koan21.headerPanelTitle">HTTP request from gateway to api</span>
+        <span data-i18n="koan20.headerPanelTitle">HTTP request from gateway to api</span>
       </div>
       <div class="tc-panel-body">
         <div class="tc-header-value">
@@ -639,59 +639,59 @@
     </div>
 
     <!-- Narrative 2: explain the header -->
-    <div class="tc-narrative" id="narrative2" data-i18n-html="koan21.narrative2">
+    <div class="tc-narrative" id="narrative2" data-i18n-html="koan20.narrative2">
       When gateway calls api, it sends a <strong>traceparent</strong> HTTP header. This single header carries everything api needs to continue the same trace.
     </div>
 
     <!-- ═══ Segment breakdown — teaches before matching ═══ -->
     <div class="tc-breakdown" id="breakdown">
-      <div class="tc-breakdown-title" data-i18n="koan21.breakdownTitle">Four segments, separated by dashes:</div>
+      <div class="tc-breakdown-title" data-i18n="koan20.breakdownTitle">Four segments, separated by dashes:</div>
       <div class="tc-breakdown-grid">
         <span class="tc-seg-version">00</span>
         <span class="tc-breakdown-eq">=</span>
-        <span class="tc-breakdown-desc" data-i18n="koan21.breakdownVersion">version (always 00 today)</span>
+        <span class="tc-breakdown-desc" data-i18n="koan20.breakdownVersion">version (always 00 today)</span>
 
         <span class="tc-seg-traceid">4bf92f...d7ac</span>
         <span class="tc-breakdown-eq">=</span>
-        <span class="tc-breakdown-desc" data-i18n="koan21.breakdownTraceId">trace-id (32 hex chars &mdash; the shared identity)</span>
+        <span class="tc-breakdown-desc" data-i18n="koan20.breakdownTraceId">trace-id (32 hex chars &mdash; the shared identity)</span>
 
         <span class="tc-seg-parentid">00f067...02b7</span>
         <span class="tc-breakdown-eq">=</span>
-        <span class="tc-breakdown-desc" data-i18n="koan21.breakdownParentId">parent-span-id (16 hex chars &mdash; the calling span)</span>
+        <span class="tc-breakdown-desc" data-i18n="koan20.breakdownParentId">parent-span-id (16 hex chars &mdash; the calling span)</span>
 
         <span class="tc-seg-flags">01</span>
         <span class="tc-breakdown-eq">=</span>
-        <span class="tc-breakdown-desc" data-i18n="koan21.breakdownFlags">trace-flags (01 = sampled)</span>
+        <span class="tc-breakdown-desc" data-i18n="koan20.breakdownFlags">trace-flags (01 = sampled)</span>
       </div>
     </div>
 
     <!-- ═══ Matching exercise ═══ -->
     <div class="tc-match-area" id="matchArea">
-      <div class="tc-match-title" data-i18n="koan21.matchTitle">Now match each segment to its meaning</div>
+      <div class="tc-match-title" data-i18n="koan20.matchTitle">Now match each segment to its meaning</div>
       <div class="tc-match-full">
         <span class="tc-seg-version">00</span><span class="tc-seg-dash"> - </span><span class="tc-seg-traceid">4bf92f3577b58681a65c3c24e8d2d7ac</span><span class="tc-seg-dash"> - </span><span class="tc-seg-parentid">00f067aa0ba902b7</span><span class="tc-seg-dash"> - </span><span class="tc-seg-flags">01</span>
       </div>
 
       <div class="tc-match-grid" id="matchGrid">
         <!-- Row 1 -->
-        <div class="tc-match-seg" data-seg="version" style="color: var(--text-muted);" data-i18n="koan21.seg1">00</div>
+        <div class="tc-match-seg" data-seg="version" style="color: var(--text-muted);" data-i18n="koan20.seg1">00</div>
         <div class="tc-match-connector">&rarr;</div>
-        <div class="tc-match-label" data-label="trace-id" data-i18n="koan21.label1">trace-id</div>
+        <div class="tc-match-label" data-label="trace-id" data-i18n="koan20.label1">trace-id</div>
 
         <!-- Row 2 -->
-        <div class="tc-match-seg" data-seg="trace-id" style="color: var(--accent-green);" data-i18n="koan21.seg2">4bf92f...d7ac</div>
+        <div class="tc-match-seg" data-seg="trace-id" style="color: var(--accent-green);" data-i18n="koan20.seg2">4bf92f...d7ac</div>
         <div class="tc-match-connector">&rarr;</div>
-        <div class="tc-match-label" data-label="trace-flags" data-i18n="koan21.label2">trace-flags (sampled)</div>
+        <div class="tc-match-label" data-label="trace-flags" data-i18n="koan20.label2">trace-flags (sampled)</div>
 
         <!-- Row 3 -->
-        <div class="tc-match-seg" data-seg="parent-span-id" style="color: var(--accent-orange);" data-i18n="koan21.seg3">00f067...02b7</div>
+        <div class="tc-match-seg" data-seg="parent-span-id" style="color: var(--accent-orange);" data-i18n="koan20.seg3">00f067...02b7</div>
         <div class="tc-match-connector">&rarr;</div>
-        <div class="tc-match-label" data-label="version" data-i18n="koan21.label3">version</div>
+        <div class="tc-match-label" data-label="version" data-i18n="koan20.label3">version</div>
 
         <!-- Row 4 -->
-        <div class="tc-match-seg" data-seg="trace-flags" style="color: var(--accent-purple);" data-i18n="koan21.seg4">01</div>
+        <div class="tc-match-seg" data-seg="trace-flags" style="color: var(--accent-purple);" data-i18n="koan20.seg4">01</div>
         <div class="tc-match-connector">&rarr;</div>
-        <div class="tc-match-label" data-label="parent-span-id" data-i18n="koan21.label4">parent-span-id</div>
+        <div class="tc-match-label" data-label="parent-span-id" data-i18n="koan20.label4">parent-span-id</div>
       </div>
 
       <div class="tc-match-status" id="matchStatus"></div>
@@ -699,14 +699,14 @@
 
     <!-- ═══ Insight ═══ -->
     <div class="tc-insight" id="insight">
-      <p data-i18n="koan21.insightLine1">The traceparent header is the invisible thread. It carries just enough &mdash; a trace ID, a span ID, and a flag &mdash; for every service to continue the same story.</p>
-      <p data-i18n="koan21.insightLine2">This is the W3C Trace Context standard. No vendor lock-in. One header. Universal propagation.</p>
-      <a href="22-baggage.html" data-i18n="common.continue">Continue &rarr;</a>
+      <p data-i18n="koan20.insightLine1">The traceparent header is the invisible thread. It carries just enough &mdash; a trace ID, a span ID, and a flag &mdash; for every service to continue the same story.</p>
+      <p data-i18n="koan20.insightLine2">This is the W3C Trace Context standard. No vendor lock-in. One header. Universal propagation.</p>
+      <a href="21-baggage.html" data-i18n="common.continue">Continue &rarr;</a>
     </div>
   </div>
 
   <div class="koan-progress">
-    <div class="koan-progress-fill" style="width: 75%"></div>
+    <div class="koan-progress-fill" style="width: 71%"></div>
   </div>
 
   <script>
@@ -795,14 +795,14 @@
           selectedLabel.classList.add('matched');
           matchedCount++;
 
-          matchStatus.textContent = i18n.t('koan21.matchCorrect');
+          matchStatus.textContent = i18n.t('koan20.matchCorrect');
           matchStatus.className = 'tc-match-status tc-match-status--correct';
 
           selectedSeg = null;
           selectedLabel = null;
 
           if (matchedCount === totalPairs) {
-            matchStatus.textContent = i18n.t('koan21.matchComplete');
+            matchStatus.textContent = i18n.t('koan20.matchComplete');
             matchStatus.className = 'tc-match-status tc-match-status--correct';
 
             /* Show insight after all matched */
@@ -818,7 +818,7 @@
           badSeg.classList.add('wrong-flash');
           badLabel.classList.add('wrong-flash');
 
-          matchStatus.textContent = i18n.t('koan21.matchWrong');
+          matchStatus.textContent = i18n.t('koan20.matchWrong');
           matchStatus.className = 'tc-match-status tc-match-status--wrong';
 
           selectedSeg = null;

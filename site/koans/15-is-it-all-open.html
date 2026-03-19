@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="koan15.pageTitle">Koan 15: Is It All Open? - OpenTelemetry Koans</title>
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../img/apple-touch-icon.png">
+  <link rel="manifest" href="../site.webmanifest">
+  <meta name="theme-color" content="#0a0e14">
+  <link rel="stylesheet" href="../css/shared.css">
+  <script src="../js/i18n.js"></script>
+  <style>
+    /* ── Scenario panel ── */
+    .port-scenario {
+      background: var(--bg-glass);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1em;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+      box-shadow: var(--shadow-inset);
+      text-align: center;
+    }
+
+    .port-scenario-header {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+
+    .port-scenario-body {
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ── Sorting exercise ── */
+    .sort-section {
+      margin-bottom: 1.25rem;
+    }
+
+    /* Unsorted item pool */
+    .item-pool {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+      min-height: 52px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .port-item {
+      position: relative;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      padding: 0.65rem 1.1rem;
+      background: rgba(22, 27, 34, 0.65);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5em;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: background 0.3s var(--ease-spring), border-color 0.3s var(--ease-spring), box-shadow 0.3s var(--ease-spring);
+      user-select: none;
+    }
+
+    .port-item:hover {
+      border-color: var(--accent-blue);
+      background: rgba(30, 37, 46, 0.75);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .port-item.assigned {
+      visibility: hidden;
+      height: 0;
+      padding: 0;
+      margin: 0;
+      border: none;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    /* Bucket picker that appears on click */
+    .bucket-picker {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      display: none;
+      gap: 0.4rem;
+      background: rgba(22, 27, 34, 0.85);
+      border: 1px solid var(--border);
+      border-radius: 0.5em;
+      padding: 0.4rem;
+      z-index: 100;
+      white-space: nowrap;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    }
+
+    .bucket-picker.open {
+      display: flex;
+    }
+
+    .picker-btn {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      padding: 0.35rem 0.8rem;
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5em;
+      background: rgba(22, 27, 34, 0.65);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.3s var(--ease-spring);
+    }
+
+    .picker-btn:hover {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      background: rgba(30, 37, 46, 0.75);
+      transform: translateY(-1px);
+    }
+
+    /* Bucket drop zones — two columns */
+    .buckets-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .bucket {
+      background: rgba(22, 27, 34, 0.65);
+      border: 1px dashed var(--border-subtle);
+      border-radius: 1em;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-inset);
+      transition: all 0.3s var(--ease-smooth);
+    }
+
+    .bucket.has-items {
+      border-style: solid;
+    }
+
+    .bucket-header {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 34px;
+    }
+
+    .bucket-label {
+      transition: color 0.6s var(--ease-smooth);
+    }
+
+    .bucket-count {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .bucket-body {
+      padding: 0.6rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .bucket-empty-hint {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin: auto;
+      opacity: 0.5;
+    }
+
+    /* Items inside buckets */
+    .bucket-item {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      padding: 0.5rem 0.75rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5em;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .bucket-item-remove {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0.15rem 0.35rem;
+      border-radius: 0.5em;
+      transition: all 0.3s var(--ease-spring);
+      flex-shrink: 0;
+    }
+
+    .bucket-item-remove:hover {
+      color: var(--accent-red);
+      background: rgba(248, 81, 73, 0.08);
+    }
+
+    /* Sort feedback */
+    .sort-feedback {
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      min-height: 1.5em;
+      margin-top: 0.35rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .sort-feedback--wrong { color: var(--accent-red); }
+    .sort-feedback--hint { color: var(--text-muted); }
+
+    .sort-check-row {
+      text-align: center;
+      margin-top: 0.5rem;
+    }
+
+    /* ── Reveal animation on buckets ── */
+    .bucket.revealed {
+      border-style: solid;
+    }
+
+    .bucket.revealed.bucket-portable {
+      border-color: var(--border-subtle);
+      box-shadow: var(--shadow-inset), 0 0 16px rgba(63, 185, 80, 0.12);
+    }
+
+    .bucket.revealed.bucket-locked {
+      border-color: var(--border-subtle);
+      box-shadow: var(--shadow-inset), 0 0 16px rgba(210, 153, 34, 0.12);
+    }
+
+    .bucket.revealed .bucket-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .bucket.revealed.bucket-portable .bucket-label { color: var(--accent-green); }
+    .bucket.revealed.bucket-locked .bucket-label { color: var(--accent-orange); }
+
+    .bucket.revealed .bucket-item {
+      border-color: transparent;
+    }
+
+    .bucket.revealed.bucket-portable .bucket-item { border-left: 2px solid rgba(63, 185, 80, 0.5); }
+    .bucket.revealed.bucket-locked .bucket-item { border-left: 2px solid rgba(210, 153, 34, 0.5); }
+
+    /* ── Follow-up question ── */
+    .port-question {
+      background: var(--bg-glass);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1em;
+      padding: 1.25rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      opacity: 0;
+      transform: translateY(8px);
+      box-shadow: var(--shadow-inset);
+      transition: opacity 0.5s var(--ease-smooth), transform 0.5s var(--ease-smooth);
+    }
+
+    .port-question.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .port-question p {
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .port-options {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .port-option {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      padding: 0.6rem 1.4rem;
+      border: 1px solid var(--border);
+      border-radius: 0.5em;
+      background: var(--bg-glass);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.3s var(--ease-spring);
+    }
+
+    .port-option:hover {
+      border-color: var(--accent-blue);
+      background: var(--bg-glass-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .port-option.correct {
+      border-color: transparent;
+      background: rgba(63, 185, 80, 0.08);
+      color: var(--accent-green);
+      box-shadow: 0 0 12px rgba(63, 185, 80, 0.15);
+    }
+
+    .port-option.wrong {
+      border-color: transparent;
+      color: var(--accent-red);
+      box-shadow: 0 0 12px rgba(248, 81, 73, 0.15);
+    }
+
+    .port-option.disabled { pointer-events: none; opacity: 0.4; }
+
+    .port-feedback {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      min-height: 1.5em;
+      margin-top: 0.5rem;
+      line-height: 1.5;
+    }
+
+    .port-feedback--correct { color: var(--accent-green); }
+    .port-feedback--wrong { color: var(--accent-red); }
+  </style>
+</head>
+<body>
+  <div class="mobile-gate">
+    <svg class="mobile-gate-anim" viewBox="0 0 180 140">
+      <path class="mg-edge" d="M 50,30 Q 70,25 90,45" />
+      <path class="mg-edge" d="M 50,30 Q 75,55 90,75" />
+      <path class="mg-edge" d="M 90,45 Q 90,60 90,75" />
+      <path class="mg-edge" d="M 90,75 Q 70,95 55,110" />
+      <path class="mg-edge" d="M 90,75 Q 110,95 125,110" />
+      <path class="mg-edge" d="M 55,110 Q 105,100 140,75" />
+      <path class="mg-edge" d="M 125,110 Q 135,95 140,75" />
+      <circle class="mg-particle--green" r="1.5" opacity="0"><animateMotion dur="3s" repeatCount="indefinite" begin="0s"><mpath href="#mgp1"/></animateMotion><animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.1;0.9;1" dur="3s" repeatCount="indefinite" begin="0s"/></circle>
+      <circle class="mg-particle--green" r="1.5" opacity="0"><animateMotion dur="3.5s" repeatCount="indefinite" begin="1.2s"><mpath href="#mgp2"/></animateMotion><animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.1;0.9;1" dur="3.5s" repeatCount="indefinite" begin="1.2s"/></circle>
+      <circle class="mg-particle--orange" r="1.5" opacity="0"><animateMotion dur="2.8s" repeatCount="indefinite" begin="0.5s"><mpath href="#mgp3"/></animateMotion><animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.1;0.9;1" dur="2.8s" repeatCount="indefinite" begin="0.5s"/></circle>
+      <circle class="mg-particle--purple" r="1.5" opacity="0"><animateMotion dur="3.2s" repeatCount="indefinite" begin="1.8s"><mpath href="#mgp4"/></animateMotion><animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.1;0.9;1" dur="3.2s" repeatCount="indefinite" begin="1.8s"/></circle>
+      <circle class="mg-particle--green" r="1.5" opacity="0"><animateMotion dur="2.6s" repeatCount="indefinite" begin="0.8s"><mpath href="#mgp5"/></animateMotion><animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.1;0.9;1" dur="2.6s" repeatCount="indefinite" begin="0.8s"/></circle>
+      <defs>
+        <path id="mgp1" d="M 50,30 Q 70,25 90,45" />
+        <path id="mgp2" d="M 50,30 Q 75,55 90,75" />
+        <path id="mgp3" d="M 90,75 Q 70,95 55,110" />
+        <path id="mgp4" d="M 55,110 Q 105,100 140,75" />
+        <path id="mgp5" d="M 125,110 Q 135,95 140,75" />
+      </defs>
+      <circle class="mg-node" cx="50" cy="30" r="12" />
+      <text class="mg-label" x="50" y="33">gw</text>
+      <circle class="mg-node" cx="90" cy="45" r="10" />
+      <text class="mg-label" x="90" y="48">auth</text>
+      <circle class="mg-node" cx="90" cy="75" r="13" />
+      <text class="mg-label" x="90" y="78">api</text>
+      <circle class="mg-node" cx="55" cy="110" r="10" />
+      <text class="mg-label" x="55" y="113">ord</text>
+      <circle class="mg-node" cx="125" cy="110" r="10" />
+      <text class="mg-label" x="125" y="113">inv</text>
+      <circle class="mg-node" cx="140" cy="75" r="11" />
+      <text class="mg-label" x="140" y="78">db</text>
+    </svg>
+    <div class="mobile-gate-text" data-i18n-html="common.desktopOnlyText">Some paths require a wider view.<br>Return on a larger screen.</div>
+  </div>
+
+  <div class="koan-page">
+
+    <h1 class="koan-title" data-i18n="koan15.title">Is It All Open?</h1>
+
+    <div class="koan-text" data-i18n-html="koan15.zen">
+      The code speaks one language now. But the walls you build around it &mdash; the dashboards, the alerts, the rules &mdash; those belong to someone else.
+    </div>
+
+    <!-- Scenario -->
+    <div class="port-scenario">
+      <div class="port-scenario-header" data-i18n="koan15.scenarioHeader">migration scenario</div>
+      <div class="port-scenario-body" data-i18n-html="koan15.scenarioBody">
+        Your company uses Backend A. The CTO wants to evaluate Backend B.<br>
+        You have instrumented 40 services with OpenTelemetry. You also have 4,000 dashboards, 200 alert rules, and 50 SLO definitions.<br>
+        What can you bring with you?
+      </div>
+    </div>
+
+    <!-- ═══ Sorting exercise ═══ -->
+    <div class="sort-section" id="sortSection">
+      <div class="koan-instruction" data-i18n="koan15.sortInstruction">
+        Sort each item into the bucket where it belongs.
+      </div>
+
+      <!-- Unsorted item pool -->
+      <div class="item-pool" id="itemPool"></div>
+
+      <!-- Two buckets: Portable / Not Portable -->
+      <div class="buckets-row" id="bucketsRow">
+        <div class="bucket" id="bucketA" data-bucket="A">
+          <div class="bucket-header">
+            <span class="bucket-label" id="labelA" data-i18n="koan15.bucketA">Bucket A</span>
+            <span class="bucket-count" id="countA"></span>
+          </div>
+          <div class="bucket-body" id="bodyA">
+            <div class="bucket-empty-hint" data-i18n="koan15.bucketEmptyA">click an item above, then choose A</div>
+          </div>
+        </div>
+        <div class="bucket" id="bucketB" data-bucket="B">
+          <div class="bucket-header">
+            <span class="bucket-label" id="labelB" data-i18n="koan15.bucketB">Bucket B</span>
+            <span class="bucket-count" id="countB"></span>
+          </div>
+          <div class="bucket-body" id="bodyB">
+            <div class="bucket-empty-hint" data-i18n="koan15.bucketEmptyB">click an item above, then choose B</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sort-check-row" id="sortCheckRow">
+        <button class="koan-btn" id="sortCheckBtn" data-i18n="koan15.sortCheckBtn">Check Sorting</button>
+      </div>
+
+      <div class="sort-feedback" id="sortFeedback"></div>
+    </div>
+
+    <!-- Q1: Why can't dashboards move? (hidden until sort complete) -->
+    <div class="port-question" id="question1">
+      <p data-i18n="koan15.q1">Why can&rsquo;t dashboards move between backends?</p>
+      <div class="port-options">
+        <button class="port-option" data-answer="wrong" data-label="data" data-i18n="koan15.q1OptData">The telemetry data is different</button>
+        <button class="port-option" data-answer="correct" data-label="standard" data-i18n="koan15.q1OptStandard">There is no open standard for dashboards or alerts</button>
+        <button class="port-option" data-answer="wrong" data-label="otel" data-i18n="koan15.q1OptOtel">OpenTelemetry doesn&rsquo;t support dashboards</button>
+      </div>
+      <div class="port-feedback" id="feedback1"></div>
+    </div>
+
+    <!-- Insight -->
+    <div class="port-insight" id="insight">
+      <p data-i18n="koan15.insightLine1">OpenTelemetry makes your instrumentation portable.</p>
+      <p data-i18n="koan15.insightLine2">But the experience you build on top &mdash; dashboards, alerts, SLOs &mdash; belongs to your backend.</p>
+      <a href="16-collector.html" data-i18n="common.continue">Continue &rarr;</a>
+    </div>
+  </div>
+
+  <div class="koan-progress">
+    <div class="koan-progress-fill" style="width: 54%"></div>
+  </div>
+
+  <script>
+    (function () {
+      function run() {
+        // ── Items with their portability category ──
+        // 'portable' = moves with you, 'locked' = vendor-specific
+        var ITEMS = [
+          { id: 0, textKey: 'koan15.item0', type: 'portable' },  // Instrumentation code
+          { id: 1, textKey: 'koan15.item1', type: 'locked'   },  // Dashboards (4,000)
+          { id: 2, textKey: 'koan15.item2', type: 'portable' },  // OTLP exporters
+          { id: 3, textKey: 'koan15.item3', type: 'locked'   },  // Alert rules
+          { id: 4, textKey: 'koan15.item4', type: 'portable' },  // Attribute names (semconv)
+          { id: 5, textKey: 'koan15.item5', type: 'locked'   },  // SLO definitions
+          { id: 6, textKey: 'koan15.item6', type: 'portable' },  // Telemetry data
+          { id: 7, textKey: 'koan15.item7', type: 'locked'   },  // Custom queries
+          { id: 8, textKey: 'koan15.item8', type: 'locked'   }   // Vendor integrations
+        ];
+
+        var PORTABLE_COUNT = 4;
+        var LOCKED_COUNT = 5;
+
+        // Shuffle
+        var shuffled = ITEMS.slice();
+        for (var idx = shuffled.length - 1; idx > 0; idx--) {
+          var j = Math.floor(Math.random() * (idx + 1));
+          var tmp = shuffled[idx];
+          shuffled[idx] = shuffled[j];
+          shuffled[j] = tmp;
+        }
+
+        // State
+        var assignments = {};
+        var activePicker = null;
+
+        var pool = document.getElementById('itemPool');
+        var sortCheckBtn = document.getElementById('sortCheckBtn');
+        var sortFeedback = document.getElementById('sortFeedback');
+
+        // Close any open picker
+        function closePicker() {
+          if (activePicker) {
+            activePicker.classList.remove('open');
+            activePicker = null;
+          }
+        }
+
+        document.addEventListener('click', function (e) {
+          if (activePicker && !e.target.closest('.port-item') && !e.target.closest('.bucket-picker')) {
+            closePicker();
+          }
+        });
+
+        // Build pool items
+        shuffled.forEach(function (item) {
+          var el = document.createElement('div');
+          el.className = 'port-item';
+          el.setAttribute('data-id', item.id);
+          el.textContent = i18n.t(item.textKey);
+
+          // Build picker — two buckets
+          var picker = document.createElement('div');
+          picker.className = 'bucket-picker';
+          ['A', 'B'].forEach(function (letter) {
+            var btn = document.createElement('button');
+            btn.className = 'picker-btn';
+            btn.textContent = letter;
+            btn.addEventListener('click', function (e) {
+              e.stopPropagation();
+              assignItem(item.id, letter);
+              closePicker();
+            });
+            picker.appendChild(btn);
+          });
+          el.appendChild(picker);
+
+          el.addEventListener('click', function (e) {
+            if (e.target.closest('.picker-btn')) return;
+            e.stopPropagation();
+            if (activePicker === picker) {
+              closePicker();
+              return;
+            }
+            closePicker();
+            picker.classList.add('open');
+            activePicker = picker;
+          });
+
+          pool.appendChild(el);
+          assignments[item.id] = null;
+        });
+
+        function assignItem(itemId, bucket) {
+          assignments[itemId] = bucket;
+          sortFeedback.textContent = '';
+          sortFeedback.className = 'sort-feedback';
+          renderBuckets();
+        }
+
+        function unassignItem(itemId) {
+          assignments[itemId] = null;
+          sortFeedback.textContent = '';
+          sortFeedback.className = 'sort-feedback';
+          renderBuckets();
+        }
+
+        function renderBuckets() {
+          // Pool: show/hide
+          var poolItems = pool.querySelectorAll('.port-item');
+          poolItems.forEach(function (el) {
+            var id = parseInt(el.getAttribute('data-id'));
+            if (assignments[id] !== null) {
+              el.classList.add('assigned');
+            } else {
+              el.classList.remove('assigned');
+            }
+          });
+
+          // Buckets
+          ['A', 'B'].forEach(function (letter) {
+            var body = document.getElementById('body' + letter);
+            var bucket = document.getElementById('bucket' + letter);
+            var countEl = document.getElementById('count' + letter);
+
+            var bucketItems = [];
+            ITEMS.forEach(function (item) {
+              if (assignments[item.id] === letter) {
+                bucketItems.push(item);
+              }
+            });
+
+            body.innerHTML = '';
+
+            if (bucketItems.length === 0) {
+              var hint = document.createElement('div');
+              hint.className = 'bucket-empty-hint';
+              hint.textContent = i18n.t('koan15.bucketEmpty' + letter);
+              body.appendChild(hint);
+              bucket.classList.remove('has-items');
+              countEl.textContent = '';
+            } else {
+              bucket.classList.add('has-items');
+              countEl.textContent = bucketItems.length;
+              bucketItems.forEach(function (item) {
+                var el = document.createElement('div');
+                el.className = 'bucket-item';
+
+                var textSpan = document.createElement('span');
+                textSpan.textContent = i18n.t(item.textKey);
+                el.appendChild(textSpan);
+
+                var removeBtn = document.createElement('span');
+                removeBtn.className = 'bucket-item-remove';
+                removeBtn.textContent = '\u2715';
+                removeBtn.title = i18n.t('koan15.removeTitle');
+                removeBtn.addEventListener('click', function () {
+                  unassignItem(item.id);
+                });
+                el.appendChild(removeBtn);
+
+                body.appendChild(el);
+              });
+            }
+          });
+        }
+
+        // Progressive hints
+        var sortWrongCount = 0;
+
+        sortCheckBtn.addEventListener('click', function () {
+          // Check all assigned
+          var allAssigned = true;
+          ITEMS.forEach(function (item) {
+            if (assignments[item.id] === null) allAssigned = false;
+          });
+
+          if (!allAssigned) {
+            sortFeedback.textContent = i18n.t('koan15.sortFeedbackAllAssigned');
+            sortFeedback.className = 'sort-feedback sort-feedback--wrong';
+            return;
+          }
+
+          // Check correctness: all portables in one bucket, all locked in the other
+          var bucketATypes = { portable: 0, locked: 0 };
+          var bucketBTypes = { portable: 0, locked: 0 };
+
+          ITEMS.forEach(function (item) {
+            if (assignments[item.id] === 'A') {
+              bucketATypes[item.type]++;
+            } else {
+              bucketBTypes[item.type]++;
+            }
+          });
+
+          // Correct if one bucket has all portable and the other all locked
+          var correct = (bucketATypes.portable === PORTABLE_COUNT && bucketATypes.locked === 0 &&
+                         bucketBTypes.locked === LOCKED_COUNT && bucketBTypes.portable === 0) ||
+                        (bucketBTypes.portable === PORTABLE_COUNT && bucketBTypes.locked === 0 &&
+                         bucketATypes.locked === LOCKED_COUNT && bucketATypes.portable === 0);
+
+          if (!correct) {
+            sortWrongCount++;
+
+            if (sortWrongCount === 1) {
+              sortFeedback.textContent = i18n.t('koan15.sortHint1');
+              sortFeedback.className = 'sort-feedback sort-feedback--hint';
+            } else if (sortWrongCount === 2) {
+              sortFeedback.textContent = i18n.t('koan15.sortHint2');
+              sortFeedback.className = 'sort-feedback sort-feedback--hint';
+            } else {
+              sortFeedback.textContent = i18n.t('koan15.sortHint3');
+              sortFeedback.className = 'sort-feedback sort-feedback--hint';
+            }
+            return;
+          }
+
+          // Correct! Determine which bucket has which type
+          var portableBucket = (bucketATypes.portable === PORTABLE_COUNT) ? 'A' : 'B';
+          var lockedBucket = (portableBucket === 'A') ? 'B' : 'A';
+
+          revealBuckets(portableBucket, lockedBucket);
+        });
+
+        function revealBuckets(portableBucket, lockedBucket) {
+          sortFeedback.textContent = '';
+          sortCheckBtn.style.display = 'none';
+          pool.style.display = 'none';
+
+          // Remove X buttons
+          var removes = document.querySelectorAll('.bucket-item-remove');
+          removes.forEach(function (el) { el.style.display = 'none'; });
+
+          var bucketInfo = {};
+          bucketInfo[portableBucket] = { name: i18n.t('koan15.revealPortable'), cssClass: 'bucket-portable' };
+          bucketInfo[lockedBucket] = { name: i18n.t('koan15.revealLocked'), cssClass: 'bucket-locked' };
+
+          var letters = ['A', 'B'];
+          letters.forEach(function (letter, i) {
+            setTimeout(function () {
+              var bucket = document.getElementById('bucket' + letter);
+              var label = document.getElementById('label' + letter);
+              var countEl = document.getElementById('count' + letter);
+              var info = bucketInfo[letter];
+
+              bucket.classList.add('revealed', info.cssClass);
+              label.textContent = info.name;
+              countEl.textContent = '';
+            }, i * 400);
+          });
+
+          // Show success feedback
+          setTimeout(function () {
+            sortFeedback.textContent = i18n.t('koan15.sortCorrectFeedback');
+            sortFeedback.className = 'sort-feedback';
+            sortFeedback.style.color = 'var(--accent-green)';
+          }, letters.length * 400);
+
+          // Show question 1
+          setTimeout(function () {
+            document.getElementById('question1').classList.add('visible');
+          }, letters.length * 400 + 800);
+        }
+
+        // ── Q1: Why can't dashboards move? ──
+        (function () {
+          var q = document.getElementById('question1');
+          var fb = document.getElementById('feedback1');
+          var opts = q.querySelectorAll('.port-option');
+
+          var wrongMessages = {
+            data: i18n.t('koan15.q1WrongData'),
+            otel: i18n.t('koan15.q1WrongOtel')
+          };
+
+          opts.forEach(function (opt) {
+            opt.addEventListener('click', function () {
+              if (this.dataset.answer === 'correct') {
+                this.classList.add('correct');
+                opts.forEach(function (o) { o.classList.add('disabled'); });
+                fb.textContent = i18n.t('koan15.q1Correct');
+                fb.className = 'port-feedback port-feedback--correct';
+                setTimeout(function () {
+                  document.getElementById('insight').classList.add('visible');
+                }, 800);
+              } else {
+                this.classList.add('wrong');
+                fb.textContent = wrongMessages[this.dataset.label] || i18n.t('koan15.q1WrongFallback');
+                fb.className = 'port-feedback port-feedback--wrong';
+                var self = this;
+                setTimeout(function () { self.classList.remove('wrong'); }, 600);
+              }
+            });
+          });
+        })();
+      }
+
+      if (window.i18n && window.i18n.t('common.desktopOnly') !== 'common.desktopOnly') {
+        run();
+      } else {
+        window.addEventListener('i18n:ready', run, { once: true });
+      }
+    })();
+  </script>
+  <script src="../js/scroll.js"></script>
+  <script src="../js/music.js"></script>
+  <script src="../js/certificate.js"></script>
+<script src="../js/progress.js"></script>
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "48917f3aeb9f4b7b9ecf513cf6135ee8"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

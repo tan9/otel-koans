@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title data-i18n="koan22.pageTitle">Koan 22: What You Carry - OpenTelemetry Koans</title>
+  <title data-i18n="koan21.pageTitle">Koan 22: What You Carry - OpenTelemetry Koans</title>
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon-16x16.png">
@@ -361,20 +361,20 @@
 
   <div class="koan-page">
 
-    <h1 class="koan-title" data-i18n="koan22.title">What You Carry</h1>
+    <h1 class="koan-title" data-i18n="koan21.title">What You Carry</h1>
 
-    <div class="koan-text" data-i18n-html="koan22.zen">
+    <div class="koan-text" data-i18n-html="koan21.zen">
       The trace context carries the thread of identity.<br>But sometimes you need to carry something of your own across the boundary.
     </div>
 
     <!-- Scenario -->
-    <div class="bg-scenario" id="scenario" data-i18n-html="koan22.scenario">
+    <div class="bg-scenario" id="scenario" data-i18n-html="koan21.scenario">
       A checkout request flows through three services: <strong>gateway</strong> &rarr; <strong>api</strong> &rarr; <strong>orders</strong>. The gateway knows the user is <strong>premium</strong>. Downstream, the orders service needs the customer tier for priority routing. Without baggage, each service must query the user database separately.
     </div>
 
     <!-- Phase 1: Without Baggage -->
     <div class="bg-scene" id="phase1Scene">
-      <div class="bg-scene-header" data-i18n="koan22.phase1Header">without baggage</div>
+      <div class="bg-scene-header" data-i18n="koan21.phase1Header">without baggage</div>
       <div class="bg-scene-body">
         <div class="svc-chain" id="phase1Chain">
           <div class="svc-node" id="p1-gw">gateway</div>
@@ -389,39 +389,39 @@
           <div class="bg-db-call" id="dbCall1">
             <span>gateway</span>
             <span class="db-arrow">&rarr;</span>
-            <span data-i18n="koan22.dbQueryTier">DB: query tier</span>
+            <span data-i18n="koan21.dbQueryTier">DB: query tier</span>
           </div>
           <div class="bg-db-call" id="dbCall2">
             <span>api</span>
             <span class="db-arrow">&rarr;</span>
-            <span data-i18n="koan22.dbQueryTier">DB: query tier</span>
+            <span data-i18n="koan21.dbQueryTier">DB: query tier</span>
           </div>
           <div class="bg-db-call" id="dbCall3">
             <span>orders</span>
             <span class="db-arrow">&rarr;</span>
-            <span data-i18n="koan22.dbQueryTier">DB: query tier</span>
+            <span data-i18n="koan21.dbQueryTier">DB: query tier</span>
           </div>
         </div>
 
         <div class="bg-db-count" id="dbCount">
-          <span class="count-num">3</span> <span data-i18n="koan22.redundantCalls">redundant DB calls for the same value</span>
+          <span class="count-num">3</span> <span data-i18n="koan21.redundantCalls">redundant DB calls for the same value</span>
         </div>
       </div>
     </div>
 
     <!-- Bridge text -->
-    <div class="bg-bridge" id="bridge1" data-i18n-html="koan22.bridge1">
+    <div class="bg-bridge" id="bridge1" data-i18n-html="koan21.bridge1">
       Every service that needs the customer tier must query the database independently. <strong>Three services, three round trips to the same database.</strong>
     </div>
 
     <!-- Phase 2 button -->
     <div class="bg-controls" id="addBaggageControls">
-      <button class="koan-btn koan-btn--primary" id="addBaggageBtn" data-i18n="koan22.addBaggageBtn">Add baggage at the gateway</button>
+      <button class="koan-btn koan-btn--primary" id="addBaggageBtn" data-i18n="koan21.addBaggageBtn">Add baggage at the gateway</button>
     </div>
 
     <!-- Phase 2: With Baggage -->
     <div class="bg-scene" id="phase2Scene">
-      <div class="bg-scene-header" data-i18n="koan22.phase2Header">with baggage</div>
+      <div class="bg-scene-header" data-i18n="koan21.phase2Header">with baggage</div>
       <div class="bg-scene-body">
         <div class="svc-chain" id="phase2Chain">
           <div class="svc-node" id="p2-gw">gateway</div>
@@ -433,52 +433,52 @@
 
         <!-- Baggage flowing through -->
         <div class="bg-baggage-flow" id="baggageFlow">
-          <span class="bg-baggage-tag" data-i18n="koan22.baggageTag">baggage: user.tier=premium</span>
+          <span class="bg-baggage-tag" data-i18n="koan21.baggageTag">baggage: user.tier=premium</span>
           <span class="bg-baggage-arrow">&rarr;</span>
-          <span class="bg-baggage-tag" data-i18n="koan22.baggageReceived">api reads tier</span>
+          <span class="bg-baggage-tag" data-i18n="koan21.baggageReceived">api reads tier</span>
           <span class="bg-baggage-arrow">&rarr;</span>
-          <span class="bg-baggage-tag" data-i18n="koan22.baggageReceived2">orders reads tier</span>
+          <span class="bg-baggage-tag" data-i18n="koan21.baggageReceived2">orders reads tier</span>
         </div>
 
         <div class="bg-no-db" id="noDbCount">
-          <span class="count-num">1</span> <span data-i18n="koan22.oneDbCall">DB call at gateway, zero downstream</span>
+          <span class="count-num">1</span> <span data-i18n="koan21.oneDbCall">DB call at gateway, zero downstream</span>
         </div>
       </div>
     </div>
 
     <!-- Question 1 -->
     <div class="trace-question" id="q1">
-      <p data-i18n="koan22.q1">The gateway knows the user is premium. How should downstream services get this info?</p>
+      <p data-i18n="koan21.q1">The gateway knows the user is premium. How should downstream services get this info?</p>
       <div class="trace-opts">
-        <button class="trace-opt" data-answer="wrong" data-fb-key="koan22.q1FbDb" data-i18n="koan22.q1OptA">Each service queries the database</button>
-        <button class="trace-opt" data-answer="correct" data-fb-key="koan22.q1FbBaggage" data-i18n="koan22.q1OptB">Pass it through baggage</button>
-        <button class="trace-opt" data-answer="wrong" data-fb-key="koan22.q1FbTrace" data-i18n="koan22.q1OptC">Add it to the trace context</button>
+        <button class="trace-opt" data-answer="wrong" data-fb-key="koan21.q1FbDb" data-i18n="koan21.q1OptA">Each service queries the database</button>
+        <button class="trace-opt" data-answer="correct" data-fb-key="koan21.q1FbBaggage" data-i18n="koan21.q1OptB">Pass it through baggage</button>
+        <button class="trace-opt" data-answer="wrong" data-fb-key="koan21.q1FbTrace" data-i18n="koan21.q1OptC">Add it to the trace context</button>
       </div>
       <div class="trace-fb" id="fb1"></div>
     </div>
 
     <!-- Question 2 -->
     <div class="trace-question" id="q2">
-      <p data-i18n="koan22.q2">What is the difference between trace context and baggage?</p>
+      <p data-i18n="koan21.q2">What is the difference between trace context and baggage?</p>
       <div class="trace-opts">
-        <button class="trace-opt" data-answer="correct" data-fb-key="koan22.q2FbCorrect" data-i18n="koan22.q2OptA">Trace context carries telemetry identity, baggage carries application data</button>
-        <button class="trace-opt" data-answer="wrong" data-fb-key="koan22.q2FbSame" data-i18n="koan22.q2OptB">They are the same thing</button>
-        <button class="trace-opt" data-answer="wrong" data-fb-key="koan22.q2FbDebug" data-i18n="koan22.q2OptC">Baggage is only for debugging</button>
+        <button class="trace-opt" data-answer="correct" data-fb-key="koan21.q2FbCorrect" data-i18n="koan21.q2OptA">Trace context carries telemetry identity, baggage carries application data</button>
+        <button class="trace-opt" data-answer="wrong" data-fb-key="koan21.q2FbSame" data-i18n="koan21.q2OptB">They are the same thing</button>
+        <button class="trace-opt" data-answer="wrong" data-fb-key="koan21.q2FbDebug" data-i18n="koan21.q2OptC">Baggage is only for debugging</button>
       </div>
       <div class="trace-fb" id="fb2"></div>
     </div>
 
     <!-- Insight -->
     <div class="bg-insight" id="insight">
-      <p data-i18n="koan22.insightLine1">Trace context carries telemetry identity. Baggage carries your application data &mdash; user tier, priority, feature flags.</p>
-      <p data-i18n="koan22.insightLine2">Same propagation mechanism, different cargo.</p>
-      <p data-i18n="koan22.insightLine3">But the line blurs: when a span processor extracts baggage into attributes, that business data becomes an observability dimension &mdash; filter traces by customer tier, split metrics by deployment ring, consistently across every service.</p>
-      <a href="23-span-links.html" data-i18n="common.continue">Continue &rarr;</a>
+      <p data-i18n="koan21.insightLine1">Trace context carries telemetry identity. Baggage carries your application data &mdash; user tier, priority, feature flags.</p>
+      <p data-i18n="koan21.insightLine2">Same propagation mechanism, different cargo.</p>
+      <p data-i18n="koan21.insightLine3">But the line blurs: when a span processor extracts baggage into attributes, that business data becomes an observability dimension &mdash; filter traces by customer tier, split metrics by deployment ring, consistently across every service.</p>
+      <a href="22-sampling.html" data-i18n="common.continue">Continue &rarr;</a>
     </div>
   </div>
 
   <div class="koan-progress">
-    <div class="koan-progress-fill" style="width: 79%"></div>
+    <div class="koan-progress-fill" style="width: 75%"></div>
   </div>
 
   <script>

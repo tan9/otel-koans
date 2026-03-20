@@ -226,13 +226,13 @@
     "finalQOptC": "Histogram",
     "finalQCorrect": "Histogram 展示数值的分布。大多数很快，少数很慢——你看到的是形状。",
     "finalQWrong": "哪个图表展示了数值在各区间的分布？",
-    "insightLine1": "Counter 追踪累计总量。Gauge 度量当前水平。Histogram 揭示分布形态。",
+    "insightLine1": "计数器或仪表将许多观测值归纳为一个数字。直方图保留了数据的分布形态。",
     "insightLine2": "选择与你需要回答的问题相匹配的类型。"
   },
   "koan05": {
     "pageTitle": "公案 5：异常值 - OpenTelemetry 公案",
     "title": "Outliers",
-    "zen": "并非所有数字讲述同一个故事。\n平均值说一切都好。\n但少数受苦的人藏在尾部。",
+    "zen": "直方图保留了流量的分布形态。\n平均值说一切正常。\n但分布形态讲述了不同的故事。",
     "dashHeader": "延迟仪表板",
     "avgLabel": "平均延迟",
     "avgValue": "197ms",
@@ -649,16 +649,16 @@
     "item3": "告警规则和阈值",
     "item4": "属性名称（语义约定）",
     "item5": "SLO 定义",
-    "item6": "自定义查询语言表达式",
-    "item7": "遥测数据格式",
+    "item6": "遥测数据格式",
+    "item7": "自定义查询语言表达式",
     "sortCorrectFeedback": "埋点是你的。在其上构建的体验则不是。",
     "sortWrongFeedback": "想想 OpenTelemetry 标准化了什么（埋点、数据格式、属性名称），以及各后端自行提供什么。",
     "removeTitle": "Remove",
     "q1": "为什么仪表板不能在后端之间迁移？",
     "q1OptData": "数据格式不同",
-    "q1OptStandard": "仪表板和告警没有开放标准",
+    "q1OptStandard": "每个后端使用自己的格式——无论是否开放",
     "q1OptOtel": "仪表板存储在数据库中",
-    "q1Correct": "OTLP 标准化了数据。语义约定标准化了名称。但没有标准覆盖仪表板、告警或 SLO。",
+    "q1Correct": "OTLP 标准化了数据。语义约定标准化了名称。Perses、PromQL 和 OpenSLO 等项目涵盖了仪表盘、告警和 SLO——但切换后端仍然意味着重建它们，无论格式是开放的还是私有的。",
     "q1WrongA": "数据格式（OTLP）是标准化的。这正是埋点可移植的原因。但仪表板是建立在各后端专有查询语言之上的。",
     "q1WrongC": "存在哪里不是问题。问题在于每个后端都有自己的仪表板格式、查询语言和告警配置。",
     "insightLine1": "OpenTelemetry 让你的埋点具有可移植性。OTLP 和语义约定确保你的数据说着通用语言。",
@@ -669,9 +669,10 @@
     "sortHint3": "Several items are wrong. Ask: does OpenTelemetry define a standard for this?",
     "revealPortable": "Portable",
     "revealLocked": "Locked in",
-    "q1WrongData": "The data format (OTLP) IS standardized — that's what makes instrumentation portable. But dashboards are built on each backend's proprietary query language.",
-    "q1WrongOtel": "OpenTelemetry standardizes instrumentation and data format. Dashboards and alerts are outside its scope — each backend defines its own.",
-    "q1WrongFallback": "Not quite. Think about what OpenTelemetry standardizes versus what each backend provides."
+    "q1WrongData": "数据格式 (OTLP) 已经标准化——这正是让检测具有可移植性的原因。但仪表盘是基于每个后端的查询语言构建的。",
+    "q1WrongOtel": "仪表盘在设计上不属于 OpenTelemetry 的范围。OTel 标准化了检测和数据传输。可移植性差距的存在是因为每个后端——无论是开放的还是私有的——都定义了自己的仪表盘和告警格式。",
+    "q1WrongFallback": "Not quite. Think about what OpenTelemetry standardizes versus what each backend provides.",
+    "item8": "供应商专属集成"
   },
   "koan16": {
     "pageTitle": "公案 14：枢纽 - OpenTelemetry 公案",
@@ -864,7 +865,9 @@
     "svgPodD": "Pod",
     "svgReplica1": "（gateway 副本 1）",
     "svgReplica2": "（gateway 副本 2）",
-    "svgSidecarPod": "Pod（含 sidecar）"
+    "svgSidecarPod": "Pod（含 sidecar）",
+    "q1Wrong": "Gateway mode is centralized. For work that needs to happen close to each application, you want agent mode.",
+    "q2Wrong": "Each agent only sees its own node's spans. To sample a full trace across 12 services, you need all spans in one place."
   },
   "koan20": {
     "pageTitle": "公案 21：无形之线 - OpenTelemetry 公案",
@@ -1024,7 +1027,7 @@
     "cannotSample": "✗ cannot sample",
     "explanationScattered": "Spans scattered across 3 replicas. Each gateway sees only 4 of 12 spans. <strong>No replica can make a tail sampling decision.</strong>",
     "explanationHashed": "All 12 spans routed to the same gateway. <strong>One replica sees the complete trace and can sample correctly.</strong>",
-    "explanationTryHash": "Now try <strong>consistent hashing</strong> — click the button above.",
+    "explanationTryHash": "现在试试<strong>一致性哈希</strong>，点击另一个策略按钮。",
     "q1Wrong": "With only 4 of 12 spans, a replica cannot know if the trace had errors or was slow.",
     "q2WrongFaster": "The routing is about correctness, not speed. Without it, tail sampling cannot work.",
     "q2WrongLess": "Trace-aware routing does not reduce span count. It routes them to the same destination."

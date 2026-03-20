@@ -226,13 +226,13 @@
     "finalQOptC": "Histogram",
     "finalQCorrect": "histogramは値の分布を示します。速いものが多く、遅いものが少し。形が見えます。",
     "finalQWrong": "値が範囲ごとに広がっている様子を見せてくれるチャートはどれですか？",
-    "insightLine1": "Counterは累積合計を追う。Gaugeは現在の水準を測る。Histogramは形を明らかにする。",
+    "insightLine1": "カウンターやゲージは多くの観測値を1つの数値に集約します。ヒストグラムはデータの分布の形を保持します。",
     "insightLine2": "答えたい問いに合った種類を選んでください。"
   },
   "koan05": {
     "pageTitle": "公案5：外れ値 - OpenTelemetry Koans",
     "title": "Outliers",
-    "zen": "すべての数値が同じ物語を語るわけではない。\n平均はみんな大丈夫だと言う。\nしかし苦しんでいる少数はテールに隠れている。",
+    "zen": "ヒストグラムはトラフィックの形を保持する。\n平均値は全員問題ないと言う。\nしかし形は別の物語を語る。",
     "dashHeader": "レイテンシダッシュボード",
     "avgLabel": "平均レイテンシ",
     "avgValue": "197ms",
@@ -649,16 +649,16 @@
     "item3": "アラートルールとしきい値",
     "item4": "属性名（セマンティック規約）",
     "item5": "SLO定義",
-    "item6": "カスタムクエリ言語の式",
-    "item7": "テレメトリデータフォーマット",
+    "item6": "テレメトリデータフォーマット",
+    "item7": "カスタムクエリ言語の式",
     "sortCorrectFeedback": "計装はあなたのものです。その上に構築された体験はそうではありません。",
     "sortWrongFeedback": "OpenTelemetryが標準化するもの（計装、データフォーマット、属性名）と、各バックエンドが独自に提供するものを考えてください。",
     "removeTitle": "Remove",
     "q1": "なぜダッシュボードはバックエンド間で移動できないのですか？",
     "q1OptData": "データフォーマットが異なるから",
-    "q1OptStandard": "ダッシュボードやアラートのオープン標準がないから",
+    "q1OptStandard": "各バックエンドは独自のフォーマットを使用する — オープンかどうかに関わらず",
     "q1OptOtel": "ダッシュボードはデータベースに保存されているから",
-    "q1Correct": "OTLPはデータを標準化します。セマンティック規約は名前を標準化します。しかしダッシュボード、アラート、SLOをカバーする標準はありません。",
+    "q1Correct": "OTLPはデータを標準化します。セマンティック規約は名前を標準化します。Perses、PromQL、OpenSLOなどのプロジェクトはダッシュボード、アラート、SLOをカバーしますが、バックエンドを切り替えるとフォーマットがオープンか独自かに関わらず再構築が必要です。",
     "q1WrongA": "データフォーマット（OTLP）は標準化されています。だからこそ計装はポータブルなのです。しかしダッシュボードは各バックエンド独自のクエリ言語の上に構築されています。",
     "q1WrongC": "保存場所が問題ではありません。問題は各バックエンドが独自のダッシュボード形式、クエリ言語、アラート設定を持っていることです。",
     "insightLine1": "OpenTelemetryは計装をポータブルにします。OTLPとセマンティック規約がデータに共通言語を与えます。",
@@ -669,9 +669,10 @@
     "sortHint3": "Several items are wrong. Ask: does OpenTelemetry define a standard for this?",
     "revealPortable": "Portable",
     "revealLocked": "Locked in",
-    "q1WrongData": "The data format (OTLP) IS standardized — that's what makes instrumentation portable. But dashboards are built on each backend's proprietary query language.",
-    "q1WrongOtel": "OpenTelemetry standardizes instrumentation and data format. Dashboards and alerts are outside its scope — each backend defines its own.",
-    "q1WrongFallback": "Not quite. Think about what OpenTelemetry standardizes versus what each backend provides."
+    "q1WrongData": "データフォーマット（OTLP）は標準化されています — それがインストルメンテーションをポータブルにしています。しかしダッシュボードは各バックエンドのクエリ言語に基づいて構築されます。",
+    "q1WrongOtel": "ダッシュボードは設計上OpenTelemetryのスコープ外です。OTelはインストルメンテーションとデータ転送を標準化します。ポータビリティのギャップは、各バックエンド（オープンか独自かを問わず）が独自のダッシュボードとアラートのフォーマットを定義しているために存在します。",
+    "q1WrongFallback": "Not quite. Think about what OpenTelemetry standardizes versus what each backend provides.",
+    "item8": "ベンダー固有の連携機能"
   },
   "koan16": {
     "pageTitle": "公案14：ハブ - OpenTelemetry Koans",
@@ -864,7 +865,9 @@
     "svgPodD": "Pod",
     "svgReplica1": "(gatewayレプリカ 1)",
     "svgReplica2": "(gatewayレプリカ 2)",
-    "svgSidecarPod": "Pod (sidecar付き)"
+    "svgSidecarPod": "Pod (sidecar付き)",
+    "q1Wrong": "Gateway mode is centralized. For work that needs to happen close to each application, you want agent mode.",
+    "q2Wrong": "Each agent only sees its own node's spans. To sample a full trace across 12 services, you need all spans in one place."
   },
   "koan20": {
     "pageTitle": "公案21：見えない糸 - OpenTelemetry Koans",
@@ -1024,7 +1027,7 @@
     "cannotSample": "✗ cannot sample",
     "explanationScattered": "Spans scattered across 3 replicas. Each gateway sees only 4 of 12 spans. <strong>No replica can make a tail sampling decision.</strong>",
     "explanationHashed": "All 12 spans routed to the same gateway. <strong>One replica sees the complete trace and can sample correctly.</strong>",
-    "explanationTryHash": "Now try <strong>consistent hashing</strong> — click the button above.",
+    "explanationTryHash": "今度は<strong>一貫性ハッシュ</strong>を試してみましょう。もう一つの戦略ボタンをクリックしてください。",
     "q1Wrong": "With only 4 of 12 spans, a replica cannot know if the trace had errors or was slow.",
     "q2WrongFaster": "The routing is about correctness, not speed. Without it, tail sampling cannot work.",
     "q2WrongLess": "Trace-aware routing does not reduce span count. It routes them to the same destination."

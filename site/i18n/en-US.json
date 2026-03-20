@@ -650,8 +650,8 @@
     "item3": "Alert rules and thresholds",
     "item4": "Attribute names (semantic conventions)",
     "item5": "SLO definitions",
-    "item6": "Custom query language expressions",
-    "item7": "Telemetry data format",
+    "item6": "Telemetry data format",
+    "item7": "Custom query language expressions",
     "sortCorrectFeedback": "The instrumentation is yours. The experience built on top is not.",
     "sortWrongFeedback": "Think about what OpenTelemetry standardizes (instrumentation, data format, attribute names) versus what each backend provides on its own.",
     "removeTitle": "Remove",
@@ -660,8 +660,8 @@
     "q1OptStandard": "Each backend uses its own formats \u2014 open or not",
     "q1OptOtel": "OpenTelemetry doesn\u2019t support dashboards",
     "q1Correct": "OTLP standardizes the data. Semantic conventions standardize the names. Projects like Perses, PromQL, and OpenSLO cover dashboards, alerts, and SLOs\u2014but switching backends still means rebuilding them, whether the format is open or proprietary.",
-    "q1WrongData": "The data format (OTLP) IS standardized. That\u2019s what makes the instrumentation portable. But dashboards are built on top of each backend\u2019s proprietary query language.",
-    "q1WrongOtel": "Dashboards are outside OpenTelemetry\u2019s scope by design. OTel standardizes instrumentation and data transport. The portability gap exists because each backend\u2014open or proprietary\u2014defines its own dashboard and alert formats.",
+    "q1WrongData": "The data format (OTLP) IS standardized \u2014 that's what makes instrumentation portable. But dashboards are built on each backend's proprietary query language.",
+    "q1WrongOtel": "OpenTelemetry standardizes instrumentation and data format. Dashboards and alerts are outside its scope \u2014 each backend defines its own.",
     "insightLine1": "OpenTelemetry makes your instrumentation portable. OTLP and semantic conventions ensure your data speaks a universal language.",
     "insightLine2": "But the experience you build on top\u2014dashboards, alerts, SLOs\u2014belongs to your backend. That is the line between open and not.",
     "sortFeedbackAllAssigned": "Sort all items into the two buckets first.",
@@ -670,9 +670,8 @@
     "sortHint3": "Several items are wrong. Ask: does OpenTelemetry define a standard for this?",
     "revealPortable": "Portable",
     "revealLocked": "Locked in",
-    "q1WrongData": "The data format (OTLP) IS standardized \u2014 that's what makes instrumentation portable. But dashboards are built on each backend's proprietary query language.",
-    "q1WrongOtel": "OpenTelemetry standardizes instrumentation and data format. Dashboards and alerts are outside its scope \u2014 each backend defines its own.",
-    "q1WrongFallback": "Not quite. Think about what OpenTelemetry standardizes versus what each backend provides."
+    "q1WrongFallback": "Not quite. Think about what OpenTelemetry standardizes versus what each backend provides.",
+    "item8": "Vendor-specific integrations"
   },
   "koan16": {
     "pageTitle": "Koan 16: The Hub - OpenTelemetry Koans",
@@ -865,7 +864,9 @@
     "svgPodD": "Pod",
     "svgReplica1": "(gateway replica 1)",
     "svgReplica2": "(gateway replica 2)",
-    "svgSidecarPod": "Pod (with sidecar)"
+    "svgSidecarPod": "Pod (with sidecar)",
+    "q1Wrong": "Gateway mode is centralized. For work that needs to happen close to each application, you want agent mode.",
+    "q2Wrong": "Each agent only sees its own node's spans. To sample a full trace across 12 services, you need all spans in one place."
   },
   "koan20": {
     "pageTitle": "Koan 20: The Invisible Thread - OpenTelemetry Koans",
@@ -1025,7 +1026,7 @@
     "cannotSample": "\u2717 cannot sample",
     "explanationScattered": "Spans scattered across 3 replicas. Each gateway sees only 4 of 12 spans. <strong>No replica can make a tail sampling decision.</strong>",
     "explanationHashed": "All 12 spans routed to the same gateway. <strong>One replica sees the complete trace and can sample correctly.</strong>",
-    "explanationTryHash": "Now try <strong>consistent hashing</strong> \u2014 click the button above.",
+    "explanationTryHash": "Now try <strong>consistent hashing</strong> \u2014 click the other strategy button.",
     "q1Wrong": "With only 4 of 12 spans, a replica cannot know if the trace had errors or was slow.",
     "q2WrongFaster": "The routing is about correctness, not speed. Without it, tail sampling cannot work.",
     "q2WrongLess": "Trace-aware routing does not reduce span count. It routes them to the same destination."

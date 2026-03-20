@@ -226,13 +226,13 @@
     "finalQOptC": "Histogram",
     "finalQCorrect": "Een histogram toont hoe waarden verdeeld zijn. De meeste snel, sommige traag. Je ziet de vorm.",
     "finalQWrong": "Welke grafiek toont de spreiding van waarden over bereiken?",
-    "insightLine1": "Counter volgt een lopend totaal. Gauge meet een huidig niveau. Histogram onthult de vorm.",
+    "insightLine1": "Een counter of gauge reduceert veel observaties tot één enkel getal. Een histogram bewaart de vorm van de data.",
     "insightLine2": "Kies het type dat past bij de vraag die je wilt beantwoorden."
   },
   "koan05": {
     "pageTitle": "Koan 5: Outliers - OpenTelemetry Koans",
     "title": "Outliers",
-    "zen": "Niet alle getallen vertellen hetzelfde verhaal.\nHet gemiddelde zegt dat alles goed is.\nMaar de weinigen die lijden, zijn verborgen in de staart.",
+    "zen": "Een histogram bewaart de vorm van je verkeer.\nHet gemiddelde zegt dat iedereen in orde is.\nMaar de vorm vertelt een ander verhaal.",
     "dashHeader": "latency dashboard",
     "avgLabel": "gemiddelde latency",
     "avgValue": "197ms",
@@ -649,16 +649,16 @@
     "item3": "Alert-regels en drempels",
     "item4": "Attribuutnamen (semantic conventions)",
     "item5": "SLO-definities",
-    "item6": "Eigen querytaal-expressies",
-    "item7": "Telemetry-dataformaat",
+    "item6": "Telemetry-dataformaat",
+    "item7": "Eigen querytaal-expressies",
     "sortCorrectFeedback": "De instrumentation is van jou. De ervaring die erop gebouwd is niet.",
     "sortWrongFeedback": "Denk na over wat OpenTelemetry standaardiseert (instrumentation, dataformaat, attribuutnamen) versus wat elke backend zelf biedt.",
     "removeTitle": "Remove",
     "q1": "Waarom kunnen dashboards niet meeverhuizen tussen backends?",
     "q1OptData": "Het dataformaat is anders",
-    "q1OptStandard": "Er is geen open standaard voor dashboards of alerts",
+    "q1OptStandard": "Elke backend gebruikt eigen formaten — open of niet",
     "q1OptOtel": "Dashboards worden opgeslagen in de database",
-    "q1Correct": "OTLP standaardiseert de data. Semantic conventions standaardiseren de namen. Maar geen standaard dekt dashboards, alerts of SLO's.",
+    "q1Correct": "OTLP standaardiseert de data. Semantische conventies standaardiseren de namen. Projecten zoals Perses, PromQL en OpenSLO dekken dashboards, alerts en SLO's — maar wisselen van backend betekent nog steeds opnieuw opbouwen, of het formaat nu open of propriëtair is.",
     "q1WrongA": "Het dataformaat (OTLP) IS gestandaardiseerd. Dat is wat de instrumentation overdraagbaar maakt. Maar dashboards zijn gebouwd op de eigen querytaal van elke backend.",
     "q1WrongC": "Waar ze opgeslagen zijn is niet het probleem. Het probleem is dat elke backend zijn eigen dashboard-formaat, querytaal en alert-configuratie heeft.",
     "insightLine1": "OpenTelemetry maakt je instrumentation overdraagbaar. OTLP en semantic conventions zorgen ervoor dat je data een universele taal spreekt.",
@@ -669,9 +669,10 @@
     "sortHint3": "Several items are wrong. Ask: does OpenTelemetry define a standard for this?",
     "revealPortable": "Portable",
     "revealLocked": "Locked in",
-    "q1WrongData": "The data format (OTLP) IS standardized — that's what makes instrumentation portable. But dashboards are built on each backend's proprietary query language.",
-    "q1WrongOtel": "OpenTelemetry standardizes instrumentation and data format. Dashboards and alerts are outside its scope — each backend defines its own.",
-    "q1WrongFallback": "Not quite. Think about what OpenTelemetry standardizes versus what each backend provides."
+    "q1WrongData": "Het dataformaat (OTLP) IS gestandaardiseerd — dat is wat instrumentatie portabel maakt. Maar dashboards zijn gebouwd op de querytaal van elke backend.",
+    "q1WrongOtel": "Dashboards vallen bewust buiten de scope van OpenTelemetry. OTel standaardiseert instrumentatie en datatransport. De portabiliteitskloof bestaat omdat elke backend — open of propriëtair — eigen dashboard- en alertformaten definieert.",
+    "q1WrongFallback": "Not quite. Think about what OpenTelemetry standardizes versus what each backend provides.",
+    "item8": "Leverancierspecifieke integraties"
   },
   "koan16": {
     "pageTitle": "Koan 16: De Hub - OpenTelemetry Koans",
@@ -864,7 +865,9 @@
     "svgPodD": "Pod",
     "svgReplica1": "(gateway-replica 1)",
     "svgReplica2": "(gateway-replica 2)",
-    "svgSidecarPod": "Pod (met sidecar)"
+    "svgSidecarPod": "Pod (met sidecar)",
+    "q1Wrong": "Gateway mode is centralized. For work that needs to happen close to each application, you want agent mode.",
+    "q2Wrong": "Each agent only sees its own node's spans. To sample a full trace across 12 services, you need all spans in one place."
   },
   "koan20": {
     "pageTitle": "Koan 20: De Onzichtbare Draad - OpenTelemetry Koans",
@@ -1024,7 +1027,7 @@
     "cannotSample": "✗ cannot sample",
     "explanationScattered": "Spans scattered across 3 replicas. Each gateway sees only 4 of 12 spans. <strong>No replica can make a tail sampling decision.</strong>",
     "explanationHashed": "All 12 spans routed to the same gateway. <strong>One replica sees the complete trace and can sample correctly.</strong>",
-    "explanationTryHash": "Now try <strong>consistent hashing</strong> — click the button above.",
+    "explanationTryHash": "Probeer nu <strong>consistent hashing</strong> — klik op de andere strategieknop.",
     "q1Wrong": "With only 4 of 12 spans, a replica cannot know if the trace had errors or was slow.",
     "q2WrongFaster": "The routing is about correctness, not speed. Without it, tail sampling cannot work.",
     "q2WrongLess": "Trace-aware routing does not reduce span count. It routes them to the same destination."

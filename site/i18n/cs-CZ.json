@@ -226,13 +226,13 @@
     "finalQOptC": "Histogram",
     "finalQCorrect": "Histogram ukazuje rozložení hodnot. Většina rychlých, některé pomalé. Vidíš tvar.",
     "finalQWrong": "Který graf ti ukazuje rozpětí hodnot napříč rozsahy?",
-    "insightLine1": "Counter sleduje průběžný součet. Gauge měří aktuální úroveň. Histogram odhaluje tvar.",
+    "insightLine1": "Čítač nebo gauge redukuje mnoho pozorování na jediné číslo. Histogram zachovává tvar dat.",
     "insightLine2": "Zvol typ, který odpovídá otázce, na kterou potřebuješ odpovědět."
   },
   "koan05": {
     "pageTitle": "Koan 5: Outliers - OpenTelemetry Koans",
     "title": "Outliers",
-    "zen": "Ne všechna čísla vyprávějí stejný příběh.\nPrůměr říká, že je vše v pořádku.\nAle těch pár, kteří trpí, se skrývá v chvostu.",
+    "zen": "Histogram zachovává tvar vašeho provozu.\nPrůměr říká, že všichni jsou v pořádku.\nAle tvar vypráví jiný příběh.",
     "dashHeader": "dashboard latence",
     "avgLabel": "průměrná latence",
     "avgValue": "197ms",
@@ -649,16 +649,16 @@
     "item3": "Pravidla alertů a prahy",
     "item4": "Názvy atributů (sémantické konvence)",
     "item5": "Definice SLO",
-    "item6": "Vlastní výrazy dotazovacího jazyka",
-    "item7": "Formát telemetrických dat",
+    "item6": "Formát telemetrických dat",
+    "item7": "Vlastní výrazy dotazovacího jazyka",
     "sortCorrectFeedback": "Instrumentace je tvá. Nadstavba nad ní ne.",
     "sortWrongFeedback": "Zamysli se, co OpenTelemetry standardizuje (instrumentace, formát dat, názvy atributů) oproti tomu, co si každý backend poskytuje sám.",
     "removeTitle": "Remove",
     "q1": "Proč se dashboardy nedají přenést mezi backendy?",
     "q1OptData": "Formát dat je odlišný",
-    "q1OptStandard": "Neexistuje otevřený standard pro dashboardy ani alerty",
+    "q1OptStandard": "Každý backend používá vlastní formáty — otevřené i proprietární",
     "q1OptOtel": "Dashboardy jsou uloženy v databázi",
-    "q1Correct": "OTLP standardizuje data. Sémantické konvence standardizují názvy. Ale žádný standard nepokrývá dashboardy, alerty ani SLO.",
+    "q1Correct": "OTLP standardizuje data. Sémantické konvence standardizují názvy. Projekty jako Perses, PromQL a OpenSLO pokrývají dashboardy, alerty a SLO — ale přechod na jiný backend stále znamená jejich přebudování, ať už je formát otevřený nebo proprietární.",
     "q1WrongA": "Formát dat (OTLP) JE standardizovaný. Proto je instrumentace přenositelná. Ale dashboardy jsou postaveny na proprietárním dotazovacím jazyku každého backendu.",
     "q1WrongC": "Kde jsou uloženy, není problém. Problém je, že každý backend má vlastní formát dashboardů, dotazovací jazyk a konfiguraci alertů.",
     "insightLine1": "OpenTelemetry dělá tvou instrumentaci přenositelnou. OTLP a sémantické konvence zajišťují, že tvá data mluví univerzálním jazykem.",
@@ -669,9 +669,10 @@
     "sortHint3": "Several items are wrong. Ask: does OpenTelemetry define a standard for this?",
     "revealPortable": "Portable",
     "revealLocked": "Locked in",
-    "q1WrongData": "The data format (OTLP) IS standardized — that's what makes instrumentation portable. But dashboards are built on each backend's proprietary query language.",
-    "q1WrongOtel": "OpenTelemetry standardizes instrumentation and data format. Dashboards and alerts are outside its scope — each backend defines its own.",
-    "q1WrongFallback": "Not quite. Think about what OpenTelemetry standardizes versus what each backend provides."
+    "q1WrongData": "Datový formát (OTLP) JE standardizovaný — právě díky tomu je instrumentace přenositelná. Ale dashboardy jsou postavené na dotazovacím jazyku každého backendu.",
+    "q1WrongOtel": "Dashboardy jsou záměrně mimo rozsah OpenTelemetry. OTel standardizuje instrumentaci a přenos dat. Mezera v přenositelnosti existuje proto, že každý backend — otevřený i proprietární — definuje vlastní formáty dashboardů a alertů.",
+    "q1WrongFallback": "Not quite. Think about what OpenTelemetry standardizes versus what each backend provides.",
+    "item8": "Integrace specifické pro dodavatele"
   },
   "koan16": {
     "pageTitle": "Koan 16: Rozbočovač - OpenTelemetry Koans",
@@ -864,7 +865,9 @@
     "svgPodD": "Pod",
     "svgReplica1": "(gateway replika 1)",
     "svgReplica2": "(gateway replika 2)",
-    "svgSidecarPod": "Pod (se sidecarem)"
+    "svgSidecarPod": "Pod (se sidecarem)",
+    "q1Wrong": "Gateway mode is centralized. For work that needs to happen close to each application, you want agent mode.",
+    "q2Wrong": "Each agent only sees its own node's spans. To sample a full trace across 12 services, you need all spans in one place."
   },
   "koan20": {
     "pageTitle": "Koan 20: Neviditelná nit - OpenTelemetry Koans",
@@ -1024,7 +1027,7 @@
     "cannotSample": "✗ cannot sample",
     "explanationScattered": "Spans scattered across 3 replicas. Each gateway sees only 4 of 12 spans. <strong>No replica can make a tail sampling decision.</strong>",
     "explanationHashed": "All 12 spans routed to the same gateway. <strong>One replica sees the complete trace and can sample correctly.</strong>",
-    "explanationTryHash": "Now try <strong>consistent hashing</strong> — click the button above.",
+    "explanationTryHash": "Teď zkuste <strong>konzistentní hashování</strong> — klikněte na druhé tlačítko strategie.",
     "q1Wrong": "With only 4 of 12 spans, a replica cannot know if the trace had errors or was slow.",
     "q2WrongFaster": "The routing is about correctness, not speed. Without it, tail sampling cannot work.",
     "q2WrongLess": "Trace-aware routing does not reduce span count. It routes them to the same destination."

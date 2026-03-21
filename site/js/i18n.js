@@ -32,6 +32,17 @@
 
     var nav = navigator.language || navigator.userLanguage || '';
     if (codeSupported(nav)) return nav;
+    /* Chinese is the only language with two supported variants (zh-CN / zh-TW).
+       The generic base-language fallback below would always pick whichever
+       appears first in SUPPORTED, so we handle zh-* explicitly here.
+       Other languages (en, pt, es, fr, de, …) have a single variant each,
+       so the generic fallback is fine for them. */
+    var lower = nav.toLowerCase();
+    if (lower.indexOf('zh') === 0) {
+      if (lower.indexOf('hant') !== -1 || /zh-(tw|hk|mo)/i.test(nav)) return 'zh-TW';
+      if (lower.indexOf('hans') !== -1 || /zh-(cn|sg)/i.test(nav)) return 'zh-CN';
+      return 'zh-CN'; /* bare "zh" defaults to Simplified */
+    }
     var base = nav.split('-')[0];
     for (var i = 0; i < SUPPORTED.length; i++) {
       if (SUPPORTED[i].code.split('-')[0] === base) return SUPPORTED[i].code;

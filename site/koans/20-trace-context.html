@@ -795,14 +795,14 @@
           selectedLabel.classList.add('matched');
           matchedCount++;
 
-          matchStatus.textContent = i18n.t('koan20.matchCorrect');
+          i18n.applyText(matchStatus, 'koan20.matchCorrect');
           matchStatus.className = 'tc-match-status tc-match-status--correct';
 
           selectedSeg = null;
           selectedLabel = null;
 
           if (matchedCount === totalPairs) {
-            matchStatus.textContent = i18n.t('koan20.matchComplete');
+            i18n.applyText(matchStatus, 'koan20.matchComplete');
             matchStatus.className = 'tc-match-status tc-match-status--correct';
 
             /* Show insight after all matched */
@@ -818,7 +818,7 @@
           badSeg.classList.add('wrong-flash');
           badLabel.classList.add('wrong-flash');
 
-          matchStatus.textContent = i18n.t('koan20.matchWrong');
+          i18n.applyText(matchStatus, 'koan20.matchWrong');
           matchStatus.className = 'tc-match-status tc-match-status--wrong';
 
           selectedSeg = null;

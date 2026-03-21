@@ -802,7 +802,7 @@
             count++;
           });
         });
-        connCounter.textContent = i18n.t('koan16.connectionTemplate').replace('{count}', count);
+        i18n.applyText(connCounter, 'koan16.connectionTemplate');.replace('{count}', count);
         connCounter.classList.remove('reduced');
       }
 
@@ -828,7 +828,7 @@
           count++;
         });
 
-        connCounter.textContent = i18n.t('koan16.connectionTemplate').replace('{count}', count);
+        i18n.applyText(connCounter, 'koan16.connectionTemplate');.replace('{count}', count);
         connCounter.classList.add('reduced');
       }
 
@@ -869,7 +869,7 @@
       function revealName() {
         phase = 'named';
         hubBox.classList.add('revealed');
-        collectorTitle.textContent = i18n.t('koan16.collectorTitle');
+        i18n.applyText(collectorTitle, 'koan16.collectorTitle');
         /* Redraw to account for box size change */
         setTimeout(function () {
           drawHub();
@@ -945,7 +945,7 @@
           if (this.dataset.answer === 'correct') {
             this.classList.add('correct');
             q1opts.forEach(function (o) { o.classList.add('disabled'); });
-            fb1.textContent = i18n.t('koan16.q1Correct');
+            i18n.applyText(fb1, 'koan16.q1Correct');
             fb1.className = 'cq-fb cq-fb--correct';
 
             /* Add the 4th service and redraw messy lines */
@@ -963,9 +963,9 @@
           } else {
             this.classList.add('wrong');
             if (this.id === 'q1a') {
-              fb1.textContent = i18n.t('koan16.q1Wrong10');
+              i18n.applyText(fb1, 'koan16.q1Wrong10');
             } else {
-              fb1.textContent = i18n.t('koan16.q1Wrong15');
+              i18n.applyText(fb1, 'koan16.q1Wrong15');
             }
             fb1.className = 'cq-fb cq-fb--wrong';
             var self = this;
@@ -984,7 +984,7 @@
           if (this.dataset.answer === 'correct') {
             this.classList.add('correct');
             q2opts.forEach(function (o) { o.classList.add('disabled'); });
-            fb2.textContent = i18n.t('koan16.q2Correct');
+            i18n.applyText(fb2, 'koan16.q2Correct');
             fb2.className = 'cq-fb cq-fb--correct';
 
             /* Cinematic reveal: pan up to diagram, transform, pan back down */
@@ -1021,9 +1021,9 @@
           } else {
             this.classList.add('wrong');
             if (this.id === 'q2a') {
-              fb2.textContent = i18n.t('koan16.q2WrongDeleted');
+              i18n.applyText(fb2, 'koan16.q2WrongDeleted');
             } else {
-              fb2.textContent = i18n.t('koan16.q2WrongFaster');
+              i18n.applyText(fb2, 'koan16.q2WrongFaster');
             }
             fb2.className = 'cq-fb cq-fb--wrong';
             var self = this;
@@ -1049,7 +1049,7 @@
               opts.forEach(function (o) { o.classList.add('disabled'); });
               matchedCount++;
               if (matchedCount === 3) {
-                fb3.textContent = i18n.t('koan16.q3AllCorrect');
+                i18n.applyText(fb3, 'koan16.q3AllCorrect');
                 fb3.className = 'cq-fb cq-fb--correct';
                 setTimeout(function () {
                   document.getElementById('insight').classList.add('visible');
@@ -1058,7 +1058,7 @@
             } else {
               /* Wrong */
               this.classList.add('match-wrong');
-              fb3.textContent = i18n.t('koan16.q3WrongTemplate').replace('{stageName}', row.querySelector('.match-stage').textContent);
+              i18n.applyText(fb3, 'koan16.q3WrongTemplate');.replace('{stageName}', row.querySelector('.match-stage').textContent);
               fb3.className = 'cq-fb cq-fb--wrong';
               var self = this;
               setTimeout(function () { self.classList.remove('match-wrong'); }, 500);

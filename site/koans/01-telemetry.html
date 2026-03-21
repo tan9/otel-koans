@@ -474,14 +474,14 @@
               if (this.dataset.answer === 'correct') {
                 this.classList.add('correct');
                 opts.forEach(function (o) { o.classList.add('disabled'); });
-                fb.textContent = i18n.t('koan01.q1Correct');
+                i18n.applyText(fb, 'koan01.q1Correct');
                 fb.className = 'telem-feedback telem-feedback--correct';
                 setTimeout(function () {
                   document.getElementById('question2').classList.add('visible');
                 }, 900);
               } else {
                 this.classList.add('wrong');
-                fb.textContent = i18n.t('koan01.q1Wrong');
+                i18n.applyText(fb, 'koan01.q1Wrong');
                 fb.className = 'telem-feedback telem-feedback--wrong';
                 var self = this;
                 setTimeout(function () { self.classList.remove('wrong'); }, 600);
@@ -506,7 +506,7 @@
               if (this.dataset.answer === 'correct') {
                 this.classList.add('correct');
                 opts.forEach(function (o) { o.classList.add('disabled'); });
-                fb.textContent = i18n.t('koan01.q2Correct');
+                i18n.applyText(fb, 'koan01.q2Correct');
                 fb.className = 'telem-feedback telem-feedback--correct';
                 setTimeout(function () {
                   document.getElementById('insight').classList.add('visible');

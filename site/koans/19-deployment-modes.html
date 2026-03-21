@@ -659,12 +659,12 @@
               if (this.dataset.answer === 'correct') {
                 this.classList.add('correct');
                 opts.forEach(function (o) { o.classList.add('disabled'); });
-                fb.textContent = i18n.t(correctMsg);
+                i18n.applyText(fb, correctMsg);
                 fb.className = 'dq-fb dq-fb--correct';
                 if (onCorrect) setTimeout(onCorrect, 800);
               } else {
                 this.classList.add('wrong');
-                fb.textContent = i18n.t(wrongMsg);
+                i18n.applyText(fb, wrongMsg);
                 fb.className = 'dq-fb dq-fb--wrong';
                 var self = this;
                 setTimeout(function () { self.classList.remove('wrong'); }, 600);

@@ -624,13 +624,13 @@
           });
 
           if (anyEmpty) {
-            checkStatus.textContent = i18n.t('koan09.statusEmpty');
+            i18n.applyText(checkStatus, 'koan09.statusEmpty');
             checkStatus.className = 'check-status error';
             return;
           }
 
           if (!allCorrect) {
-            checkStatus.textContent = i18n.t('koan09.statusWrong');
+            i18n.applyText(checkStatus, 'koan09.statusWrong');
             checkStatus.className = 'check-status error';
             // Allow retry - reset wrong selects after a moment
             setTimeout(function () {
@@ -648,7 +648,7 @@
 
           // All correct
           solved = true;
-          checkStatus.textContent = i18n.t('koan09.statusCorrect');
+          i18n.applyText(checkStatus, 'koan09.statusCorrect');
           checkStatus.className = 'check-status success';
           checkBtn.style.opacity = '0.4';
           checkBtn.style.pointerEvents = 'none';

@@ -604,7 +604,7 @@
           if (this.dataset.answer === 'correct') {
             this.classList.add('correct');
             opts1.forEach(function (o) { o.classList.add('disabled'); });
-            fb1.textContent = i18n.t('koan14.q1Correct');
+            i18n.applyText(fb1, 'koan14.q1Correct');
             fb1.className = 'fmt-fb fmt-fb--correct';
             hint1El.classList.remove('visible');
 
@@ -641,13 +641,13 @@
             var self = this;
             setTimeout(function () { self.classList.remove('wrong'); }, 600);
 
-            fb1.textContent = i18n.t('koan14.q1Wrong');
+            i18n.applyText(fb1, 'koan14.q1Wrong');
             fb1.className = 'fmt-fb fmt-fb--wrong';
             if (q1Wrongs === 1) {
-              hint1El.textContent = i18n.t('koan14.q1Hint1');
+              i18n.applyText(hint1El, 'koan14.q1Hint1');
               hint1El.classList.add('visible');
             } else {
-              hint1El.textContent = i18n.t('koan14.q1Hint2');
+              i18n.applyText(hint1El, 'koan14.q1Hint2');
               hint1El.classList.add('visible');
             }
           }
@@ -678,7 +678,7 @@
 
           if (val === answers[name]) {
             solved[name] = true;
-            fb.textContent = i18n.t('koan14.backendCorrect');
+            i18n.applyText(fb, 'koan14.backendCorrect');
             fb.style.color = 'var(--accent-green)';
             hintEl.textContent = '';
             backend.classList.add('solved');
@@ -690,12 +690,12 @@
             checkAllSolved();
           } else {
             wrongCounts[name]++;
-            fb.textContent = i18n.t('koan14.backendWrong');
+            i18n.applyText(fb, 'koan14.backendWrong');
             fb.style.color = 'var(--accent-red)';
             select.value = '';
 
             var hintIndex = Math.min(wrongCounts[name] - 1, hintKeys[name].length - 1);
-            hintEl.textContent = i18n.t(hintKeys[name][hintIndex]);
+            i18n.applyText(hintEl, hintKeys[name][hintIndex]);
 
             setTimeout(function () {
               if (!solved[name]) {

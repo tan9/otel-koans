@@ -529,7 +529,7 @@
         });
 
         if (unanswered > 0) {
-          status.textContent = i18n.t('koan13.statusFillAll');
+          i18n.applyText(status, 'koan13.statusFillAll');
           status.className = 'export-status export-status--error';
           return;
         }
@@ -556,7 +556,7 @@
             }
           });
 
-          status.textContent = i18n.t('koan13.statusWrongCount').replace('{count}', wrongCount);
+          i18n.applyText(status, 'koan13.statusWrongCount');.replace('{count}', wrongCount);
           status.className = 'export-status export-status--error';
 
           /* Show the first wrong blank's hint (most actionable) */
@@ -581,7 +581,7 @@
         clearCodeHighlights();
         blankHint.textContent = '';
         blankHint.classList.remove('visible');
-        status.textContent = i18n.t('koan13.statusAllCorrect');
+        i18n.applyText(status, 'koan13.statusAllCorrect');
         status.className = 'export-status export-status--success';
         checkBtn.style.opacity = '0.4';
         checkBtn.style.pointerEvents = 'none';
@@ -599,12 +599,12 @@
           if (this.dataset.answer === 'correct') {
             this.classList.add('correct');
             opts.forEach(function (o) { o.classList.add('disabled'); });
-            fb1.textContent = i18n.t('koan13.q1Correct');
+            i18n.applyText(fb1, 'koan13.q1Correct');
             fb1.className = 'export-fb export-fb--correct';
             setTimeout(function () { document.getElementById('insight').classList.add('visible'); }, 800);
           } else {
             this.classList.add('wrong');
-            fb1.textContent = i18n.t('koan13.q1Wrong');
+            i18n.applyText(fb1, 'koan13.q1Wrong');
             fb1.className = 'export-fb export-fb--wrong';
             var self = this;
             setTimeout(function () { self.classList.remove('wrong'); }, 500);

@@ -306,6 +306,12 @@
     langBtn.setAttribute('aria-label', t('common.changeLanguage', 'Change language'));
     tocBtn.title = t('common.tableOfContents', 'Table of Contents');
     tocBtn.setAttribute('aria-label', t('common.tableOfContents', 'Table of Contents'));
+    var musicBtn = document.querySelector('.music-toggle');
+    if (musicBtn) {
+      var musicLabel = t('common.toggleMusic', 'Toggle music');
+      musicBtn.title = musicLabel;
+      musicBtn.setAttribute('aria-label', musicLabel);
+    }
     var tocEntries = tocDrop.querySelectorAll('.toc-title');
     tocEntries.forEach(function (el, idx) {
       el.textContent = koanTitle(idx + 1);

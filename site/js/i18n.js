@@ -6,6 +6,17 @@
 
   var STORAGE_KEY = 'otel-koans-lang';
   var DEFAULT_LOCALE = 'en-US';
+
+  /* ── Prevent FOUC for non-EN locales ──
+     Since i18n.js loads in <head>, we can hide the body before it renders.
+     For en-US the HTML fallback text is already correct, so no hide needed. */
+  var savedLang = localStorage.getItem(STORAGE_KEY);
+  if (savedLang && savedLang !== DEFAULT_LOCALE) {
+    var s = document.createElement('style');
+    s.id = 'i18n-fouc';
+    s.textContent = 'body{opacity:0}body.i18n-ready{opacity:1;transition:opacity .15s}';
+    document.head.appendChild(s);
+  }
   var SUPPORTED = [
     { code: 'en-US', name: 'English (US)' },
     { code: 'pt-BR', name: 'Portugu\u00eas (BR)' },
@@ -105,6 +116,8 @@
       if (v !== el.getAttribute('data-i18n-placeholder')) el.placeholder = v;
     });
     document.documentElement.lang = currentLocale;
+    /* Reveal body after translations are applied (see FOUC guard above) */
+    document.body.classList.add('i18n-ready');
   }
 
   /* ── Set locale and re-render ── */

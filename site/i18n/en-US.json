@@ -1212,7 +1212,7 @@
     "journeyRootCauseFound": "Connection pool exhausted",
     "journeyRootCauseDetail": "database \u00b7 orders pool",
     "rememberThis": "Remember this?",
-    "completionLine1": "You have walked the path of 19 koans.",
+    "completionLine1": "You have walked the path of 27 koans.",
     "completionLine2": "From a silent system to one that speaks in metrics, traces, and logs.",
     "completionLine3": "You began with silence.",
     "completionLine4": "Now you can see.",

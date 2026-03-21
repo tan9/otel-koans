@@ -1213,7 +1213,7 @@
     "journeyRootCauseFound": "Connection pool vyčerpán",
     "journeyRootCauseDetail": "database · orders pool",
     "rememberThis": "Pamatuješ si tohle?",
-    "completionLine1": "Prošel jsi cestou 19 koanů.",
+    "completionLine1": "Prošel jsi cestou 27 koanů.",
     "completionLine2": "Od tichého systému k systému, který mluví v metrics, traces a logs.",
     "completionLine3": "Začal jsi s tichem.",
     "completionLine4": "Teď vidíš.",

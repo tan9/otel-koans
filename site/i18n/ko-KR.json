@@ -1213,7 +1213,7 @@
     "journeyRootCauseFound": "커넥션 풀 소진",
     "journeyRootCauseDetail": "database · orders pool",
     "rememberThis": "이것을 기억하나요?",
-    "completionLine1": "19개의 koan의 길을 걸어왔어요.",
+    "completionLine1": "27개의 koan의 길을 걸어왔어요.",
     "completionLine2": "침묵하는 시스템에서 metric, trace, log로 말하는 시스템까지.",
     "completionLine3": "침묵에서 시작했어요.",
     "completionLine4": "이제 볼 수 있어요.",

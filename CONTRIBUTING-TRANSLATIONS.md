@@ -51,9 +51,19 @@ Some text (feedback messages, hints, animation explanations) is set dynamically 
 i18n.applyText(el, 'koan01.q1Correct');
 i18n.applyHtml(el, 'koan01.q1Correct');
 
+// ✓ With dynamic values — use the optional transform parameter.
+//   The transform is stored and re-invoked on locale switch,
+//   so both the translation and dynamic values stay correct.
+i18n.applyText(el, 'koan11.echoPrefix', function(v) { return v + name; });
+i18n.applyText(el, 'koan16.connectionTemplate', function(v) {
+    return v.replace('{count}', count);
+});
+
 // ✗ Avoid — won't update on locale switch
 el.textContent = i18n.t('koan01.q1Correct');
 ```
+
+> **Note:** This project uses ES5 style (`var`, `function() {}`) throughout. Please avoid arrow functions, `const`/`let`, and template literals to maintain consistency.
 
 ## JSON structure
 

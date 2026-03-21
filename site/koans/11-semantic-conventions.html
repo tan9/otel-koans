@@ -779,7 +779,7 @@
         /* Lock input */
         yourInput.disabled = true;
         yourBtn.disabled = true;
-        yourEcho.textContent = i18n.t('koan11.echoPrefix') + learnerName;
+        i18n.applyText(yourEcho, 'koan11.echoPrefix'); + learnerName;
 
         /* Now reveal the three team panels */
         var svcs = ['svcA', 'svcB', 'svcC'];
@@ -800,9 +800,9 @@
             }
           }
           if (matchedTeam) {
-            comp.textContent = i18n.t('koan11.comparisonMatched').replace('{team}', matchedTeam);
+            i18n.applyText(comp, 'koan11.comparisonMatched');.replace('{team}', matchedTeam);
           } else {
-            comp.textContent = i18n.t('koan11.comparisonUnmatched');
+            i18n.applyText(comp, 'koan11.comparisonUnmatched');
           }
           comp.classList.add('visible');
         }, 1800);
@@ -850,13 +850,13 @@
         queryStep++;
 
         if (queryStep < queries.length) {
-          searchBtn.textContent = i18n.t('koan11.searchBtnNext');
+          i18n.applyText(searchBtn, 'koan11.searchBtnNext');
           setTimeout(function () {
             searchBox.value = queries[queryStep].input;
           }, 800);
         } else {
           searchBtn.disabled = true;
-          searchBtn.textContent = i18n.t('koan11.searchBtnDone');
+          i18n.applyText(searchBtn, 'koan11.searchBtnDone');
 
           setTimeout(function () {
             document.getElementById('frustration').classList.add('visible');
@@ -886,7 +886,7 @@
             if (this.dataset.answer === 'correct') {
               this.classList.add('correct');
               opts.forEach(function (o) { o.classList.add('disabled'); });
-              fb.textContent = i18n.t('koan11.q1Correct');
+              i18n.applyText(fb, 'koan11.q1Correct');
               fb.className = 'nm-fb nm-fb--correct';
 
               /* Reveal the fix: show unified naming on each service panel */
@@ -930,7 +930,7 @@
             if (this.dataset.answer === 'correct') {
               this.classList.add('correct');
               opts.forEach(function (o) { o.classList.add('disabled'); });
-              fb.textContent = i18n.t('koan11.q2Correct');
+              i18n.applyText(fb, 'koan11.q2Correct');
               fb.className = 'nm-fb nm-fb--correct';
 
               setTimeout(function () {
@@ -938,7 +938,7 @@
               }, 800);
             } else {
               this.classList.add('wrong');
-              fb.textContent = i18n.t('koan11.q2Wrong');
+              i18n.applyText(fb, 'koan11.q2Wrong');
               fb.className = 'nm-fb nm-fb--wrong';
               var self = this;
               setTimeout(function () { self.classList.remove('wrong'); }, 600);

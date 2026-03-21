@@ -84,10 +84,12 @@
   function applyText(el, key) {
     el.textContent = t(key);
     el.setAttribute('data-i18n', key);
+    el.removeAttribute('data-i18n-html');
   }
   function applyHtml(el, key) {
     el.innerHTML = t(key).replace(/\n/g, '<br>');
     el.setAttribute('data-i18n-html', key);
+    el.removeAttribute('data-i18n');
   }
 
   /* ── Apply DOM translations ── */

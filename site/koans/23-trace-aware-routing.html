@@ -666,13 +666,13 @@
 
         /* Update labels */
         if (strategy === 'scatter') {
-          modeLabel.textContent = i18n.t('koan23.modeRoundRobin');
+          i18n.applyText(modeLabel, 'koan23.modeRoundRobin');
           modeLabel.style.color = 'var(--accent-orange)';
-          lbMethod.textContent = i18n.t('koan23.lbRoundRobin');
+          i18n.applyText(lbMethod, 'koan23.lbRoundRobin');
         } else {
-          modeLabel.textContent = i18n.t('koan23.modeConsistentHash');
+          i18n.applyText(modeLabel, 'koan23.modeConsistentHash');
           modeLabel.style.color = 'var(--accent-green)';
-          lbMethod.textContent = i18n.t('koan23.lbConsistentHash');
+          i18n.applyText(lbMethod, 'koan23.lbConsistentHash');
         }
 
         var assignment = strategy === 'scatter' ? scatteredAssignment : hashedAssignment;
@@ -753,9 +753,9 @@
 
           /* Update explanation */
           if (strategy === 'scatter') {
-            explanation.innerHTML = i18n.t('koan23.explanationScattered');
+            i18n.applyHtml(explanation, 'koan23.explanationScattered');
           } else {
-            explanation.innerHTML = i18n.t('koan23.explanationHashed');
+            i18n.applyHtml(explanation, 'koan23.explanationHashed');
           }
 
           animating = false;
@@ -792,16 +792,16 @@
             if (this.dataset.answer === 'correct') {
               this.classList.add('correct');
               opts.forEach(function (o) { o.classList.add('disabled'); });
-              fb1.textContent = i18n.t('koan23.q1Correct');
+              i18n.applyText(fb1, 'koan23.q1Correct');
               fb1.className = 'routing-fb routing-fb--correct';
               q1Answered = true;
               /* Prompt them to try consistent hashing */
               animTimers.push(setTimeout(function () {
-                explanation.innerHTML = i18n.t('koan23.explanationTryHash');
+                i18n.applyHtml(explanation, 'koan23.explanationTryHash');
               }, 800));
             } else {
               this.classList.add('wrong');
-              fb1.textContent = i18n.t('koan23.q1Wrong');
+              i18n.applyText(fb1, 'koan23.q1Wrong');
               fb1.className = 'routing-fb routing-fb--wrong';
               var self = this;
               setTimeout(function () { self.classList.remove('wrong'); }, 500);
@@ -819,7 +819,7 @@
             if (this.dataset.answer === 'correct') {
               this.classList.add('correct');
               opts.forEach(function (o) { o.classList.add('disabled'); });
-              fb2.textContent = i18n.t('koan23.q2Correct');
+              i18n.applyText(fb2, 'koan23.q2Correct');
               fb2.className = 'routing-fb routing-fb--correct';
               animTimers.push(setTimeout(function () {
                 insight.classList.add('visible');
@@ -827,9 +827,9 @@
             } else {
               this.classList.add('wrong');
               if (this.dataset.why === 'faster') {
-                fb2.textContent = i18n.t('koan23.q2WrongFaster');
+                i18n.applyText(fb2, 'koan23.q2WrongFaster');
               } else {
-                fb2.textContent = i18n.t('koan23.q2WrongLess');
+                i18n.applyText(fb2, 'koan23.q2WrongLess');
               }
               fb2.className = 'routing-fb routing-fb--wrong';
               var self = this;

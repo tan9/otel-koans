@@ -612,14 +612,14 @@
               if (this.dataset.answer === 'correct') {
                 this.classList.add('correct');
                 opts.forEach(function (o) { o.classList.add('disabled'); });
-                fb.textContent = i18n.t('koan05.q1Correct');
+                i18n.applyText(fb, 'koan05.q1Correct');
                 fb.className = 'outlier-fb outlier-fb--correct';
 
                 // Update dashboard to show warning
                 document.getElementById('avgValue').classList.add('warning');
                 var statusEl = document.getElementById('avgStatus');
                 statusEl.classList.add('warning');
-                statusEl.textContent = i18n.t('koan05.avgStatusMisleading');
+                i18n.applyText(statusEl, 'koan05.avgStatusMisleading');
 
                 // Show reveal button
                 setTimeout(function () {
@@ -627,7 +627,7 @@
                 }, 600);
               } else {
                 this.classList.add('wrong');
-                fb.textContent = i18n.t('koan05.q1Wrong');
+                i18n.applyText(fb, 'koan05.q1Wrong');
                 fb.className = 'outlier-fb outlier-fb--wrong';
                 var self = this;
                 setTimeout(function () { self.classList.remove('wrong'); }, 600);
@@ -684,7 +684,7 @@
               if (this.dataset.answer === 'correct') {
                 this.classList.add('correct');
                 opts.forEach(function (o) { o.classList.add('disabled'); });
-                fb.textContent = i18n.t('koan05.q2Correct');
+                i18n.applyText(fb, 'koan05.q2Correct');
                 fb.className = 'outlier-fb outlier-fb--correct';
                 setTimeout(function () {
                   document.getElementById('question3').classList.add('visible');
@@ -692,9 +692,9 @@
               } else {
                 this.classList.add('wrong');
                 if (this.textContent.indexOf('p50') !== -1) {
-                  fb.textContent = i18n.t('koan05.q2WrongP50');
+                  i18n.applyText(fb, 'koan05.q2WrongP50');
                 } else {
-                  fb.textContent = i18n.t('koan05.q2WrongP95');
+                  i18n.applyText(fb, 'koan05.q2WrongP95');
                 }
                 fb.className = 'outlier-fb outlier-fb--wrong';
                 var self = this;
@@ -715,14 +715,14 @@
               if (this.dataset.answer === 'correct') {
                 this.classList.add('correct');
                 opts.forEach(function (o) { o.classList.add('disabled'); });
-                fb.textContent = i18n.t('koan05.q3Correct');
+                i18n.applyText(fb, 'koan05.q3Correct');
                 fb.className = 'outlier-fb outlier-fb--correct';
                 setTimeout(function () {
                   document.getElementById('insight').classList.add('visible');
                 }, 800);
               } else {
                 this.classList.add('wrong');
-                fb.textContent = i18n.t('koan05.q3Wrong');
+                i18n.applyText(fb, 'koan05.q3Wrong');
                 fb.className = 'outlier-fb outlier-fb--wrong';
                 var self = this;
                 setTimeout(function () { self.classList.remove('wrong'); }, 600);

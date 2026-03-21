@@ -1250,7 +1250,7 @@
             smapNodes.forEach(function (n) {
               if (n.dataset.svc !== 'database') n.classList.add('disabled');
             });
-            smapFb.textContent = i18n.t('koan27.serviceMapCorrect');
+            i18n.applyText(smapFb, 'koan27.serviceMapCorrect');
             smapFb.className = 'fp-smap-fb correct';
 
             /* Cascade: root cause -> journey -> koan 0 callback -> completion */

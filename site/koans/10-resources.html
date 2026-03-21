@@ -616,7 +616,7 @@
             if (this.dataset.answer === 'correct') {
               this.classList.add('correct');
               opts.forEach(function (o) { o.classList.add('disabled'); });
-              fb.textContent = i18n.t('koan10.q1Correct');
+              i18n.applyText(fb, 'koan10.q1Correct');
               fb.className = 'res-fb res-fb--correct';
 
               /* Reveal the resources on each card */
@@ -630,7 +630,7 @@
               }, 600);
             } else {
               this.classList.add('wrong');
-              fb.textContent = i18n.t('koan10.q1Wrong');
+              i18n.applyText(fb, 'koan10.q1Wrong');
               fb.className = 'res-fb res-fb--wrong';
               var self = this;
               setTimeout(function () { self.classList.remove('wrong'); }, 600);
@@ -675,14 +675,14 @@
               q2WrongCount++;
 
               if (q2WrongCount === 1) {
-                hint2.textContent = i18n.t('koan10.q2Hint1');
+                i18n.applyText(hint2, 'koan10.q2Hint1');
                 hint2.classList.add('visible');
                 highlightServiceNames();
               } else if (q2WrongCount === 2) {
-                hint2.textContent = i18n.t('koan10.q2Hint2');
+                i18n.applyText(hint2, 'koan10.q2Hint2');
                 hint2.classList.add('visible');
               } else {
-                hint2.textContent = i18n.t('koan10.q2Hint3');
+                i18n.applyText(hint2, 'koan10.q2Hint3');
                 hint2.classList.add('visible');
               }
 
@@ -732,14 +732,14 @@
               q3WrongCount++;
 
               if (q3WrongCount === 1) {
-                hint3.textContent = i18n.t('koan10.q3Hint1');
+                i18n.applyText(hint3, 'koan10.q3Hint1');
                 hint3.classList.add('visible');
                 highlightEnvironments();
               } else if (q3WrongCount === 2) {
-                hint3.textContent = i18n.t('koan10.q3Hint2');
+                i18n.applyText(hint3, 'koan10.q3Hint2');
                 hint3.classList.add('visible');
               } else {
-                hint3.textContent = i18n.t('koan10.q3Hint3');
+                i18n.applyText(hint3, 'koan10.q3Hint3');
                 hint3.classList.add('visible');
               }
 

@@ -520,7 +520,7 @@
           var el = document.createElement('div');
           el.className = 'port-item';
           el.setAttribute('data-id', item.id);
-          el.textContent = i18n.t(item.textKey);
+          i18n.applyText(el, item.textKey);
 
           // Build picker — two buckets
           var picker = document.createElement('div');
@@ -598,7 +598,7 @@
             if (bucketItems.length === 0) {
               var hint = document.createElement('div');
               hint.className = 'bucket-empty-hint';
-              hint.textContent = i18n.t('koan15.bucketEmpty' + letter);
+              i18n.applyText(hint, 'koan15.bucketEmpty' + letter);
               body.appendChild(hint);
               bucket.classList.remove('has-items');
               countEl.textContent = '';
@@ -610,7 +610,7 @@
                 el.className = 'bucket-item';
 
                 var textSpan = document.createElement('span');
-                textSpan.textContent = i18n.t(item.textKey);
+                i18n.applyText(textSpan, item.textKey);
                 el.appendChild(textSpan);
 
                 var removeBtn = document.createElement('span');
@@ -639,7 +639,7 @@
           });
 
           if (!allAssigned) {
-            sortFeedback.textContent = i18n.t('koan15.sortFeedbackAllAssigned');
+            i18n.applyText(sortFeedback, 'koan15.sortFeedbackAllAssigned');
             sortFeedback.className = 'sort-feedback sort-feedback--wrong';
             return;
           }
@@ -666,13 +666,13 @@
             sortWrongCount++;
 
             if (sortWrongCount === 1) {
-              sortFeedback.textContent = i18n.t('koan15.sortHint1');
+              i18n.applyText(sortFeedback, 'koan15.sortHint1');
               sortFeedback.className = 'sort-feedback sort-feedback--hint';
             } else if (sortWrongCount === 2) {
-              sortFeedback.textContent = i18n.t('koan15.sortHint2');
+              i18n.applyText(sortFeedback, 'koan15.sortHint2');
               sortFeedback.className = 'sort-feedback sort-feedback--hint';
             } else {
-              sortFeedback.textContent = i18n.t('koan15.sortHint3');
+              i18n.applyText(sortFeedback, 'koan15.sortHint3');
               sortFeedback.className = 'sort-feedback sort-feedback--hint';
             }
             return;
@@ -714,7 +714,7 @@
 
           // Show success feedback
           setTimeout(function () {
-            sortFeedback.textContent = i18n.t('koan15.sortCorrectFeedback');
+            i18n.applyText(sortFeedback, 'koan15.sortCorrectFeedback');
             sortFeedback.className = 'sort-feedback';
             sortFeedback.style.color = 'var(--accent-green)';
           }, letters.length * 400);
@@ -741,7 +741,7 @@
               if (this.dataset.answer === 'correct') {
                 this.classList.add('correct');
                 opts.forEach(function (o) { o.classList.add('disabled'); });
-                fb.textContent = i18n.t('koan15.q1Correct');
+                i18n.applyText(fb, 'koan15.q1Correct');
                 fb.className = 'port-feedback port-feedback--correct';
                 setTimeout(function () {
                   document.getElementById('insight').classList.add('visible');

@@ -517,7 +517,7 @@
           started = true;
           revealBtn.style.opacity = '0';
           revealBtn.style.pointerEvents = 'none';
-          status.textContent = i18n.t('koan07.statusLoading');
+          i18n.applyText(status, 'koan07.statusLoading');
 
           // Reveal rows one at a time with a cascade
           rows.forEach(function (row, i) {
@@ -529,7 +529,7 @@
           // Show total line
           setTimeout(function () {
             document.getElementById('totalLine').classList.add('visible');
-            status.textContent = i18n.t('koan07.statusLoaded');
+            i18n.applyText(status, 'koan07.statusLoaded');
           }, 2000);
 
           // Highlight the database row to draw attention to it

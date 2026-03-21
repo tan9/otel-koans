@@ -575,15 +575,15 @@
         activeBtn.classList.add('active');
 
         /* Update sampler label */
-        if (strategy === 'all') samplerLabel.textContent = i18n.t('koan22.samplerOff');
-        else if (strategy === 'random') samplerLabel.textContent = i18n.t('koan22.samplerRandom');
-        else samplerLabel.textContent = i18n.t('koan22.samplerTail');
+        if (strategy === 'all') i18n.applyText(samplerLabel, 'koan22.samplerOff');
+        else if (strategy === 'random') i18n.applyText(samplerLabel, 'koan22.samplerRandom');
+        else i18n.applyText(samplerLabel, 'koan22.samplerTail');
 
         /* Reset pills */
         buildPills();
 
         var kept = countKept(strategy);
-        counter.textContent = i18n.t('koan22.counterLoading');
+        i18n.applyText(counter, 'koan22.counterLoading');
 
         /* Animate each pill */
         var stagger = 120;
@@ -632,11 +632,11 @@
         var totalTime = (traces.length * stagger) + animDuration + 200;
 
         setTimeout(function () {
-          counter.textContent = i18n.t('koan22.counterTemplate').replace('{kept}', kept);
+          i18n.applyText(counter, 'koan22.counterTemplate');.replace('{kept}', kept);
 
           if (strategy === 'all') {
             counter.style.color = 'var(--accent-red)';
-            explanation.innerHTML = i18n.t('koan22.explanationAll');
+            i18n.applyHtml(explanation, 'koan22.explanationAll');
           } else if (strategy === 'random') {
             counter.style.color = 'var(--accent-orange)';
             /* Count how many error traces survived the random sample */
@@ -648,10 +648,10 @@
                 if (isKept(t, 'random')) errKept++;
               }
             });
-            explanation.innerHTML = i18n.t('koan22.explanationRandom').replace('{kept}', kept).replace('{errKept}', errKept).replace('{errTotal}', errTotal);
+            i18n.applyHtml(explanation, 'koan22.explanationRandom');.replace('{kept}', kept).replace('{errKept}', errKept).replace('{errTotal}', errTotal);
           } else {
             counter.style.color = 'var(--accent-green)';
-            explanation.innerHTML = i18n.t('koan22.explanationSmart').replace('{kept}', kept);
+            i18n.applyHtml(explanation, 'koan22.explanationSmart');.replace('{kept}', kept);
           }
 
           animating = false;
@@ -683,7 +683,7 @@
           if (this.dataset.answer === 'correct') {
             this.classList.add('correct');
             quizOpts.forEach(function (o) { o.classList.add('disabled'); });
-            fb1.textContent = i18n.t('koan22.q1Correct');
+            i18n.applyText(fb1, 'koan22.q1Correct');
             fb1.className = 'sampling-fb sampling-fb--correct';
             setTimeout(function () {
               insight.classList.add('visible');
@@ -692,9 +692,9 @@
             wrongAttempts++;
             this.classList.add('wrong');
             if (wrongAttempts === 1) {
-              fb1.textContent = i18n.t('koan22.q1Wrong1');
+              i18n.applyText(fb1, 'koan22.q1Wrong1');
             } else {
-              fb1.textContent = i18n.t('koan22.q1Wrong2');
+              i18n.applyText(fb1, 'koan22.q1Wrong2');
             }
             fb1.className = 'sampling-fb sampling-fb--wrong';
             var self = this;

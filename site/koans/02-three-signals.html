@@ -646,7 +646,7 @@
             if (bucketItems.length === 0) {
               var hint = document.createElement('div');
               hint.className = 'bucket-empty-hint';
-              hint.textContent = i18n.t('koan02.bucketEmpty' + letter);
+              i18n.applyText(hint, 'koan02.bucketEmpty' + letter);
               body.appendChild(hint);
               bucket.classList.remove('has-items');
               countEl.textContent = '';
@@ -708,7 +708,7 @@
           });
 
           if (!allAssigned) {
-            sortFeedback.textContent = i18n.t('koan02.sortFeedbackAllAssigned');
+            i18n.applyText(sortFeedback, 'koan02.sortFeedbackAllAssigned');
             sortFeedback.className = 'sort-feedback sort-feedback--wrong';
             return;
           }
@@ -725,7 +725,7 @@
           });
 
           if (!validSizes) {
-            sortFeedback.textContent = i18n.t('koan02.sortFeedbackEqualSize');
+            i18n.applyText(sortFeedback, 'koan02.sortFeedbackEqualSize');
             sortFeedback.className = 'sort-feedback sort-feedback--wrong';
             return;
           }
@@ -754,10 +754,10 @@
             sortWrongCount++;
 
             if (sortWrongCount === 1) {
-              sortFeedback.textContent = i18n.t('koan02.sortHint1');
+              i18n.applyText(sortFeedback, 'koan02.sortHint1');
               sortFeedback.className = 'sort-feedback sort-feedback--hint';
             } else if (sortWrongCount === 2) {
-              sortFeedback.textContent = i18n.t('koan02.sortHint2');
+              i18n.applyText(sortFeedback, 'koan02.sortHint2');
               sortFeedback.className = 'sort-feedback sort-feedback--hint';
             } else {
               // 3rd+ wrong: highlight a specific misplaced item's characteristic
@@ -765,7 +765,7 @@
               if (misplaced) {
                 sortFeedback.textContent = '\u201c' + misplaced.text + '\u201d: ' + itemCharacteristics[misplaced.id] + '. ' + i18n.t('koan02.sortHint3Suffix');
               } else {
-                sortFeedback.textContent = i18n.t('koan02.sortHint3Fallback');
+                i18n.applyText(sortFeedback, 'koan02.sortHint3Fallback');
               }
               sortFeedback.className = 'sort-feedback sort-feedback--hint';
             }
@@ -813,7 +813,7 @@
 
           // After reveal, show the context line, then the match exercise
           setTimeout(function () {
-            sortFeedback.textContent = i18n.t('koan02.sortCorrectFeedback');
+            i18n.applyText(sortFeedback, 'koan02.sortCorrectFeedback');
             sortFeedback.className = 'sort-feedback';
             sortFeedback.style.color = 'var(--accent-green)';
           }, letters.length * 400);
@@ -851,14 +851,14 @@
           });
 
           if (!allFilled) {
-            matchFeedback.textContent = i18n.t('koan02.matchFeedbackEmpty');
+            i18n.applyText(matchFeedback, 'koan02.matchFeedbackEmpty');
             matchFeedback.className = 'match-feedback match-feedback--wrong';
             return;
           }
 
           if (allCorrect) {
             matchSolved = true;
-            matchFeedback.textContent = i18n.t('koan02.matchCorrect');
+            i18n.applyText(matchFeedback, 'koan02.matchCorrect');
             matchFeedback.className = 'match-feedback match-feedback--correct';
             selects.forEach(function (sel) { sel.disabled = true; });
             matchCheckBtn.classList.add('disabled');
@@ -869,7 +869,7 @@
               document.getElementById('insight').classList.add('visible');
             }, 800);
           } else {
-            matchFeedback.textContent = i18n.t('koan02.matchWrong');
+            i18n.applyText(matchFeedback, 'koan02.matchWrong');
             matchFeedback.className = 'match-feedback match-feedback--wrong';
             setTimeout(function () {
               selects.forEach(function (sel) {

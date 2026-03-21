@@ -598,7 +598,7 @@
           started = true;
           animateBtn.style.opacity = '0';
           animateBtn.style.pointerEvents = 'none';
-          status.textContent = i18n.t('koan04.statusWatching');
+          i18n.applyText(status, 'koan04.statusWatching');
 
           // Chart A: counter line (orange)
           animateLine(
@@ -627,7 +627,7 @@
           // Show labeling exercise after animation completes
           var totalTime = 200 + 10 * 200 + 500;
           setTimeout(function () {
-            status.textContent = i18n.t('koan04.statusDone');
+            i18n.applyText(status, 'koan04.statusDone');
             labelExercise.classList.add('visible');
           }, totalTime);
         });
@@ -700,7 +700,7 @@
           });
 
           if (allCorrect) {
-            labelFb.textContent = i18n.t('koan04.labelCorrect');
+            i18n.applyText(labelFb, 'koan04.labelCorrect');
             labelFb.className = 'label-fb label-fb--correct';
             checkBtn.style.opacity = '0';
             checkBtn.style.pointerEvents = 'none';
@@ -711,15 +711,15 @@
               var nameB = document.getElementById('nameB');
               var nameC = document.getElementById('nameC');
 
-              nameA.textContent = i18n.t('koan04.revealA');
+              i18n.applyText(nameA, 'koan04.revealA');
               nameA.classList.add('revealed-counter');
               document.getElementById('headerA').classList.add('revealed');
 
-              nameB.textContent = i18n.t('koan04.revealB');
+              i18n.applyText(nameB, 'koan04.revealB');
               nameB.classList.add('revealed-gauge');
               document.getElementById('headerB').classList.add('revealed');
 
-              nameC.textContent = i18n.t('koan04.revealC');
+              i18n.applyText(nameC, 'koan04.revealC');
               nameC.classList.add('revealed-histogram');
               document.getElementById('headerC').classList.add('revealed');
             }, 400);
@@ -729,10 +729,10 @@
               document.getElementById('finalQ').classList.add('visible');
             }, 1000);
           } else if (anyWrong) {
-            labelFb.textContent = i18n.t('koan04.labelWrong');
+            i18n.applyText(labelFb, 'koan04.labelWrong');
             labelFb.className = 'label-fb label-fb--wrong';
           } else {
-            labelFb.textContent = i18n.t('koan04.labelEmpty');
+            i18n.applyText(labelFb, 'koan04.labelEmpty');
             labelFb.className = 'label-fb label-fb--wrong';
           }
         });
@@ -748,14 +748,14 @@
               if (this.dataset.answer === 'correct') {
                 this.classList.add('correct');
                 opts.forEach(function (o) { o.classList.add('disabled'); });
-                fb.textContent = i18n.t('koan04.finalQCorrect');
+                i18n.applyText(fb, 'koan04.finalQCorrect');
                 fb.className = 'types-fb types-fb--correct';
                 setTimeout(function () {
                   document.getElementById('insight').classList.add('visible');
                 }, 800);
               } else {
                 this.classList.add('wrong');
-                fb.textContent = i18n.t('koan04.finalQWrong');
+                i18n.applyText(fb, 'koan04.finalQWrong');
                 fb.className = 'types-fb types-fb--wrong';
                 var self = this;
                 setTimeout(function () { self.classList.remove('wrong'); }, 500);

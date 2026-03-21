@@ -80,6 +80,16 @@
     return obj;
   }
 
+  /* ── Helpers: set text AND mark for re-translation on locale switch ── */
+  function applyText(el, key) {
+    el.textContent = t(key);
+    el.setAttribute('data-i18n', key);
+  }
+  function applyHtml(el, key) {
+    el.innerHTML = t(key).replace(/\n/g, '<br>');
+    el.setAttribute('data-i18n-html', key);
+  }
+
   /* ── Apply DOM translations ── */
   function applyDOM() {
     document.querySelectorAll('[data-i18n]').forEach(function (el) {
@@ -128,6 +138,8 @@
   /* ── Public API ── */
   window.i18n = {
     t: t,
+    applyText: applyText,
+    applyHtml: applyHtml,
     setLocale: setLocale,
     getLocale: function () { return currentLocale; },
     getSupported: function () { return SUPPORTED; },

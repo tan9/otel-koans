@@ -103,28 +103,45 @@
     return obj;
   }
 
-  /* ── Helpers: set text AND mark for re-translation on locale switch ── */
-  function applyText(el, key) {
-    el.textContent = t(key);
+  /* ── Helpers: set text AND mark for re-translation on locale switch.
+     Optional transform(value) lets callers post-process the translated
+     string (e.g. replace placeholders, concatenate). The transform is
+     stored on the element and re-applied by applyDOM() on locale change,
+     so dynamic values stay current. ── */
+  function applyText(el, key, transform) {
+    var v = t(key);
+    if (transform) v = transform(v);
+    el.textContent = v;
     el.setAttribute('data-i18n', key);
     el.removeAttribute('data-i18n-html');
+    if (transform) el._i18nTransform = transform;
+    else delete el._i18nTransform;
   }
-  function applyHtml(el, key) {
-    el.innerHTML = t(key).replace(/\n/g, '<br>');
+  function applyHtml(el, key, transform) {
+    var v = t(key).replace(/\n/g, '<br>');
+    if (transform) v = transform(v);
+    el.innerHTML = v;
     el.setAttribute('data-i18n-html', key);
     el.removeAttribute('data-i18n');
+    if (transform) el._i18nTransform = transform;
+    else delete el._i18nTransform;
   }
 
   /* ── Apply DOM translations ── */
   function applyDOM() {
     document.querySelectorAll('[data-i18n]').forEach(function (el) {
       var v = t(el.getAttribute('data-i18n'));
-      if (v !== el.getAttribute('data-i18n')) el.textContent = v;
+      if (v !== el.getAttribute('data-i18n')) {
+        if (el._i18nTransform) v = el._i18nTransform(v);
+        el.textContent = v;
+      }
     });
     document.querySelectorAll('[data-i18n-html]').forEach(function (el) {
       var v = t(el.getAttribute('data-i18n-html'));
       if (v !== el.getAttribute('data-i18n-html')) {
-        el.innerHTML = v.replace(/\n/g, '<br>');
+        v = v.replace(/\n/g, '<br>');
+        if (el._i18nTransform) v = el._i18nTransform(v);
+        el.innerHTML = v;
       }
     });
     document.querySelectorAll('[data-i18n-title]').forEach(function (el) {

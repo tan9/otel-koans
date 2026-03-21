@@ -780,7 +780,7 @@
         });
 
         if (wrongCount > 0) {
-          i18n.applyText(status, 'koan17.statusWrongFields');.replace('{count}', wrongCount);
+          i18n.applyText(status, 'koan17.statusWrongFields', function(v) { return v.replace('{count}', wrongCount); });
           status.className = 'pipeline-status pipeline-status--error';
 
           /* Show the first wrong field's hint below the button */

@@ -632,7 +632,7 @@
         var totalTime = (traces.length * stagger) + animDuration + 200;
 
         setTimeout(function () {
-          i18n.applyText(counter, 'koan22.counterTemplate');.replace('{kept}', kept);
+          i18n.applyText(counter, 'koan22.counterTemplate', function(v) { return v.replace('{kept}', kept); });
 
           if (strategy === 'all') {
             counter.style.color = 'var(--accent-red)';
@@ -648,10 +648,10 @@
                 if (isKept(t, 'random')) errKept++;
               }
             });
-            i18n.applyHtml(explanation, 'koan22.explanationRandom');.replace('{kept}', kept).replace('{errKept}', errKept).replace('{errTotal}', errTotal);
+            i18n.applyHtml(explanation, 'koan22.explanationRandom', function(v) { return v.replace('{kept}', kept).replace('{errKept}', errKept).replace('{errTotal}', errTotal); });
           } else {
             counter.style.color = 'var(--accent-green)';
-            i18n.applyHtml(explanation, 'koan22.explanationSmart');.replace('{kept}', kept);
+            i18n.applyHtml(explanation, 'koan22.explanationSmart', function(v) { return v.replace('{kept}', kept); });
           }
 
           animating = false;

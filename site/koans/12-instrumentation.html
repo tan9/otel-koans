@@ -581,7 +581,7 @@
 
           // Update status
           if (correctCount < totalCorrect) {
-            i18n.applyText(status, 'koan12.statusProgress');.replace('{count}', correctCount).replace('{total}', totalCorrect);
+            i18n.applyText(status, 'koan12.statusProgress', function(v) { return v.replace('{count}', correctCount).replace('{total}', totalCorrect); });
           }
 
           // All correct lines placed

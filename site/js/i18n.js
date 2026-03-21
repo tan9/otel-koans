@@ -18,6 +18,7 @@
     { code: 'cs-CZ', name: '\u010ce\u0161tina' },
     { code: 'ro-RO', name: 'Rom\u00e2n\u0103' },
     { code: 'zh-CN', name: '\u4e2d\u6587 (\u7b80\u4f53)' },
+    { code: 'zh-TW', name: '\u4e2d\u6587 (\u7e41\u9ad4)' },
     { code: 'ko-KR', name: '\ud55c\uad6d\uc5b4' },
     { code: 'ja-JP', name: '\u65e5\u672c\u8a9e' }
   ];
@@ -31,6 +32,17 @@
 
     var nav = navigator.language || navigator.userLanguage || '';
     if (codeSupported(nav)) return nav;
+    /* Chinese is the only language with two supported variants (zh-CN / zh-TW).
+       The generic base-language fallback below would always pick whichever
+       appears first in SUPPORTED, so we handle zh-* explicitly here.
+       Other languages (en, pt, es, fr, de, …) have a single variant each,
+       so the generic fallback is fine for them. */
+    var lower = nav.toLowerCase();
+    if (lower.indexOf('zh') === 0) {
+      if (lower.indexOf('hant') !== -1 || /zh-(tw|hk|mo)/i.test(nav)) return 'zh-TW';
+      if (lower.indexOf('hans') !== -1 || /zh-(cn|sg)/i.test(nav)) return 'zh-CN';
+      return 'zh-CN'; /* bare "zh" defaults to Simplified */
+    }
     var base = nav.split('-')[0];
     for (var i = 0; i < SUPPORTED.length; i++) {
       if (SUPPORTED[i].code.split('-')[0] === base) return SUPPORTED[i].code;

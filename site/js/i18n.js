@@ -18,6 +18,7 @@
     { code: 'cs-CZ', name: '\u010ce\u0161tina' },
     { code: 'ro-RO', name: 'Rom\u00e2n\u0103' },
     { code: 'zh-CN', name: '\u4e2d\u6587 (\u7b80\u4f53)' },
+    { code: 'zh-TW', name: '\u4e2d\u6587 (\u7e41\u9ad4)' },
     { code: 'ko-KR', name: '\ud55c\uad6d\uc5b4' },
     { code: 'ja-JP', name: '\u65e5\u672c\u8a9e' }
   ];

@@ -104,7 +104,7 @@
       var v = t(el.getAttribute('data-i18n-placeholder'));
       if (v !== el.getAttribute('data-i18n-placeholder')) el.placeholder = v;
     });
-    document.documentElement.lang = currentLocale.split('-')[0];
+    document.documentElement.lang = currentLocale;
   }
 
   /* ── Set locale and re-render ── */

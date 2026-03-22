@@ -45,4 +45,34 @@ describe('Static analysis: broken i18n call patterns', function () {
     var matches = file.content.match(directAssign);
     expect(matches).toBeNull();
   });
+
+  // i18n.t() in koan inline scripts produces a one-time translation that goes
+  // stale on locale switch. Use applyText/applyHtml instead, or store the key
+  // and translate at display time. The only allowed use is the ready-check:
+  //   i18n.t('common.desktopOnly') !== 'common.desktopOnly'
+  test.each(koanFiles)('$name: no i18n.t() in inline scripts (use applyText/applyHtml instead)', function (file) {
+    // Extract inline <script> blocks (not src= ones)
+    var scriptPattern = /<script(?![^>]*\bsrc\b)[^>]*>([\s\S]*?)<\/script>/gi;
+    var match;
+    var calls = [];
+    while ((match = scriptPattern.exec(file.content)) !== null) {
+      var code = match[1];
+      // Find all i18n.t( calls with their surrounding context
+      var tCallPattern = /i18n\.t\s*\(/g;
+      var tMatch;
+      while ((tMatch = tCallPattern.exec(code)) !== null) {
+        // Get the line containing this call
+        var start = code.lastIndexOf('\n', tMatch.index) + 1;
+        var end = code.indexOf('\n', tMatch.index);
+        if (end === -1) end = code.length;
+        var line = code.slice(start, end).trim();
+
+        // Skip the ready-check pattern: i18n.t('...') !== '...'
+        if (/i18n\.t\s*\(\s*['"][^'"]+['"]\s*\)\s*!==?\s*['"]/.test(line)) continue;
+
+        calls.push(line.slice(0, 100));
+      }
+    }
+    expect(calls).toEqual([]);
+  });
 });

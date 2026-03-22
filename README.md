@@ -4,9 +4,6 @@
 
 <h1 align="center">OpenTelemetry Koans</h1>
 
-[![CI](https://github.com/mreider/otel-koans/actions/workflows/ci.yml/badge.svg)](https://github.com/mreider/otel-koans/actions/workflows/ci.yml)
-[![Deploy](https://github.com/mreider/otel-koans/actions/workflows/deploy.yml/badge.svg)](https://github.com/mreider/otel-koans/actions/workflows/deploy.yml)
-
 <p align="center">
   <em>A system ran for a thousand days without error.<br>
   On the thousand-and-first day, it failed.<br>
@@ -21,6 +18,9 @@
 ---
 
 Twenty interactive exercises. No backend. No prior knowledge required.
+
+[![CI](https://github.com/mreider/otel-koans/actions/workflows/ci.yml/badge.svg)](https://github.com/mreider/otel-koans/actions/workflows/ci.yml)
+[![Deploy](https://github.com/mreider/otel-koans/actions/workflows/deploy.yml/badge.svg)](https://github.com/mreider/otel-koans/actions/workflows/deploy.yml)
 
 Each koan presents a problem. You investigate, discover, and name the concept yourself — metrics, traces, logs, spans, collectors, pipelines, sampling, correlation — one idea at a time, in order.
 

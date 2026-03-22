@@ -33,7 +33,8 @@
           target.addEventListener('transitionend', function handler(e) {
             if (e.propertyName === 'max-height' || e.propertyName === 'opacity') {
               target.removeEventListener('transitionend', handler);
-              scrollIntoView(target);
+              clearTimeout(pending);
+              pending = setTimeout(function () { scrollIntoView(target); }, SCROLL_DELAY);
             }
           });
         })(el);

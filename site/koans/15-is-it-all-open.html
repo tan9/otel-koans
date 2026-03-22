@@ -616,7 +616,7 @@
                 var removeBtn = document.createElement('span');
                 removeBtn.className = 'bucket-item-remove';
                 removeBtn.textContent = '\u2715';
-                removeBtn.title = i18n.t('koan15.removeTitle');
+                removeBtn.setAttribute('data-i18n-title', 'koan15.removeTitle');
                 removeBtn.addEventListener('click', function () {
                   unassignItem(item.id);
                 });
@@ -695,8 +695,8 @@
           removes.forEach(function (el) { el.style.display = 'none'; });
 
           var bucketInfo = {};
-          bucketInfo[portableBucket] = { name: i18n.t('koan15.revealPortable'), cssClass: 'bucket-portable' };
-          bucketInfo[lockedBucket] = { name: i18n.t('koan15.revealLocked'), cssClass: 'bucket-locked' };
+          bucketInfo[portableBucket] = { nameKey: 'koan15.revealPortable', cssClass: 'bucket-portable' };
+          bucketInfo[lockedBucket] = { nameKey: 'koan15.revealLocked', cssClass: 'bucket-locked' };
 
           var letters = ['A', 'B'];
           letters.forEach(function (letter, i) {
@@ -707,7 +707,7 @@
               var info = bucketInfo[letter];
 
               bucket.classList.add('revealed', info.cssClass);
-              label.textContent = info.name;
+              i18n.applyText(label, info.nameKey);
               countEl.textContent = '';
             }, i * 400);
           });
@@ -731,9 +731,9 @@
           var fb = document.getElementById('feedback1');
           var opts = q.querySelectorAll('.port-option');
 
-          var wrongMessages = {
-            data: i18n.t('koan15.q1WrongData'),
-            otel: i18n.t('koan15.q1WrongOtel')
+          var wrongMessageKeys = {
+            data: 'koan15.q1WrongData',
+            otel: 'koan15.q1WrongOtel'
           };
 
           opts.forEach(function (opt) {
@@ -748,7 +748,8 @@
                 }, 800);
               } else {
                 this.classList.add('wrong');
-                fb.textContent = wrongMessages[this.dataset.label] || i18n.t('koan15.q1WrongFallback');
+                var wrongKey = wrongMessageKeys[this.dataset.label] || 'koan15.q1WrongFallback';
+                i18n.applyText(fb, wrongKey);
                 fb.className = 'port-feedback port-feedback--wrong';
                 var self = this;
                 setTimeout(function () { self.classList.remove('wrong'); }, 600);

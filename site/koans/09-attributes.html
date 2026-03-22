@@ -532,23 +532,23 @@
           sel1: {
             keyword: 'endpoint',
             labelId: 'label1',
-            hint1: i18n.t('koan09.hint1L1'),
-            hint2: i18n.t('koan09.hint1L2'),
-            hint3: i18n.t('koan09.hint1L3')
+            hint1Key: 'koan09.hint1L1',
+            hint2Key: 'koan09.hint1L2',
+            hint3Key: 'koan09.hint1L3'
           },
           sel2: {
             keyword: 'HTTP method',
             labelId: 'label2',
-            hint1: i18n.t('koan09.hint2L1'),
-            hint2: i18n.t('koan09.hint2L2'),
-            hint3: i18n.t('koan09.hint2L3')
+            hint1Key: 'koan09.hint2L1',
+            hint2Key: 'koan09.hint2L2',
+            hint3Key: 'koan09.hint2L3'
           },
           sel3: {
             keyword: 'succeed',
             labelId: 'label3',
-            hint1: i18n.t('koan09.hint3L1'),
-            hint2: i18n.t('koan09.hint3L2'),
-            hint3: i18n.t('koan09.hint3L3')
+            hint1Key: 'koan09.hint3L1',
+            hint2Key: 'koan09.hint3L2',
+            hint3Key: 'koan09.hint3L3'
           }
         };
 
@@ -611,13 +611,13 @@
 
               if (wrongCounts[selId] === 1) {
                 highlightKeyword(selId);
-                hint.textContent = data.hint1;
+                i18n.applyText(hint, data.hint1Key);
                 hint.classList.add('visible');
               } else if (wrongCounts[selId] === 2) {
-                hint.textContent = data.hint2;
+                i18n.applyText(hint, data.hint2Key);
                 hint.classList.add('visible');
               } else {
-                hint.textContent = data.hint3;
+                i18n.applyText(hint, data.hint3Key);
                 hint.classList.add('visible');
               }
             }

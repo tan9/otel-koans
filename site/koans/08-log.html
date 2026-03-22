@@ -473,7 +473,7 @@
         }
 
         // --- Quiz logic ---
-        function setupQuiz(qId, fbId, correctMsg, wrongMsg, onCorrect) {
+        function setupQuiz(qId, fbId, correctKey, wrongKey, onCorrect) {
           var q = document.getElementById(qId);
           var fb = document.getElementById(fbId);
           var opts = q.querySelectorAll('.k7-opt');
@@ -483,14 +483,14 @@
               if (this.dataset.answer === 'correct') {
                 this.classList.add('correct');
                 opts.forEach(function (o) { o.classList.add('disabled'); });
-                fb.textContent = correctMsg;
+                i18n.applyText(fb, correctKey);
                 fb.className = 'k7-fb k7-fb--correct';
                 if (onCorrect) {
                   setTimeout(onCorrect, 800);
                 }
               } else {
                 this.classList.add('wrong');
-                fb.textContent = wrongMsg;
+                i18n.applyText(fb, wrongKey);
                 fb.className = 'k7-fb k7-fb--wrong';
                 var self = this;
                 setTimeout(function () { self.classList.remove('wrong'); }, 500);
@@ -502,8 +502,8 @@
         // Q1: Feel the gap
         setupQuiz(
           'q1', 'fb1',
-          i18n.t('koan08.q1Correct'),
-          i18n.t('koan08.q1Wrong'),
+          'koan08.q1Correct',
+          'koan08.q1Wrong',
           function () {
             // Show narrator2, then evidence, then Q2
             var n2 = document.getElementById('narrator2');
@@ -524,8 +524,8 @@
         // Q2: What did it capture?
         setupQuiz(
           'q2', 'fb2',
-          i18n.t('koan08.q2Correct'),
-          i18n.t('koan08.q2Wrong'),
+          'koan08.q2Correct',
+          'koan08.q2Wrong',
           function () {
             document.getElementById('q3').classList.add('visible');
           }
@@ -534,8 +534,8 @@
         // Q3: Name it
         setupQuiz(
           'q3', 'fb3',
-          i18n.t('koan08.q3Correct'),
-          i18n.t('koan08.q3Wrong'),
+          'koan08.q3Correct',
+          'koan08.q3Wrong',
           function () {
             document.getElementById('insight').classList.add('visible');
           }

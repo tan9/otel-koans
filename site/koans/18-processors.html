@@ -689,19 +689,18 @@
           opts.forEach(function (opt) {
             opt.addEventListener('click', function () {
               var fbKey = this.dataset.fbKey;
-              var feedbackText = fbKey ? i18n.t(fbKey) : '';
 
               if (this.dataset.answer === 'correct') {
                 this.classList.add('correct');
                 opts.forEach(function (o) { o.classList.add('disabled'); });
-                fbEl.textContent = feedbackText;
+                if (fbKey) { i18n.applyText(fbEl, fbKey); }
                 fbEl.className = 'trace-fb trace-fb--correct';
                 if (onCorrect) {
                   setTimeout(onCorrect, 800);
                 }
               } else {
                 this.classList.add('wrong');
-                fbEl.textContent = feedbackText;
+                if (fbKey) { i18n.applyText(fbEl, fbKey); }
                 fbEl.className = 'trace-fb trace-fb--wrong';
                 var self = this;
                 setTimeout(function () { self.classList.remove('wrong'); }, 600);

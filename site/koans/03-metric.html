@@ -533,8 +533,9 @@
           eventStream.scrollTop = eventStream.scrollHeight;
 
           eventCount++;
-          var tmpl = i18n.t('koan03.eventCountTemplate');
-          eventCountEl.textContent = tmpl.replace('{count}', eventCount);
+          i18n.applyText(eventCountEl, 'koan03.eventCountTemplate', function (v) {
+            return v.replace('{count}', eventCount);
+          });
         }
 
         // --- Stream events with rising frequency ---
@@ -690,7 +691,11 @@
               } else {
                 this.classList.add('wrong');
                 var fbKey = this.dataset.fbKey;
-                fb.textContent = fbKey ? i18n.t(fbKey) : this.dataset.fb;
+                if (fbKey) {
+                  i18n.applyText(fb, fbKey);
+                } else {
+                  fb.textContent = this.dataset.fb;
+                }
                 fb.className = 'metric-fb metric-fb--wrong';
                 var self = this;
                 setTimeout(function () { self.classList.remove('wrong'); }, 1200);

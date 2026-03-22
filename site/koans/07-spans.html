@@ -545,7 +545,7 @@
         });
 
         // Quiz engine
-        function setupQuiz(qId, fbId, nextIds, correctMsg, wrongMsg) {
+        function setupQuiz(qId, fbId, nextIds, correctKey, wrongKey) {
           var q = document.getElementById(qId);
           var fb = document.getElementById(fbId);
           var opts = q.querySelectorAll('.wf-opt');
@@ -555,7 +555,7 @@
               if (this.dataset.answer === 'correct') {
                 this.classList.add('correct');
                 opts.forEach(function (o) { o.classList.add('disabled'); });
-                fb.textContent = correctMsg;
+                i18n.applyText(fb, correctKey);
                 fb.className = 'wf-fb wf-fb--correct';
                 // Reveal next elements in sequence
                 var delay = 800;
@@ -567,7 +567,7 @@
                 });
               } else {
                 this.classList.add('wrong');
-                fb.textContent = wrongMsg;
+                i18n.applyText(fb, wrongKey);
                 fb.className = 'wf-fb wf-fb--wrong';
                 var self = this;
                 setTimeout(function () { self.classList.remove('wrong'); }, 500);
@@ -578,20 +578,20 @@
 
         setupQuiz(
           'q1', 'fb1', ['mid1', 'q2'],
-          i18n.t('koan07.q1Correct'),
-          i18n.t('koan07.q1Wrong')
+          'koan07.q1Correct',
+          'koan07.q1Wrong'
         );
 
         setupQuiz(
           'q2', 'fb2', ['mid2', 'q3'],
-          i18n.t('koan07.q2Correct'),
-          i18n.t('koan07.q2Wrong')
+          'koan07.q2Correct',
+          'koan07.q2Wrong'
         );
 
         setupQuiz(
           'q3', 'fb3', ['insight'],
-          i18n.t('koan07.q3Correct'),
-          i18n.t('koan07.q3Wrong')
+          'koan07.q3Correct',
+          'koan07.q3Wrong'
         );
       }
 

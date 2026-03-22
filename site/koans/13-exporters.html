@@ -547,11 +547,11 @@
               if (codeLineEl) codeLineEl.classList.add('code-line-highlight');
 
               if (meta.wrongCount === 1) {
-                hints.push(i18n.t(meta.hint1Key));
+                hints.push(meta.hint1Key);
               } else if (meta.wrongCount === 2) {
-                hints.push(i18n.t(meta.hint2Key));
+                hints.push(meta.hint2Key);
               } else {
-                hints.push(i18n.t(meta.hint3Key));
+                hints.push(meta.hint3Key);
               }
             }
           });
@@ -561,7 +561,7 @@
 
           /* Show the first wrong blank's hint (most actionable) */
           if (hints.length > 0) {
-            blankHint.textContent = hints[0];
+            i18n.applyText(blankHint, hints[0]);
             blankHint.classList.add('visible');
           }
 

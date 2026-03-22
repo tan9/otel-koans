@@ -664,28 +664,28 @@
           wrongCount: 0,
           yamlLines: ['yaml-def-receivers-1', 'yaml-def-receivers-2', 'yaml-def-receivers-3', 'yaml-def-receivers-4'],
           sectionName: 'receivers',
-          inlineHint: i18n.t('koan17.hintRecInline'),
-          hint1: i18n.t('koan17.hintRec1'),
-          hint2: i18n.t('koan17.hintRec2'),
-          hint3: i18n.t('koan17.hintRec3')
+          inlineHintKey: 'koan17.hintRecInline',
+          hint1Key: 'koan17.hintRec1',
+          hint2Key: 'koan17.hintRec2',
+          hint3Key: 'koan17.hintRec3'
         },
         selProcessors: {
           wrongCount: 0,
           yamlLines: ['yaml-def-processors-1', 'yaml-def-processors-2'],
           sectionName: 'processors',
-          inlineHint: i18n.t('koan17.hintProcInline'),
-          hint1: i18n.t('koan17.hintProc1'),
-          hint2: i18n.t('koan17.hintProc2'),
-          hint3: i18n.t('koan17.hintProc3')
+          inlineHintKey: 'koan17.hintProcInline',
+          hint1Key: 'koan17.hintProc1',
+          hint2Key: 'koan17.hintProc2',
+          hint3Key: 'koan17.hintProc3'
         },
         selExporters: {
           wrongCount: 0,
           yamlLines: ['yaml-def-exporters-1', 'yaml-def-exporters-2', 'yaml-def-exporters-3'],
           sectionName: 'exporters',
-          inlineHint: i18n.t('koan17.hintExpInline'),
-          hint1: i18n.t('koan17.hintExp1'),
-          hint2: i18n.t('koan17.hintExp2'),
-          hint3: i18n.t('koan17.hintExp3')
+          inlineHintKey: 'koan17.hintExpInline',
+          hint1Key: 'koan17.hintExp1',
+          hint2Key: 'koan17.hintExp2',
+          hint3Key: 'koan17.hintExp3'
         }
       };
 
@@ -764,17 +764,17 @@
 
             /* Show progressive inline hint */
             if (meta.wrongCount === 1) {
-              item.hint.textContent = meta.inlineHint;
+              i18n.applyText(item.hint, meta.inlineHintKey);
               item.hint.classList.add('visible');
-              hints.push(meta.hint1);
+              hints.push(meta.hint1Key);
             } else if (meta.wrongCount === 2) {
-              item.hint.textContent = meta.hint2;
+              i18n.applyText(item.hint, meta.hint2Key);
               item.hint.classList.add('visible');
-              hints.push(meta.hint2);
+              hints.push(meta.hint2Key);
             } else {
-              item.hint.textContent = meta.hint3;
+              i18n.applyText(item.hint, meta.hint3Key);
               item.hint.classList.add('visible');
-              hints.push(meta.hint3);
+              hints.push(meta.hint3Key);
             }
           }
         });
@@ -785,7 +785,7 @@
 
           /* Show the first wrong field's hint below the button */
           if (hints.length > 0) {
-            pipelineHint.textContent = hints[0];
+            i18n.applyText(pipelineHint, hints[0]);
             pipelineHint.classList.add('visible');
           }
           return;

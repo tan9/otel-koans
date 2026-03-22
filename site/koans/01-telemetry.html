@@ -418,7 +418,7 @@
           resultA.innerHTML =
             '<div class="no-data">' +
               '<div class="no-data-icon">&#8709;</div>' +
-              '<div>' + i18n.t('koan01.noData') + '</div>' +
+              '<div data-i18n="koan01.noData">' + i18n.t('koan01.noData') + '</div>' +
               '<div style="margin-top:0.5rem;"><span class="data-dim">$</span>&nbsp;<span class="blink">_</span></div>' +
             '</div>';
 
@@ -434,12 +434,12 @@
 
           resultB.innerHTML =
             '<div class="rich-data">' +
-              '<div class="data-line data-trace" data-delay="200">' + i18n.t('koan01.dataLine1') + ' &nbsp;<span class="data-dim">' + i18n.t('koan01.dataLine1Dim') + '</span></div>' +
-              '<div class="data-line data-metric" data-delay="700">' + i18n.t('koan01.dataLine2') + ' &nbsp;<span class="data-dim">' + i18n.t('koan01.dataLine2Dim') + '</span></div>' +
-              '<div class="data-line data-trace" data-delay="1200">' + i18n.t('koan01.dataLine3') + ' &nbsp;<span class="data-dim">' + i18n.t('koan01.dataLine3Dim') + '</span></div>' +
-              '<div class="data-line data-metric" data-delay="1700">' + i18n.t('koan01.dataLine4') + ' &nbsp;<span class="data-dim">' + i18n.t('koan01.dataLine4Dim') + '</span></div>' +
-              '<div class="data-line data-error" data-delay="2200">' + i18n.t('koan01.dataLine5') + ' &nbsp;<span class="data-dim">' + i18n.t('koan01.dataLine5Dim') + '</span></div>' +
-              '<div class="data-line data-error" data-delay="2700">' + i18n.t('koan01.dataLine6') + ' &nbsp;<span class="data-dim">' + i18n.t('koan01.dataLine6Dim') + '</span></div>' +
+              '<div class="data-line data-trace" data-delay="200"><span data-i18n="koan01.dataLine1">' + i18n.t('koan01.dataLine1') + '</span> &nbsp;<span class="data-dim" data-i18n="koan01.dataLine1Dim">' + i18n.t('koan01.dataLine1Dim') + '</span></div>' +
+              '<div class="data-line data-metric" data-delay="700"><span data-i18n="koan01.dataLine2">' + i18n.t('koan01.dataLine2') + '</span> &nbsp;<span class="data-dim" data-i18n="koan01.dataLine2Dim">' + i18n.t('koan01.dataLine2Dim') + '</span></div>' +
+              '<div class="data-line data-trace" data-delay="1200"><span data-i18n="koan01.dataLine3">' + i18n.t('koan01.dataLine3') + '</span> &nbsp;<span class="data-dim" data-i18n="koan01.dataLine3Dim">' + i18n.t('koan01.dataLine3Dim') + '</span></div>' +
+              '<div class="data-line data-metric" data-delay="1700"><span data-i18n="koan01.dataLine4">' + i18n.t('koan01.dataLine4') + '</span> &nbsp;<span class="data-dim" data-i18n="koan01.dataLine4Dim">' + i18n.t('koan01.dataLine4Dim') + '</span></div>' +
+              '<div class="data-line data-error" data-delay="2200"><span data-i18n="koan01.dataLine5">' + i18n.t('koan01.dataLine5') + '</span> &nbsp;<span class="data-dim" data-i18n="koan01.dataLine5Dim">' + i18n.t('koan01.dataLine5Dim') + '</span></div>' +
+              '<div class="data-line data-error" data-delay="2700"><span data-i18n="koan01.dataLine6">' + i18n.t('koan01.dataLine6') + '</span> &nbsp;<span class="data-dim" data-i18n="koan01.dataLine6Dim">' + i18n.t('koan01.dataLine6Dim') + '</span></div>' +
             '</div>';
 
           var lines = resultB.querySelectorAll('.data-line');
@@ -496,9 +496,9 @@
           var fb = document.getElementById('feedback2');
           var opts = q.querySelectorAll('.telem-option');
 
-          var wrongMessages = {
-            debug: i18n.t('koan01.q2WrongDebug'),
-            logs: i18n.t('koan01.q2WrongLogs')
+          var wrongMessageKeys = {
+            debug: 'koan01.q2WrongDebug',
+            logs: 'koan01.q2WrongLogs'
           };
 
           opts.forEach(function (opt) {
@@ -513,7 +513,8 @@
                 }, 800);
               } else {
                 this.classList.add('wrong');
-                fb.textContent = wrongMessages[this.dataset.label] || i18n.t('koan01.q2WrongFallback');
+                var msgKey = wrongMessageKeys[this.dataset.label] || 'koan01.q2WrongFallback';
+                i18n.applyText(fb, msgKey);
                 fb.className = 'telem-feedback telem-feedback--wrong';
                 var self = this;
                 setTimeout(function () { self.classList.remove('wrong'); }, 600);

@@ -616,7 +616,11 @@
           } else {
             opt.classList.add('wrong');
             var wrongKey = opt.dataset.wrongKey;
-            fb1.textContent = wrongKey ? i18n.t(wrongKey) : i18n.t('koan12.q1WrongFallback');
+            if (wrongKey) {
+              i18n.applyText(fb1, wrongKey);
+            } else {
+              i18n.applyText(fb1, 'koan12.q1WrongFallback');
+            }
             fb1.className = 'inst-fb inst-fb--wrong';
             setTimeout(function () {
               opt.classList.remove('wrong');

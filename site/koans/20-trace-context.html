@@ -727,12 +727,11 @@
       q1Opts.forEach(function (opt) {
         opt.addEventListener('click', function () {
           var fbKey = this.dataset.fbKey;
-          var feedbackText = fbKey ? i18n.t(fbKey) : '';
 
           if (this.dataset.answer === 'correct') {
             this.classList.add('correct');
             q1Opts.forEach(function (o) { o.classList.add('disabled'); });
-            fb1.textContent = feedbackText;
+            if (fbKey) { i18n.applyText(fb1, fbKey); }
             fb1.className = 'trace-fb trace-fb--correct';
 
             /* Reveal the answer: arrow, header, narrative2, then matching */
@@ -757,7 +756,7 @@
             }, 4000);
           } else {
             this.classList.add('wrong');
-            fb1.textContent = feedbackText;
+            if (fbKey) { i18n.applyText(fb1, fbKey); }
             fb1.className = 'trace-fb trace-fb--wrong';
             var self = this;
             setTimeout(function () { self.classList.remove('wrong'); }, 600);

@@ -516,12 +516,12 @@
       function run() {
         // ── Telemetry items with their true signal type ──
         var ITEMS = [
-          { id: 0, text: i18n.t('koan02.item0'), type: 'metric' },
-          { id: 1, text: i18n.t('koan02.item1'), type: 'trace'  },
-          { id: 2, text: i18n.t('koan02.item2'), type: 'log'    },
-          { id: 3, text: i18n.t('koan02.item3'), type: 'metric' },
-          { id: 4, text: i18n.t('koan02.item4'), type: 'trace'  },
-          { id: 5, text: i18n.t('koan02.item5'), type: 'log'    }
+          { id: 0, textKey: 'koan02.item0', type: 'metric' },
+          { id: 1, textKey: 'koan02.item1', type: 'trace'  },
+          { id: 2, textKey: 'koan02.item2', type: 'log'    },
+          { id: 3, textKey: 'koan02.item3', type: 'metric' },
+          { id: 4, textKey: 'koan02.item4', type: 'trace'  },
+          { id: 5, textKey: 'koan02.item5', type: 'log'    }
         ];
 
         // Shuffle the items for display
@@ -563,7 +563,7 @@
           var el = document.createElement('div');
           el.className = 'telem-item';
           el.setAttribute('data-id', item.id);
-          el.textContent = item.text;
+          i18n.applyText(el, item.textKey);
 
           // Build picker
           var picker = document.createElement('div');
@@ -658,13 +658,13 @@
                 el.className = 'bucket-item';
 
                 var textSpan = document.createElement('span');
-                textSpan.textContent = item.text;
+                i18n.applyText(textSpan, item.textKey);
                 el.appendChild(textSpan);
 
                 var removeBtn = document.createElement('span');
                 removeBtn.className = 'bucket-item-remove';
                 removeBtn.textContent = '\u2715';
-                removeBtn.title = i18n.t('koan02.removeTitle');
+                removeBtn.setAttribute('data-i18n-title', 'koan02.removeTitle');
                 removeBtn.addEventListener('click', function () {
                   unassignItem(item.id);
                 });
@@ -680,9 +680,9 @@
         var sortWrongCount = 0;
 
         // Map each item to a distinguishing characteristic for the 3rd-level hint
-        var itemCharacteristics = {};
+        var itemCharacteristicKeys = {};
         ITEMS.forEach(function (item) {
-          itemCharacteristics[item.id] = i18n.t('koan02.itemChar' + item.id);
+          itemCharacteristicKeys[item.id] = 'koan02.itemChar' + item.id;
         });
 
         // Find a misplaced item to highlight on 3rd wrong attempt
@@ -716,7 +716,7 @@
           // Check that each bucket has exactly 2 items
           var bucketCounts = { A: [], B: [], C: [] };
           ITEMS.forEach(function (item) {
-            bucketCounts[assignments[item.id]].push({ id: item.id, type: item.type, text: item.text });
+            bucketCounts[assignments[item.id]].push({ id: item.id, type: item.type, textKey: item.textKey });
           });
 
           var validSizes = true;
@@ -763,7 +763,22 @@
               // 3rd+ wrong: highlight a specific misplaced item's characteristic
               var misplaced = findMisplacedItem(bucketCounts);
               if (misplaced) {
-                sortFeedback.textContent = '\u201c' + misplaced.text + '\u201d: ' + itemCharacteristics[misplaced.id] + '. ' + i18n.t('koan02.sortHint3Suffix');
+                sortFeedback.textContent = '';
+                var q1 = document.createElement('span');
+                q1.textContent = '\u201c';
+                var itemName = document.createElement('span');
+                i18n.applyText(itemName, misplaced.textKey);
+                var q2 = document.createElement('span');
+                q2.textContent = '\u201d: ';
+                var charSpan = document.createElement('span');
+                i18n.applyText(charSpan, itemCharacteristicKeys[misplaced.id]);
+                var suffSpan = document.createElement('span');
+                i18n.applyText(suffSpan, 'koan02.sortHint3Suffix', function(v) { return '. ' + v; });
+                sortFeedback.appendChild(q1);
+                sortFeedback.appendChild(itemName);
+                sortFeedback.appendChild(q2);
+                sortFeedback.appendChild(charSpan);
+                sortFeedback.appendChild(suffSpan);
               } else {
                 i18n.applyText(sortFeedback, 'koan02.sortHint3Fallback');
               }
@@ -790,9 +805,9 @@
 
           // Map of type -> display name and color class
           var typeInfo = {
-            metric: { name: i18n.t('koan02.revealMetric'), cssClass: 'bucket-metric' },
-            trace:  { name: i18n.t('koan02.revealTrace'),  cssClass: 'bucket-trace'  },
-            log:    { name: i18n.t('koan02.revealLog'),     cssClass: 'bucket-log'    }
+            metric: { nameKey: 'koan02.revealMetric', cssClass: 'bucket-metric' },
+            trace:  { nameKey: 'koan02.revealTrace',  cssClass: 'bucket-trace'  },
+            log:    { nameKey: 'koan02.revealLog',     cssClass: 'bucket-log'    }
           };
 
           // Animate each bucket reveal with a stagger
@@ -806,7 +821,7 @@
               var info = typeInfo[type];
 
               bucket.classList.add('revealed', info.cssClass);
-              label.textContent = info.name;
+              i18n.applyText(label, info.nameKey);
               countEl.textContent = '';
             }, i * 400);
           });

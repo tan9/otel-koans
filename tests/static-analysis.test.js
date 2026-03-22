@@ -70,6 +70,10 @@ describe('Static analysis: broken i18n call patterns', function () {
         // Skip the ready-check pattern: i18n.t('...') !== '...'
         if (/i18n\.t\s*\(\s*['"][^'"]+['"]\s*\)\s*!==?\s*['"]/.test(line)) continue;
 
+        // Skip lines where data-i18n(-title|-html) is set alongside i18n.t()
+        // for initial content — applyDOM() handles re-translation
+        if (/data-i18n/.test(line)) continue;
+
         calls.push(line.slice(0, 100));
       }
     }

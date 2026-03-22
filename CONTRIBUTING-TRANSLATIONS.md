@@ -51,9 +51,19 @@ Some text (feedback messages, hints, animation explanations) is set dynamically 
 i18n.applyText(el, 'koan01.q1Correct');
 i18n.applyHtml(el, 'koan01.q1Correct');
 
+// ✓ With dynamic values — use the optional transform parameter.
+//   The transform is stored and re-invoked on locale switch,
+//   so both the translation and dynamic values stay correct.
+i18n.applyText(el, 'koan11.echoPrefix', function(v) { return v + name; });
+i18n.applyText(el, 'koan16.connectionTemplate', function(v) {
+    return v.replace('{count}', count);
+});
+
 // ✗ Avoid — won't update on locale switch
 el.textContent = i18n.t('koan01.q1Correct');
 ```
+
+> **Note:** This project uses ES5 style (`var`, `function() {}`) throughout. Please avoid arrow functions, `const`/`let`, and template literals to maintain consistency.
 
 ## JSON structure
 
@@ -74,69 +84,24 @@ Keys are organized by page:
 ## Testing locally
 
 ```bash
-# Serve the site
-python3 -m http.server 8000 --directory site
+# Install dependencies (first time only)
+npm install
 
+# Run all tests — checks missing keys, extra keys, placeholder
+# preservation, broken i18n patterns, HTML structure, and more
+npm test
+
+# Serve the site for manual testing
+npx serve site -l 8000
 # Open http://localhost:8000
 # Click the language icon (文A) in the bottom bar to switch languages
 ```
 
-## Checking for missing keys
+## What the tests check
 
-```bash
-python3 -c "
-import json
-en = json.load(open('site/i18n/en-US.json'))
-tr = json.load(open('site/i18n/YOUR_LOCALE.json'))
+`npm test` runs 829 tests across 4 suites. All must pass before a PR can merge:
 
-def flat(d, p=''):
-    out = {}
-    for k,v in d.items():
-        key = p+'.'+k if p else k
-        if isinstance(v,dict): out.update(flat(v,key))
-        else: out[key]=v
-    return out
-
-e, t = flat(en), flat(tr)
-missing = set(e) - set(t)
-extra = set(t) - set(e)
-same = {k for k in e if k in t and e[k] == t[k] and len(e[k]) > 10}
-print(f'{len(missing)} missing, {len(extra)} extra, {len(same)} possibly untranslated')
-for k in sorted(missing): print(f'  MISSING: {k}')
-for k in sorted(extra): print(f'  EXTRA: {k}')
-"
-```
-
-## Checking for HTML/placeholder consistency
-
-```bash
-python3 -c "
-import json, re
-en = json.load(open('site/i18n/en-US.json'))
-tr = json.load(open('site/i18n/YOUR_LOCALE.json'))
-
-def flat(d, p=''):
-    out = {}
-    for k,v in d.items():
-        key = p+'.'+k if p else k
-        if isinstance(v,dict): out.update(flat(v,key))
-        else: out[key]=v
-    return out
-
-e, t = flat(en), flat(tr)
-for k in sorted(e):
-    if k not in t: continue
-    ev, tv = e[k], t[k]
-    if not isinstance(ev, str): continue
-    # Check template variables
-    evars = set(re.findall(r'\{[^}]+\}', ev))
-    tvars = set(re.findall(r'\{[^}]+\}', tv))
-    if evars != tvars: print(f'  VAR mismatch: {k}')
-    # Check HTML tags
-    etags = sorted(re.findall(r'<[^>]+>', ev))
-    ttags = sorted(re.findall(r'<[^>]+>', tv))
-    if etags != ttags: print(f'  TAG mismatch: {k}')
-    # Check newlines
-    if ev.count(chr(10)) != tv.count(chr(10)): print(f'  NEWLINE mismatch: {k}')
-"
-```
+- **Locale consistency** — every key in `en-US.json` exists in your locale, no extra keys, all `{placeholder}` tokens preserved
+- **Static analysis** — catches broken `applyText`/`applyHtml` call patterns (e.g., semicolons before `.replace()` chains)
+- **Site integrity** — HTML structure, required scripts, navigation chain, JS syntax in inline scripts
+- **i18n unit tests** — core API behavior (`t()`, `applyText()`, `applyHtml()`, `applyDOM()`)

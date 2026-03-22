@@ -4,9 +4,8 @@
 
 <h1 align="center">OpenTelemetry Koans</h1>
 
-<p align="center">
-  <a href="https://github.com/mreider/otel-koans/actions/workflows/pages.yml"><img src="https://github.com/mreider/otel-koans/actions/workflows/pages.yml/badge.svg" alt="Tests"></a>
-</p>
+[![CI](https://github.com/mreider/otel-koans/actions/workflows/ci.yml/badge.svg)](https://github.com/mreider/otel-koans/actions/workflows/ci.yml)
+[![Deploy](https://github.com/mreider/otel-koans/actions/workflows/deploy.yml/badge.svg)](https://github.com/mreider/otel-koans/actions/workflows/deploy.yml)
 
 <p align="center">
   <em>A system ran for a thousand days without error.<br>

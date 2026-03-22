@@ -802,7 +802,7 @@
             count++;
           });
         });
-        i18n.applyText(connCounter, 'koan16.connectionTemplate');.replace('{count}', count);
+        i18n.applyText(connCounter, 'koan16.connectionTemplate', function(v) { return v.replace('{count}', count); });
         connCounter.classList.remove('reduced');
       }
 
@@ -828,7 +828,7 @@
           count++;
         });
 
-        i18n.applyText(connCounter, 'koan16.connectionTemplate');.replace('{count}', count);
+        i18n.applyText(connCounter, 'koan16.connectionTemplate', function(v) { return v.replace('{count}', count); });
         connCounter.classList.add('reduced');
       }
 
@@ -1058,7 +1058,7 @@
             } else {
               /* Wrong */
               this.classList.add('match-wrong');
-              i18n.applyText(fb3, 'koan16.q3WrongTemplate');.replace('{stageName}', row.querySelector('.match-stage').textContent);
+              i18n.applyText(fb3, 'koan16.q3WrongTemplate', function(v) { return v.replace('{stageName}', row.querySelector('.match-stage').textContent); });
               fb3.className = 'cq-fb cq-fb--wrong';
               var self = this;
               setTimeout(function () { self.classList.remove('match-wrong'); }, 500);

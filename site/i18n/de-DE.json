@@ -629,7 +629,8 @@
     "q1Hint1": "Lies den Fehler nochmal. Er sagt „nicht unterstütztes Format.“ Was sagt dir das über die Daten selbst?",
     "q1Hint2": "Die Daten waren weder kaputt noch ungültig. Das Backend spricht einfach diese Sprache nicht.",
     "insightLine1": "Die Daten sind dieselben. Das Format ist der Umschlag.",
-    "insightLine2": "Verschiedene Ziele brauchen verschiedene Umschläge."
+    "insightLine2": "Verschiedene Ziele brauchen verschiedene Umschläge.",
+    "revealNote": "Many observability platforms combine all three. The format is what matters, not the tool."
   },
   "koan15": {
     "pageTitle": "Koan 15: Is It All Open? - OpenTelemetry Koans",
@@ -670,9 +671,7 @@
     "q1WrongOtel": "Dashboards liegen bewusst außerhalb des Umfangs von OpenTelemetry. OTel standardisiert Instrumentierung und Datentransport. Die Portabilitätslücke besteht, weil jedes Backend — offen oder proprietär — eigene Dashboard- und Alert-Formate definiert.",
     "q1WrongFallback": "Nicht ganz. Überlege, was OpenTelemetry standardisiert im Vergleich zu dem, was jedes Backend selbst bereitstellt.",
     "insightLine1": "OpenTelemetry macht deine Instrumentierung portabel. OTLP und Semantic Conventions stellen sicher, dass deine Daten eine universelle Sprache sprechen.",
-    "insightLine2": "Aber die Erfahrung, die du darauf aufbaust — Dashboards, Alarme, SLOs — gehört deinem Backend. Das ist die Grenze zwischen offen und nicht.",
-    "q1WrongA": "Das Datenformat (OTLP) IST standardisiert. Das macht die Instrumentierung portabel. Aber Dashboards bauen auf der proprietären Abfragesprache jedes Backends auf.",
-    "q1WrongC": "Wo sie gespeichert sind, ist nicht das Problem. Das Problem ist, dass jedes Backend sein eigenes Dashboard-Format, seine eigene Abfragesprache und Alarmkonfiguration hat."
+    "insightLine2": "Aber die Erfahrung, die du darauf aufbaust — Dashboards, Alarme, SLOs — gehört deinem Backend. Das ist die Grenze zwischen offen und nicht."
   },
   "koan16": {
     "pageTitle": "Koan 16: Die Drehscheibe - OpenTelemetry Koans",

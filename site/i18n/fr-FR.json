@@ -629,7 +629,8 @@
     "q1Hint1": "Relisez l'erreur. Elle dit « format non supporté ». Qu'est-ce que cela vous dit sur les données elles-mêmes ?",
     "q1Hint2": "Les données n'étaient ni cassées ni invalides. Le backend ne parle tout simplement pas cette langue.",
     "insightLine1": "Les données sont les mêmes. Le format est l'enveloppe.",
-    "insightLine2": "Différentes destinations nécessitent différentes enveloppes."
+    "insightLine2": "Différentes destinations nécessitent différentes enveloppes.",
+    "revealNote": "Many observability platforms combine all three. The format is what matters, not the tool."
   },
   "koan15": {
     "pageTitle": "Koan 15 : Est-ce entièrement ouvert ? - OpenTelemetry Koans",
@@ -670,9 +671,7 @@
     "q1WrongOtel": "Les tableaux de bord sont volontairement hors du périmètre d'OpenTelemetry. OTel standardise l'instrumentation et le transport des données. Le manque de portabilité existe parce que chaque backend — ouvert ou propriétaire — définit ses propres formats de tableaux de bord et d'alertes.",
     "q1WrongFallback": "Pas tout à fait. Réfléchis à ce qu'OpenTelemetry standardise par rapport à ce que chaque backend fournit.",
     "insightLine1": "OpenTelemetry rend votre instrumentation portable. OTLP et les conventions sémantiques garantissent que vos données parlent un langage universel.",
-    "insightLine2": "Mais l'expérience que vous construisez par-dessus — tableaux de bord, alertes, SLO — appartient à votre backend. C'est la ligne entre ouvert et non.",
-    "q1WrongA": "Le format de données (OTLP) EST standardisé. C'est ce qui rend l'instrumentation portable. Mais les tableaux de bord sont construits sur le langage de requête propriétaire de chaque backend.",
-    "q1WrongC": "L'endroit où ils sont stockés n'est pas le problème. Le problème est que chaque backend a son propre format de tableau de bord, langage de requête et configuration d'alertes."
+    "insightLine2": "Mais l'expérience que vous construisez par-dessus — tableaux de bord, alertes, SLO — appartient à votre backend. C'est la ligne entre ouvert et non."
   },
   "koan16": {
     "pageTitle": "Koan 16 : Le concentrateur - OpenTelemetry Koans",

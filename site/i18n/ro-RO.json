@@ -629,7 +629,8 @@
     "q1Hint1": "Recitește eroarea. Spune \"unsupported format.\" Ce îți spune asta despre datele în sine?",
     "q1Hint2": "Datele nu erau stricate sau invalide. Backend-ul pur și simplu nu vorbește acea limbă.",
     "insightLine1": "Datele sunt aceleași. Formatul este plicul.",
-    "insightLine2": "Destinații diferite au nevoie de plicuri diferite."
+    "insightLine2": "Destinații diferite au nevoie de plicuri diferite.",
+    "revealNote": "Many observability platforms combine all three. The format is what matters, not the tool."
   },
   "koan15": {
     "pageTitle": "Koan 15: Is It All Open? - OpenTelemetry Koans",
@@ -670,9 +671,7 @@
     "q1WrongOtel": "Dashboardurile sunt în mod deliberat în afara sferei OpenTelemetry. OTel standardizează instrumentarea și transportul datelor. Lacuna de portabilitate există deoarece fiecare backend — deschis sau proprietar — definește propriile formate de dashboarduri și alerte.",
     "q1WrongFallback": "Nu chiar. Gândește-te ce standardizează OpenTelemetry față de ce oferă fiecare backend.",
     "insightLine1": "OpenTelemetry face instrumentarea ta portabilă. OTLP și convențiile semantice asigură că datele tale vorbesc un limbaj universal.",
-    "insightLine2": "Dar experiența pe care o construiești deasupra — dashboard-uri, alerte, SLO-uri — aparține backend-ului tău. Aceasta este linia între deschis și nu.",
-    "q1WrongA": "Formatul de date (OTLP) ESTE standardizat. Asta face instrumentarea portabilă. Dar dashboard-urile sunt construite peste limbajul de interogare proprietar al fiecărui backend.",
-    "q1WrongC": "Unde sunt stocate nu e problema. Problema este că fiecare backend are propriul format de dashboard, limbaj de interogare și configurare de alerte."
+    "insightLine2": "Dar experiența pe care o construiești deasupra — dashboard-uri, alerte, SLO-uri — aparține backend-ului tău. Aceasta este linia între deschis și nu."
   },
   "koan16": {
     "pageTitle": "Koan 16: Nodul central - OpenTelemetry Koans",

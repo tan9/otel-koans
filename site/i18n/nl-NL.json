@@ -629,7 +629,8 @@
     "q1Hint1": "Lees de fout opnieuw. Er staat “niet-ondersteund formaat.” Wat zegt dat over de data zelf?",
     "q1Hint2": "De data was niet kapot of ongeldig. De backend spreekt gewoon die taal niet.",
     "insightLine1": "De data is hetzelfde. Het formaat is de envelop.",
-    "insightLine2": "Verschillende bestemmingen hebben verschillende enveloppen nodig."
+    "insightLine2": "Verschillende bestemmingen hebben verschillende enveloppen nodig.",
+    "revealNote": "Many observability platforms combine all three. The format is what matters, not the tool."
   },
   "koan15": {
     "pageTitle": "Koan 15: Is het allemaal open? - OpenTelemetry Koans",
@@ -670,9 +671,7 @@
     "q1WrongOtel": "Dashboards vallen bewust buiten de scope van OpenTelemetry. OTel standaardiseert instrumentatie en datatransport. De portabiliteitskloof bestaat omdat elke backend — open of propriëtair — eigen dashboard- en alertformaten definieert.",
     "q1WrongFallback": "Niet helemaal. Denk na over wat OpenTelemetry standaardiseert versus wat elke backend zelf biedt.",
     "insightLine1": "OpenTelemetry maakt je instrumentation overdraagbaar. OTLP en semantic conventions zorgen ervoor dat je data een universele taal spreekt.",
-    "insightLine2": "Maar de ervaring die je erop bouwt — dashboards, alerts, SLO's — hoort bij je backend. Dat is de grens tussen open en niet.",
-    "q1WrongA": "Het dataformaat (OTLP) IS gestandaardiseerd. Dat is wat de instrumentation overdraagbaar maakt. Maar dashboards zijn gebouwd op de eigen querytaal van elke backend.",
-    "q1WrongC": "Waar ze opgeslagen zijn is niet het probleem. Het probleem is dat elke backend zijn eigen dashboard-formaat, querytaal en alert-configuratie heeft."
+    "insightLine2": "Maar de ervaring die je erop bouwt — dashboards, alerts, SLO's — hoort bij je backend. Dat is de grens tussen open en niet."
   },
   "koan16": {
     "pageTitle": "Koan 16: De Hub - OpenTelemetry Koans",

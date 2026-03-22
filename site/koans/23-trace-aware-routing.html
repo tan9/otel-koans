@@ -732,7 +732,7 @@
           [1, 2, 3].forEach(function (gw) {
             var spanIds = gwContents[gw];
             if (spanIds.length === 0) {
-              invRefs[gw].textContent = i18n.t('koan23.gwEmpty');
+              i18n.applyText(invRefs[gw], 'koan23.gwEmpty');
             } else {
               invRefs[gw].textContent = spanIds.join(', ') + ' (' + spanIds.length + '/12)';
             }
@@ -740,12 +740,12 @@
             if (spanIds.length === 12) {
               invRefs[gw].classList.add('has-full-trace');
               highlightRefs[gw].classList.add('active');
-              verdictRefs[gw].textContent = i18n.t('koan23.canSample');
+              i18n.applyText(verdictRefs[gw], 'koan23.canSample');
               verdictRefs[gw].style.fill = 'var(--accent-green)';
               verdictRefs[gw].style.opacity = '1';
             } else if (spanIds.length > 0) {
               invRefs[gw].classList.add('has-partial-trace');
-              verdictRefs[gw].textContent = i18n.t('koan23.cannotSample');
+              i18n.applyText(verdictRefs[gw], 'koan23.cannotSample');
               verdictRefs[gw].style.fill = 'var(--accent-red)';
               verdictRefs[gw].style.opacity = '1';
             }

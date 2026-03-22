@@ -556,7 +556,7 @@
             }
           });
 
-          i18n.applyText(status, 'koan13.statusWrongCount');.replace('{count}', wrongCount);
+          i18n.applyText(status, 'koan13.statusWrongCount', function(v) { return v.replace('{count}', wrongCount); });
           status.className = 'export-status export-status--error';
 
           /* Show the first wrong blank's hint (most actionable) */

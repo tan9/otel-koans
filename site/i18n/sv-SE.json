@@ -629,7 +629,8 @@
     "q1Hint1": "Läs felet igen. Det säger \"unsupported format.\" Vad berättar det om själva datan?",
     "q1Hint2": "Datan var inte trasig eller ogiltig. Backend:en talar bara inte det språket.",
     "insightLine1": "Datan är densamma. Formatet är kuvertet.",
-    "insightLine2": "Olika destinationer behöver olika kuvert."
+    "insightLine2": "Olika destinationer behöver olika kuvert.",
+    "revealNote": "Many observability platforms combine all three. The format is what matters, not the tool."
   },
   "koan15": {
     "pageTitle": "Koan 15: Is It All Open? - OpenTelemetry Koans",
@@ -670,9 +671,7 @@
     "q1WrongOtel": "Dashboards ligger medvetet utanför OpenTelemetrys scope. OTel standardiserar instrumentering och datatransport. Portabilitetsgapet finns eftersom varje backend — öppen eller proprietär — definierar egna dashboard- och larmformat.",
     "q1WrongFallback": "Inte riktigt. Tänk på vad OpenTelemetry standardiserar jämfört med vad varje backend tillhandahåller.",
     "insightLine1": "OpenTelemetry gör din instrumentering portabel. OTLP och semantiska konventioner säkerställer att dina data talar ett universellt språk.",
-    "insightLine2": "Men upplevelsen du bygger ovanpå — dashboards, larm, SLO:er — tillhör din backend. Det är gränsen mellan öppet och inte.",
-    "q1WrongA": "Dataformatet (OTLP) ÄR standardiserat. Det är det som gör instrumenteringen portabel. Men dashboards byggs ovanpå varje backends proprietära frågespråk.",
-    "q1WrongC": "Var de lagras är inte problemet. Problemet är att varje backend har sitt eget dashboard-format, frågespråk och larmkonfiguration."
+    "insightLine2": "Men upplevelsen du bygger ovanpå — dashboards, larm, SLO:er — tillhör din backend. Det är gränsen mellan öppet och inte."
   },
   "koan16": {
     "pageTitle": "Koan 16: Navet - OpenTelemetry Koans",

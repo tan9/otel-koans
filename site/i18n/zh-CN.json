@@ -629,7 +629,8 @@
     "q1Hint1": "重读错误信息。它说\"不支持的格式\"。这关于数据本身告诉了你什么？",
     "q1Hint2": "数据没有损坏或无效。后端只是不会说那种语言。",
     "insightLine1": "数据相同，格式是信封。",
-    "insightLine2": "不同的目的地需要不同的信封。"
+    "insightLine2": "不同的目的地需要不同的信封。",
+    "revealNote": "Many observability platforms combine all three. The format is what matters, not the tool."
   },
   "koan15": {
     "pageTitle": "公案 15：一切都是开放的吗？ - OpenTelemetry 公案",
@@ -670,9 +671,7 @@
     "q1WrongOtel": "仪表盘在设计上不属于 OpenTelemetry 的范围。OTel 标准化了检测和数据传输。可移植性差距的存在是因为每个后端——无论是开放的还是私有的——都定义了自己的仪表盘和告警格式。",
     "q1WrongFallback": "不完全对。想想 OpenTelemetry 标准化了什么，以及各后端自行提供了什么。",
     "insightLine1": "OpenTelemetry 让你的埋点具有可移植性。OTLP 和语义约定确保你的数据说着通用语言。",
-    "insightLine2": "但你在其上构建的体验——仪表板、告警、SLO——属于你的后端。这就是开放与非开放之间的界线。",
-    "q1WrongA": "数据格式（OTLP）是标准化的。这正是埋点可移植的原因。但仪表板是建立在各后端专有查询语言之上的。",
-    "q1WrongC": "存在哪里不是问题。问题在于每个后端都有自己的仪表板格式、查询语言和告警配置。"
+    "insightLine2": "但你在其上构建的体验——仪表板、告警、SLO——属于你的后端。这就是开放与非开放之间的界线。"
   },
   "koan16": {
     "pageTitle": "公案 14：枢纽 - OpenTelemetry 公案",

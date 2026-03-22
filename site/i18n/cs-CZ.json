@@ -629,7 +629,8 @@
     "q1Hint1": "Přečti si chybu znovu. Říká \"nepodporovaný formát.\" Co ti to říká o datech samotných?",
     "q1Hint2": "Data nebyla poškozená ani neplatná. Backend prostě tímto jazykem nemluví.",
     "insightLine1": "Data jsou stejná. Formát je obálka.",
-    "insightLine2": "Různé cíle potřebují různé obálky."
+    "insightLine2": "Různé cíle potřebují různé obálky.",
+    "revealNote": "Many observability platforms combine all three. The format is what matters, not the tool."
   },
   "koan15": {
     "pageTitle": "Koan 15: Is It All Open? - OpenTelemetry Koans",
@@ -670,9 +671,7 @@
     "q1WrongOtel": "Dashboardy jsou záměrně mimo rozsah OpenTelemetry. OTel standardizuje instrumentaci a přenos dat. Mezera v přenositelnosti existuje proto, že každý backend — otevřený i proprietární — definuje vlastní formáty dashboardů a alertů.",
     "q1WrongFallback": "Ne tak docela. Zamysli se, co OpenTelemetry standardizuje oproti tomu, co si každý backend poskytuje sám.",
     "insightLine1": "OpenTelemetry dělá tvou instrumentaci přenositelnou. OTLP a sémantické konvence zajišťují, že tvá data mluví univerzálním jazykem.",
-    "insightLine2": "Ale nadstavba, kterou si postavíš — dashboardy, alerty, SLO — patří tvému backendu. To je hranice mezi otevřeným a ne.",
-    "q1WrongA": "Formát dat (OTLP) JE standardizovaný. Proto je instrumentace přenositelná. Ale dashboardy jsou postaveny na proprietárním dotazovacím jazyku každého backendu.",
-    "q1WrongC": "Kde jsou uloženy, není problém. Problém je, že každý backend má vlastní formát dashboardů, dotazovací jazyk a konfiguraci alertů."
+    "insightLine2": "Ale nadstavba, kterou si postavíš — dashboardy, alerty, SLO — patří tvému backendu. To je hranice mezi otevřeným a ne."
   },
   "koan16": {
     "pageTitle": "Koan 16: Rozbočovač - OpenTelemetry Koans",

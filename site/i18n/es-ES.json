@@ -629,7 +629,8 @@
     "q1Hint1": "Relee el error. Dice \"formato no soportado\". ¿Qué te dice eso sobre los datos en sí?",
     "q1Hint2": "Los datos no estaban rotos ni eran inválidos. El backend simplemente no habla ese idioma.",
     "insightLine1": "Los datos son los mismos. El formato es el sobre.",
-    "insightLine2": "Diferentes destinos necesitan diferentes sobres."
+    "insightLine2": "Diferentes destinos necesitan diferentes sobres.",
+    "revealNote": "Many observability platforms combine all three. The format is what matters, not the tool."
   },
   "koan15": {
     "pageTitle": "Koan 15: Is It All Open? - OpenTelemetry Koans",
@@ -670,9 +671,7 @@
     "q1WrongOtel": "Los dashboards están fuera del alcance de OpenTelemetry por diseño. OTel estandariza la instrumentación y el transporte de datos. La brecha de portabilidad existe porque cada backend — abierto o propietario — define sus propios formatos de dashboards y alertas.",
     "q1WrongFallback": "No del todo. Piensa en qué estandariza OpenTelemetry frente a lo que cada backend proporciona.",
     "insightLine1": "OpenTelemetry hace tu instrumentación portable. OTLP y las convenciones semánticas aseguran que tus datos hablen un lenguaje universal.",
-    "insightLine2": "Pero la experiencia que construyes encima — paneles, alertas, SLOs — pertenece a tu backend. Esa es la línea entre abierto y no.",
-    "q1WrongA": "El formato de datos (OTLP) SÍ está estandarizado. Eso es lo que hace portable la instrumentación. Pero los paneles se construyen sobre el lenguaje de consulta propietario de cada backend.",
-    "q1WrongC": "Dónde se almacenan no es el problema. El problema es que cada backend tiene su propio formato de panel, lenguaje de consulta y configuración de alertas."
+    "insightLine2": "Pero la experiencia que construyes encima — paneles, alertas, SLOs — pertenece a tu backend. Esa es la línea entre abierto y no."
   },
   "koan16": {
     "pageTitle": "Koan 16: El Concentrador - OpenTelemetry Koans",

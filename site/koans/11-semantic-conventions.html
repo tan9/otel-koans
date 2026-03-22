@@ -779,7 +779,7 @@
         /* Lock input */
         yourInput.disabled = true;
         yourBtn.disabled = true;
-        i18n.applyText(yourEcho, 'koan11.echoPrefix'); + learnerName;
+        i18n.applyText(yourEcho, 'koan11.echoPrefix', function(v) { return v + learnerName; });
 
         /* Now reveal the three team panels */
         var svcs = ['svcA', 'svcB', 'svcC'];
@@ -800,7 +800,7 @@
             }
           }
           if (matchedTeam) {
-            i18n.applyText(comp, 'koan11.comparisonMatched');.replace('{team}', matchedTeam);
+            i18n.applyText(comp, 'koan11.comparisonMatched', function(v) { return v.replace('{team}', matchedTeam); });
           } else {
             i18n.applyText(comp, 'koan11.comparisonUnmatched');
           }

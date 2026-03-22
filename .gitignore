@@ -1,4 +1,5 @@
 .DS_Store
+node_modules/
 
 # Claude Code agent config and skills (local only)
 .claude/

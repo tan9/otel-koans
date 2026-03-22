@@ -533,8 +533,7 @@
           eventStream.scrollTop = eventStream.scrollHeight;
 
           eventCount++;
-          var tmpl = i18n.t('koan03.eventCountTemplate');
-          eventCountEl.textContent = tmpl.replace('{count}', eventCount);
+          i18n.applyText(eventCountEl, 'koan03.eventCountTemplate', function(v) { return v.replace('{count}', eventCount); });
         }
 
         // --- Stream events with rising frequency ---

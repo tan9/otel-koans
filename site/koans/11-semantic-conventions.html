@@ -875,10 +875,10 @@
         var opts = q.querySelectorAll('.nm-opt');
         var attempts = 0;
 
-        var scaffolding = [
-          i18n.t('koan11.q1Scaffold1'),
-          i18n.t('koan11.q1Scaffold2'),
-          i18n.t('koan11.q1Scaffold3')
+        var scaffoldKeys = [
+          'koan11.q1Scaffold1',
+          'koan11.q1Scaffold2',
+          'koan11.q1Scaffold3'
         ];
 
         opts.forEach(function (opt) {
@@ -909,7 +909,7 @@
               }, 2600);
             } else {
               this.classList.add('wrong');
-              fb.textContent = scaffolding[Math.min(attempts, scaffolding.length - 1)];
+              i18n.applyText(fb, scaffoldKeys[Math.min(attempts, scaffoldKeys.length - 1)]);
               fb.className = 'nm-fb nm-fb--wrong';
               attempts++;
               var self = this;

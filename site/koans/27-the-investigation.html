@@ -1168,8 +1168,8 @@
         var cssClass = signal === 'metric' ? 'metric-btn' : signal === 'trace' ? 'trace-btn' : 'log-btn';
         btn.className = 'fp-choice-btn ' + cssClass;
         btn.dataset.signal = signal;
-        var labels = { metric: i18n.t('koan27.btnMetric'), trace: i18n.t('koan27.btnTrace'), log: i18n.t('koan27.btnLog') };
-        btn.textContent = labels[signal];
+        var labelKeys = { metric: 'koan27.btnMetric', trace: 'koan27.btnTrace', log: 'koan27.btnLog' };
+        i18n.applyText(btn, labelKeys[signal]);
         return btn;
       }
 
